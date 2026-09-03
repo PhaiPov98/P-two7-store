@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Noto_Sans_Khmer, Inter, JetBrains_Mono } from 'next/font/google';
 import { Suspense } from 'react';
 import './globals.css';
@@ -28,6 +28,13 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-mono',
   display: 'swap',
 });
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#080C16',
+};
 
 export const metadata: Metadata = {
   title: 'P-Two7 Digital Store — ហាងឌីជីថលលក់ Product Key និង Files Download',

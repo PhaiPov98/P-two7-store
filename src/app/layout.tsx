@@ -42,6 +42,8 @@ export const metadata: Metadata = {
   keywords: 'Windows 11 Pro Key, Microsoft Office 2024, Adobe Photoshop, IDM Key, Antivirus, Product Key Cambodia, P-Two7',
 };
 
+import MobileBottomNav from '@/components/layout/MobileBottomNav';
+
 export default function RootLayout({
   children,
 }: {
@@ -49,7 +51,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="km" className={`dark ${notoSansKhmer.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white font-khmer">
+      <body className="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white font-khmer pb-16 lg:pb-0">
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>
@@ -59,12 +61,12 @@ export default function RootLayout({
               <Navbar />
               <main className="flex-grow">{children}</main>
               <Footer />
+              <MobileBottomNav />
             </CartProvider>
           </AuthProvider>
         </ToastProvider>
       </body>
     </html>
-
   );
 }
 

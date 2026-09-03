@@ -68,87 +68,87 @@ export default function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       {/* Card Content */}
-      <div className="p-5 flex-1 flex flex-col justify-between">
+      <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between">
         <div>
           {/* Category & Rating */}
-          <div className="flex items-center justify-between text-xs mb-2">
-            <span className="text-blue-400 font-medium bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
+          <div className="flex items-center justify-between text-[10px] sm:text-xs mb-1.5 sm:mb-2">
+            <span className="text-blue-400 font-medium bg-blue-500/10 px-1.5 sm:px-2 py-0.5 rounded border border-blue-500/20 truncate max-w-[90px] sm:max-w-none">
               {product.category?.nameKm || 'Software'}
             </span>
-            <div className="flex items-center gap-1 text-amber-400 font-semibold">
-              <Star className="w-3.5 h-3.5 fill-amber-400" />
+            <div className="flex items-center gap-1 text-amber-400 font-semibold shrink-0">
+              <Star className="w-3 sm:w-3.5 h-3 sm:h-3.5 fill-amber-400" />
               <span>{product.rating.toFixed(1)}</span>
-              <span className="text-slate-400 text-[11px]">({product.reviewCount})</span>
+              <span className="text-slate-400 text-[9px] sm:text-[11px]">({product.reviewCount})</span>
             </div>
           </div>
 
           {/* Title */}
           <Link href={`/products/${product.slug}`} className="block group-hover:text-blue-400 transition-colors">
-            <h3 className="font-bold text-base text-white line-clamp-1 leading-snug">
+            <h3 className="font-bold text-xs sm:text-base text-white line-clamp-2 leading-snug min-h-[2.4rem] sm:min-h-0">
               {product.name}
             </h3>
           </Link>
 
-          {/* Short Description */}
-          <p className="text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
+          {/* Short Description (Hidden on compact mobile for clean app look, visible on desktop) */}
+          <p className="hidden sm:block text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">
             {product.shortDesc || product.description}
           </p>
 
           {/* Sold count & Stock */}
-          <div className="flex items-center gap-3 mt-3 text-[11px] text-slate-400">
-            <span className="flex items-center gap-1 text-emerald-400 font-medium">
-              <ShieldCheck className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-1.5 sm:gap-3 mt-2 sm:mt-3 text-[10px] sm:text-[11px] text-slate-400">
+            <span className="flex items-center gap-1 text-emerald-400 font-medium shrink-0">
+              <ShieldCheck className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               {KHMER_TEXT.stockStatus.inStock}
             </span>
-            <span>•</span>
-            <span>{product.soldCount} នាក់បានទិញ</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="truncate hidden sm:inline">{product.soldCount} នាក់បានទិញ</span>
           </div>
         </div>
 
         {/* Pricing & Buttons */}
-        <div className="mt-5 pt-4 border-t border-slate-800/80">
-          <div className="flex items-baseline justify-between mb-4">
+        <div className="mt-3 sm:mt-5 pt-2 sm:pt-4 border-t border-slate-800/80">
+          <div className="flex items-baseline justify-between mb-2.5 sm:mb-4">
             <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black text-white">
+              <div className="flex items-baseline gap-1.5 sm:gap-2">
+                <span className="text-sm sm:text-xl font-black text-white">
                   {formatPrice(product.price)}
                 </span>
                 {product.comparePrice && product.comparePrice > product.price && (
-                  <span className="text-xs text-slate-400 line-through">
+                  <span className="text-[10px] sm:text-xs text-slate-400 line-through">
                     {formatPrice(product.comparePrice)}
                   </span>
                 )}
               </div>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[9px] sm:text-[11px] text-slate-400 block">
                 {formatPriceRiel(product.price)}
               </span>
             </div>
 
             {(product.file || product.fileId || product.downloadUrl) ? (
-              <span className="text-[10px] font-bold text-teal-300 bg-teal-500/15 px-2 py-0.5 rounded border border-teal-500/30 flex items-center gap-1">
-                <span>Key + File .EXE</span>
+              <span className="text-[9px] sm:text-[10px] font-bold text-teal-300 bg-teal-500/15 px-1.5 sm:px-2 py-0.5 rounded border border-teal-500/30 shrink-0">
+                Key + File
               </span>
             ) : (
-              <span className="text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                License ស្របច្បាប់
+              <span className="text-[9px] sm:text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 rounded border border-emerald-500/20 shrink-0">
+                License
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1">
             <button
               onClick={handleAddToCart}
-              className="btn-uiverse-df-cart py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5"
+              className="btn-uiverse-df-cart py-1.5 sm:py-2.5 px-1.5 sm:px-3 rounded-lg sm:rounded-xl text-[10px] sm:text-xs flex items-center justify-center gap-1"
             >
-              <ShoppingBag className="w-4 h-4 text-blue-400" />
-              <span>{KHMER_TEXT.actions.addToCart}</span>
+              <ShoppingBag className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+              <span className="truncate">{KHMER_TEXT.actions.addToCart}</span>
             </button>
             <button
               onClick={handleBuyNow}
-              className="btn-uiverse-buy py-2.5 px-3 rounded-xl"
+              className="btn-uiverse-buy py-1.5 sm:py-2.5 px-1.5 sm:px-3 rounded-lg sm:rounded-xl text-[10px] sm:text-xs flex items-center justify-center gap-1"
             >
-              <Zap className="w-3.5 h-3.5 text-green-400" />
-              <span>{KHMER_TEXT.actions.buyNow}</span>
+              <Zap className="w-3 h-3 text-green-400 shrink-0" />
+              <span className="truncate">{KHMER_TEXT.actions.buyNow}</span>
             </button>
           </div>
         </div>

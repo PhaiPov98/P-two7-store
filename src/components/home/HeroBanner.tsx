@@ -7,11 +7,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
-  CheckCircle2,
   Star,
   Users,
-  Clock,
-  ArrowRight,
+  CheckCircle2,
 } from 'lucide-react';
 import { KHMER_TEXT } from '@/lib/translations';
 
@@ -28,21 +26,21 @@ const DEFAULT_SLIDES: SlideItem[] = [
     id: '1',
     image: '/hero-slide-1.jpg',
     title: 'Windows 11 & Office 365',
-    subtitle: 'Product Key ស្របច្បាប់ ១០០% ដំណើរការ Activate ពេញមួយជីវិត ផ្ញើជូនភ្លាមៗ 24/7។',
+    subtitle: 'Product Key ស្របច្បាប់ ១០០% Activate ពេញមួយជីវិត ផ្ញើជូនភ្លាមៗ 24/7។',
     badge: '🔥 HOT RELEASE • GENUINE LICENSE',
   },
   {
     id: '2',
     image: '/hero-slide-2.jpg',
     title: 'Adobe Creative Suite',
-    subtitle: 'កម្មវិធីឌីហ្សាញអាជីព Photoshop, Premiere Pro, Illustrator ជាមួយ AI Firefly។',
+    subtitle: 'កម្មវិធីឌីហ្សាញអាជីព Photoshop, Premiere Pro, Illustrator ជាមួយ AI។',
     badge: '🎨 CREATIVE SUITE • FULL APPS',
   },
   {
     id: '3',
     image: '/hero-slide-3.jpg',
     title: 'Cybersecurity & Tools',
-    subtitle: 'ការពារទិន្នន័យ និងកុំព្យូទ័ររបស់អ្នកដោយសុវត្ថិភាពខ្ពស់កម្រិតស្តង់ដារអន្តរជាតិ។',
+    subtitle: 'ការពារទិន្នន័យ និងកុំព្យូទ័ររបស់អ្នកដោយសុវត្ថិភាពខ្ពស់កម្រិតស្តង់ដារ។',
     badge: '🛡️ MAXIMUM SECURITY • 24/7 PROTECTION',
   },
 ];
@@ -50,21 +48,13 @@ const DEFAULT_SLIDES: SlideItem[] = [
 const DEFAULT_TICKER =
   'ទិញ Product Key និងទាញយក Software & Tools បានភ្លាមៗ និងងាយស្រួល។ ធានាគុណភាពស្របច្បាប់ 100% ដំណើរការទូទាត់រហ័សតាម Bakong KHQR និងប្រព័ន្ធផ្ញើជូន Product Key ស្វ័យប្រវត្តភ្លាមៗ 24/7។';
 
-const SLIDE_DURATION = 4000; // 4 seconds auto-slide
-
-// Customer avatar samples for the social proof counter
-const CUSTOMER_AVATARS = [
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=80&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&auto=format&fit=crop&q=80',
-];
+const SLIDE_DURATION = 4000;
 
 export default function HeroBanner() {
   const [slides, setSlides] = useState<SlideItem[]>(DEFAULT_SLIDES);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [ticker, setTicker] = useState(DEFAULT_TICKER);
 
-  // Fetch dynamic banners & settings from API
   useEffect(() => {
     async function loadData() {
       try {
@@ -104,7 +94,6 @@ export default function HeroBanner() {
     loadData();
   }, []);
 
-  // Preload all slide images immediately into memory so transitions are instant
   useEffect(() => {
     slides.forEach((slide) => {
       if (slide.image) {
@@ -114,14 +103,11 @@ export default function HeroBanner() {
     });
   }, [slides]);
 
-  // Slide Auto-Rotation Timer (Runs reliably every 4 seconds)
   useEffect(() => {
     if (slides.length <= 1) return;
-
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, SLIDE_DURATION);
-
     return () => clearInterval(timer);
   }, [slides.length]);
 
@@ -133,186 +119,148 @@ export default function HeroBanner() {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  const handleSelectSlide = (idx: number) => {
-    setCurrentIndex(idx);
-  };
-
   const currentSlide = slides[currentIndex] || slides[0] || DEFAULT_SLIDES[0];
 
   return (
-    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-4 sm:pb-8 select-none">
-      {/* MAIN CAROUSEL CONTAINER */}
-      <div className="relative w-full min-h-[380px] sm:min-h-[500px] lg:min-h-[560px] rounded-2xl sm:rounded-3xl overflow-hidden border border-cyan-500/30 shadow-[0_0_50px_-15px_rgba(6,182,212,0.3)] flex items-center group bg-dark-950">
-        {/* BACKGROUND SLIDES WITH INSTANT PRELOADED TRANSITIONS */}
+    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 space-y-3 sm:space-y-4 select-none">
+      {/* 1. CAROUSEL BANNER CARD */}
+      <div className="relative w-full h-[220px] sm:h-[340px] md:h-[420px] lg:h-[480px] rounded-2xl sm:rounded-3xl overflow-hidden border border-cyan-500/25 shadow-xl bg-dark-950 flex items-end sm:items-center">
+        {/* SLIDE IMAGES */}
         {slides.map((slide, idx) => (
           <div
             key={slide.id || idx}
-            className={`absolute inset-0 transition-opacity duration-300 ease-in-out ${
-              idx === currentIndex
-                ? 'opacity-100 z-0'
-                : 'opacity-0 pointer-events-none -z-10'
+            className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+              idx === currentIndex ? 'opacity-100 z-0' : 'opacity-0 pointer-events-none -z-10'
             }`}
           >
             <img
               src={slide.image}
               alt={slide.title}
-              className="w-full h-full object-cover object-right lg:object-center select-none"
+              className="w-full h-full object-cover object-center"
               draggable={false}
               loading="eager"
             />
           </div>
         ))}
 
-        {/* CINEMATIC GRADIENT OVERLAYS (Left dark for text, Right bright for art) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-dark-950/95 via-dark-950/70 to-dark-950/30 sm:to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-transparent to-dark-950/40 pointer-events-none z-10" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 via-transparent to-purple-600/15 pointer-events-none z-10" />
+        {/* GRADIENT OVERLAYS */}
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-950/95 via-dark-950/60 to-dark-950/20 sm:bg-gradient-to-r sm:from-dark-950/95 sm:via-dark-950/60 sm:to-transparent pointer-events-none z-10" />
 
-        {/* FLOATING CONTENT OVER SLIDE */}
-        <div className="relative z-20 px-4 sm:px-10 lg:px-14 py-6 sm:py-10 max-w-3xl space-y-4 sm:space-y-6">
-          {/* Top Glowing Store Badge */}
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-purple-500/20 border border-cyan-400/40 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.25)]">
-            <span className="flex h-1.5 sm:h-2 w-1.5 sm:w-2 relative">
+        {/* CONTENT */}
+        <div className="relative z-20 p-4 sm:p-8 lg:p-12 w-full max-w-2xl space-y-2 sm:space-y-4">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 backdrop-blur-md">
+            <span className="flex h-1.5 w-1.5 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1.5 sm:h-2 w-1.5 sm:w-2 bg-cyan-500"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
             </span>
-            <span className="text-[10px] sm:text-xs font-bold text-cyan-300 tracking-wide uppercase truncate max-w-[240px] sm:max-w-none">
-              {currentSlide.badge || '✨ ផ្លូវការ & ទំនុកចិត្តខ្ពស់ • 24/7 Delivery'}
+            <span className="text-[9px] sm:text-xs font-bold text-cyan-300 tracking-wide uppercase truncate max-w-[200px] sm:max-w-none">
+              {currentSlide.badge || '✨ GENUINE LICENSE • 24/7'}
             </span>
           </div>
 
-          {/* Main 3D Headline */}
+          {/* Title */}
           <div>
-            <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight sm:leading-[1.1] drop-shadow-2xl">
-              <span className="bg-gradient-to-r from-white via-blue-200 to-cyan-300 bg-clip-text text-transparent filter drop-shadow-[0_4px_24px_rgba(56,189,248,0.4)]">
-                P-Two7 Store
+            <h1 className="text-lg sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug drop-shadow-md">
+              <span className="bg-gradient-to-r from-white via-slate-100 to-cyan-200 bg-clip-text text-transparent">
+                {currentSlide.title}
               </span>
             </h1>
-            <p className="text-xs sm:text-base text-slate-300 mt-2 line-clamp-2 max-w-xl font-medium leading-relaxed">
-              {currentSlide.subtitle || 'Product Key ស្របច្បាប់ ១០០% ដំណើរការ Activate ពេញមួយជីវិត ផ្ញើជូនភ្លាមៗ 24/7។'}
+            <p className="hidden sm:block text-xs sm:text-sm text-slate-300 mt-1 line-clamp-2 leading-relaxed">
+              {currentSlide.subtitle}
             </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-3 pt-1">
+          {/* CTA Button */}
+          <div className="pt-1">
             <Link
               href="/products"
               prefetch={true}
-              className="btn-uiverse-buy px-6 sm:px-8 py-2.5 sm:py-4 rounded-xl sm:rounded-2xl text-white font-black text-xs sm:text-base tracking-wide shadow-xl shadow-green-950/40 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-1.5 sm:py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/25 transition-transform active:scale-95"
             >
-              <Zap className="w-4 sm:w-5 h-4 sm:h-5 text-green-400 animate-pulse" />
+              <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-amber-300 fill-amber-300" />
               <span>{KHMER_TEXT.actions.buyNow}</span>
             </Link>
           </div>
-
-          {/* MOBILE COMPACT TRUST BAR (Clean 1-line on phones) */}
-          <div className="sm:hidden pt-2 flex items-center justify-between gap-1 text-[10px] text-slate-300 bg-dark-950/80 border border-slate-800/80 p-2.5 rounded-xl backdrop-blur-md">
-            <span className="flex items-center gap-1 font-bold text-white">
-              <span className="text-cyan-400">👥</span> 1,500+ នាក់
-            </span>
-            <span className="text-slate-600">•</span>
-            <span className="flex items-center gap-1 font-bold text-emerald-400">
-              <Zap className="w-3 h-3" /> &lt; 10 វិនាទី
-            </span>
-            <span className="text-slate-600">•</span>
-            <span className="flex items-center gap-1 font-bold text-amber-400">
-              <Star className="w-3 h-3 fill-amber-400" /> 4.9/5
-            </span>
-          </div>
-
-          {/* DESKTOP/TABLET GLASS STAT CARDS */}
-          <div className="hidden sm:grid pt-2 grid-cols-3 gap-3 max-w-2xl">
-            {/* Stat 1 */}
-            <div className="p-3 rounded-2xl bg-dark-950/70 border border-slate-800/80 backdrop-blur-xl shadow-lg flex items-center gap-3 hover:border-cyan-500/40 transition-all">
-              <div className="flex -space-x-2 shrink-0">
-                {CUSTOMER_AVATARS.map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt="Customer"
-                    className="w-7 h-7 rounded-full border-2 border-dark-950 object-cover shadow"
-                  />
-                ))}
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-black text-white">1,500+</p>
-                <p className="text-[10px] text-slate-400 truncate">អតិថិជនបានទិញ</p>
-              </div>
-            </div>
-
-            {/* Stat 2 */}
-            <div className="p-3 rounded-2xl bg-dark-950/70 border border-slate-800/80 backdrop-blur-xl shadow-lg flex items-center gap-3 hover:border-emerald-500/40 transition-all">
-              <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-                <Zap className="w-4 h-4 animate-pulse" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-black text-emerald-400">&lt; 10 វិនាទី</p>
-                <p className="text-[10px] text-slate-400 truncate">ផ្ញើ Key ស្វ័យប្រវត្តិ</p>
-              </div>
-            </div>
-
-            {/* Stat 3 */}
-            <div className="p-3 rounded-2xl bg-dark-950/70 border border-slate-800/80 backdrop-blur-xl shadow-lg flex items-center gap-3 hover:border-amber-500/40 transition-all">
-              <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
-                <Star className="w-4 h-4 fill-amber-400" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-black text-amber-400">4.9 / 5.0</p>
-                <p className="text-[10px] text-slate-400 truncate">ការវាយតម្លៃផ្កាយ 5</p>
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* OPTION 5: NAVIGATION PREV & NEXT BUTTONS ([ < ] [ > ]) */}
-        <div className="absolute top-6 right-6 z-30 flex items-center gap-2">
+        {/* DESKTOP PREV / NEXT ARROWS */}
+        <div className="hidden sm:flex absolute bottom-6 right-6 z-30 items-center gap-2">
           <button
             onClick={handlePrev}
-            aria-label="Previous Slide"
-            className="w-10 h-10 rounded-xl bg-dark-950/70 border border-slate-800/80 hover:border-cyan-400/50 hover:bg-dark-900 text-slate-300 hover:text-white backdrop-blur-md flex items-center justify-center transition-all shadow-lg active:scale-95 group/arrow cursor-pointer"
+            className="w-8 h-8 rounded-full bg-dark-900/80 border border-slate-700 text-white hover:bg-blue-600 hover:border-blue-500 flex items-center justify-center transition-all shadow backdrop-blur-md"
+            aria-label="Previous slide"
           >
-            <ChevronLeft className="w-5 h-5 transition-transform group-hover/arrow:-translate-x-0.5" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={handleNext}
-            aria-label="Next Slide"
-            className="w-10 h-10 rounded-xl bg-dark-950/70 border border-slate-800/80 hover:border-cyan-400/50 hover:bg-dark-900 text-slate-300 hover:text-white backdrop-blur-md flex items-center justify-center transition-all shadow-lg active:scale-95 group/arrow cursor-pointer"
+            className="w-8 h-8 rounded-full bg-dark-900/80 border border-slate-700 text-white hover:bg-blue-600 hover:border-blue-500 flex items-center justify-center transition-all shadow backdrop-blur-md"
+            aria-label="Next slide"
           >
-            <ChevronRight className="w-5 h-5 transition-transform group-hover/arrow:translate-x-0.5" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        {/* MINIMAL PAGINATION DOTS AT BOTTOM */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 px-3 py-1.5 rounded-full bg-dark-950/70 border border-slate-800/80 backdrop-blur-md">
-          {slides.map((_, idx) => (
+        {/* SLIDE DOT INDICATORS */}
+        <div className="absolute bottom-2.5 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5">
+          {slides.map((_, i) => (
             <button
-              key={idx}
-              onClick={() => handleSelectSlide(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-              className={`transition-all rounded-full cursor-pointer ${
-                idx === currentIndex
-                  ? 'w-6 h-1.5 bg-cyan-400 shadow-[0_0_8px_rgba(56,189,248,0.8)]'
-                  : 'w-1.5 h-1.5 bg-slate-600 hover:bg-slate-400'
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === currentIndex ? 'w-5 bg-cyan-400 shadow-md shadow-cyan-400/50' : 'w-1.5 bg-slate-600/80 hover:bg-slate-400'
               }`}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </div>
       </div>
 
-      {/* SMOOTH CONTINUOUS MARQUEE TICKER */}
-      <div className="mt-4 p-2 sm:p-2.5 rounded-2xl bg-dark-900/80 border border-slate-800/80 backdrop-blur-xl flex items-center shadow-xl">
-        <div className="scrolling-ticker-wrapper">
-          <div className="scrolling-ticker-track">
-            {[...Array(4)].map((_, i) => (
-              <span
-                key={i}
-                className="text-xs sm:text-sm font-medium text-slate-200 flex items-center gap-3 shrink-0"
-              >
-                <span>{ticker}</span>
-                <span className="text-cyan-400 font-black">✦</span>
-              </span>
-            ))}
+      {/* 2. TRUST STATS BAR (Single Clean Row on All Devices) */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 p-2.5 sm:p-4 rounded-2xl bg-dark-900/70 border border-slate-800/80 backdrop-blur-xl shadow-lg text-center">
+        {/* Item 1 */}
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2.5">
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+            <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
           </div>
+          <div className="text-left">
+            <p className="text-xs sm:text-sm font-black text-white font-mono leading-tight">1,500+</p>
+            <p className="text-[9px] sm:text-xs text-slate-400 leading-tight truncate">អតិថិជនបានទិញ</p>
+          </div>
+        </div>
+
+        {/* Item 2 */}
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 border-x border-slate-800/80 px-1">
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
+          </div>
+          <div className="text-left">
+            <p className="text-xs sm:text-sm font-black text-emerald-400 font-mono leading-tight">&lt; 10s</p>
+            <p className="text-[9px] sm:text-xs text-slate-400 leading-tight truncate">ផ្ញើ Key ស្វ័យប្រវត្តិ</p>
+          </div>
+        </div>
+
+        {/* Item 3 */}
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2.5">
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+            <Star className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-amber-400" />
+          </div>
+          <div className="text-left">
+            <p className="text-xs sm:text-sm font-black text-amber-400 font-mono leading-tight">4.9 / 5.0</p>
+            <p className="text-[9px] sm:text-xs text-slate-400 leading-tight truncate">ការវាយតម្លៃផ្កាយ 5</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. TICKER MARQUEE */}
+      <div className="p-2 sm:p-2.5 rounded-xl bg-dark-950/80 border border-slate-800/60 flex items-center gap-2 overflow-hidden">
+        <span className="shrink-0 px-2 py-0.5 rounded-md bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[10px] sm:text-xs font-bold flex items-center gap-1">
+          <ShieldCheck className="w-3 h-3" />
+          <span>ដំណឹង</span>
+        </span>
+        <div className="overflow-hidden whitespace-nowrap text-[11px] sm:text-xs text-slate-300 marquee-container">
+          <span className="marquee-content">{ticker}</span>
         </div>
       </div>
     </section>

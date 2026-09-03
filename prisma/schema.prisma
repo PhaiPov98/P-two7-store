@@ -1,0 +1,254 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id             String          @id @default(cuid())
+  name           String
+  email          String          @unique
+  password       String
+  phone          String?
+  role           String          @default("CUSTOMER") // CUSTOMER, ADMIN
+  avatar         String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  orders         Order[]
+  downloads      Download[]
+  reviews        Review[]
+  supportTickets SupportTicket[]
+  gifts          Gift[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  nameKm      String
+  nameEn      String
+  slug        String    @unique
+  description String?
+  icon        String?
+  products    Product[]
+  files       File[]
+}
+
+model Product {
+  id                 String       @id @default(cuid())
+  name               String
+  slug               String       @unique
+  description        String
+  shortDesc          String?
+  price              Float
+  comparePrice       Float?
+  discountPercent    Int?
+  images             String       // JSON string array or main image URL
+  category           Category     @relation(fields: [categoryId], references: [id])
+  categoryId         String
+  version            String?
+  platform           String?      // Windows, Mac, Multi-platform
+  systemRequirements String?
+  features           String?
+  downloadUrl        String?      // Direct download URL or cloud link
+  file               File?        @relation("ProductFile", fields: [fileId], references: [id])
+  fileId             String?
+  rating             Float        @default(5.0)
+  reviewCount        Int          @default(1)
+  soldCount          Int          @default(0)
+  isFeatured         Boolean      @default(false)
+  isBestSeller       Boolean      @default(false)
+  isActive           Boolean      @default(true)
+  stockCount         Int          @default(0)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  keys               ProductKey[]
+  orderItems         OrderItem[]
+  reviews            Review[]
+}
+
+model ProductKey {
+  id          String      @id @default(cuid())
+  key         String
+  status      String      @default("AVAILABLE") // AVAILABLE, SOLD, DISABLED
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String
+  orderItem   OrderItem?  @relation(fields: [orderItemId], references: [id])
+  orderItemId String?     @unique
+  soldAt      DateTime?
+  createdAt   DateTime    @default(now())
+}
+
+model File {
+  id            String      @id @default(cuid())
+  title         String
+  slug          String      @unique
+  description   String
+  version       String
+  fileType      String      // ISO, ZIP, EXE, PKG, etc.
+  fileSize      String      // e.g. "5.4 GB"
+  filePath      String      // filename inside storage/files
+  downloadCount Int         @default(0)
+  isFree        Boolean     @default(true)
+  price         Float       @default(0)
+  changelog     String?
+  requirements  String?
+  category      Category    @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  downloads     Download[]
+  orderItems    OrderItem[]
+  products      Product[]   @relation("ProductFile")
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  orderNumber    String      @unique
+  user           User        @relation(fields: [userId], references: [id])
+  userId         String
+  customerName   String
+  customerEmail  String
+  customerPhone  String?
+  subtotal       Float
+  discount       Float       @default(0)
+  total          Float
+  paymentStatus  String      @default("PENDING") // PENDING, PAID, FAILED, REFUNDED
+  orderStatus    String      @default("PENDING") // PENDING, PROCESSING, COMPLETED, CANCELLED, REFUNDED
+  paymentMethod  String      // BAKONG_KHQR, ABA_PAY, WING, CREDIT_CARD
+  paymentDetails String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  items          OrderItem[]
+  payments       Payment[]
+}
+
+model OrderItem {
+  id         String      @id @default(cuid())
+  order      Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId    String
+  product    Product?    @relation(fields: [productId], references: [id])
+  productId  String?
+  file       File?       @relation(fields: [fileId], references: [id])
+  fileId     String?
+  name       String
+  price      Float
+  quantity   Int         @default(1)
+  key        ProductKey?
+}
+
+model Download {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  file      File     @relation(fields: [fileId], references: [id])
+  fileId    String
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  order         Order    @relation(fields: [orderId], references: [id])
+  orderId       String
+  amount        Float
+  currency      String   @default("USD")
+  provider      String   // BAKONG, ABA, STRIPE
+  transactionId String?
+  status        String   // SUCCESS, FAILED
+  payload       String?
+  createdAt     DateTime @default(now())
+}
+
+model Coupon {
+  id            String    @id @default(cuid())
+  code          String    @unique
+  discountType  String    @default("PERCENT") // PERCENT, FIXED
+  discountValue Float
+  minSpend      Float?
+  maxDiscount   Float?
+  expiryDate    DateTime?
+  isActive      Boolean   @default(true)
+  usageCount    Int       @default(0)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      @default(5)
+  comment   String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  createdAt DateTime @default(now())
+}
+
+model SupportTicket {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  name      String?
+  contact   String?
+  subject   String?
+  message   String
+  status    String   @default("OPEN") // OPEN, RESOLVED, CLOSED
+  reply     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+}
+
+model Tutorial {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  category    String   // e.g. Windows Setup, Office Setup, System Utility
+  readTime    String?  @default("3 នាទីអាន")
+  icon        String?  @default("BookOpen")
+  description String?
+  steps       String   // JSON array string e.g. ["step 1", "step 2"]
+  isActive    Boolean  @default(true)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String   // Tag or title e.g. "Windows 11 & Office 365"
+  image     String   // Image URL
+  link      String?  @default("/products")
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Gift {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String    // e.g. "Product Key Windows 11 Pro ឥតគិតថ្លៃ"
+  description String?   // Admin message note
+  giftType    String    @default("KEY") // KEY, FILE, VOUCHER, CUSTOM
+  content     String?   // The actual key or download link or code
+  isClaimed   Boolean   @default(false)
+  claimedAt   DateTime?
+  expiresAt   DateTime? // Expiration date for the gift
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+
+

@@ -1,0 +1,2547 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #080C16;
+  --foreground: #F1F5F9;
+  --font-khmer: var(--font-khmer), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: var(--font-mono), monospace;
+}
+
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-khmer);
+  overflow-x: hidden;
+  letter-spacing: 0.01em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Floating 3D Animations */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1deg);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(-1deg);
+  }
+}
+
+@keyframes pulse-glow-ring {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.8;
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow-ring {
+  animation: pulse-glow-ring 4s ease-in-out infinite;
+}
+
+.glow-blue {
+  box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.3);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.3);
+}
+
+.tech-border {
+  position: relative;
+}
+.tech-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.5), transparent, rgba(139, 92, 246, 0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.key-code-font {
+  font-family: var(--font-mono);
+}
+
+/* ===================================================
+   UIVERSE.IO INSPIRED BUTTON DESIGN SYSTEM
+   =================================================== */
+
+/* 1. UIVERSE PRIMARY BUTTON (Cosmic Glow & Shimmer Sweep) */
+.btn-uiverse-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+  color: #ffffff;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 15px -3px rgba(37, 99, 235, 0.4), 0 0 20px -5px rgba(124, 58, 237, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  z-index: 1;
+}
+
+.btn-uiverse-primary::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  transition: all 0.75s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.btn-uiverse-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -4px rgba(37, 99, 235, 0.6), 0 0 30px rgba(124, 58, 237, 0.45);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-uiverse-primary:hover::before {
+  left: 130%;
+}
+
+.btn-uiverse-primary:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4);
+}
+
+/* 2. UIVERSE BUY NOW BUTTON (From Uiverse.io by Web-Potato) */
+.btn-uiverse-buy {
+  position: relative;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  background-color: #212121;
+  transition: all 0.5s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  z-index: 0;
+}
+
+.btn-uiverse-buy::before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(29, 255, 86, 0.281);
+  border-radius: inherit;
+  transition: all 0.3s;
+  z-index: -1;
+}
+
+.btn-uiverse-buy:hover::before {
+  opacity: 0;
+  transform: scale(0.7, 0.7);
+}
+
+.btn-uiverse-buy::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.4s;
+  border: 1px solid rgba(29, 255, 86, 0.5);
+  border-radius: inherit;
+  transform: scale(1.5, 1.5);
+  opacity: 0;
+  z-index: -1;
+}
+
+.btn-uiverse-buy:hover::after {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+.btn-uiverse-buy:active {
+  transform: scale(0.95);
+}
+
+/* 3. UIVERSE SECONDARY / GLASS BUTTON (Sleek Glassmorphic State) */
+.btn-uiverse-secondary {
+  position: relative;
+  background: rgba(15, 23, 42, 0.85);
+  color: #cbd5e1;
+  font-weight: 600;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-uiverse-secondary:hover {
+  background: rgba(30, 41, 59, 0.95);
+  color: #ffffff;
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px -3px rgba(59, 130, 246, 0.25);
+}
+
+.btn-uiverse-secondary:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* 4. UIVERSE EMERALD BUTTON (From Uiverse.io by Mangesh636) */
+.btn-uiverse-emerald {
+  background: transparent;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  outline: none;
+  overflow: hidden;
+  color: #10b981;
+  transition: color 0.3s 0.1s ease-out;
+  text-align: center;
+}
+
+.btn-uiverse-emerald::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  content: "";
+  border-radius: 50%;
+  display: block;
+  width: 20em;
+  height: 20em;
+  left: -5em;
+  text-align: center;
+  transition: box-shadow 0.5s ease-out;
+  z-index: -1;
+}
+
+.btn-uiverse-emerald:hover {
+  color: #fff;
+  border-color: #059669;
+}
+
+.btn-uiverse-emerald:hover::before {
+  box-shadow: inset 0 0 0 10em #059669;
+}
+
+.btn-uiverse-emerald:active {
+  transform: scale(0.95);
+}
+
+/* 5. UIVERSE DANGER BUTTON (Neon Red Glow for Delete/Logout) */
+.btn-uiverse-danger {
+  position: relative;
+  background: rgba(225, 29, 72, 0.12);
+  color: #f87171;
+  font-weight: 600;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-uiverse-danger:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #e11d48 100%);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(225, 29, 72, 0.4);
+  transform: translateY(-1.5px);
+}
+
+.btn-uiverse-danger:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* 6. UIVERSE ICON BUTTON (Glass Circle / Square Micro-interaction) */
+.btn-uiverse-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.85);
+  color: #94a3b8;
+  border: 1px solid rgba(100, 116, 139, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-uiverse-icon:hover {
+  color: #ffffff;
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px) scale(1.05);
+}
+
+.btn-uiverse-icon:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* 7. UIVERSE TAB PILL (Interactive Filter Controls) */
+.btn-uiverse-tab {
+  position: relative;
+  background: rgba(15, 23, 42, 0.7);
+  color: #94a3b8;
+  font-weight: 600;
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-uiverse-tab:hover {
+  background: rgba(30, 41, 59, 0.8);
+  color: #ffffff;
+  border-color: rgba(100, 116, 139, 0.8);
+  transform: translateY(-1px);
+}
+
+.btn-uiverse-tab-active {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%) !important;
+  color: #ffffff !important;
+  border-color: rgba(147, 197, 253, 0.4) !important;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35) !important;
+}
+
+/* 8. UIVERSE COPY KEY BUTTON (Glowing Cyber Tooltip Button) */
+.btn-uiverse-copy {
+  position: relative;
+  background: rgba(37, 99, 235, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  font-weight: 700;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.btn-uiverse-copy:hover {
+  background: rgba(37, 99, 235, 0.3);
+  color: #ffffff;
+  border-color: rgba(96, 165, 250, 0.6);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-uiverse-copy:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* 9. UIVERSE NEON RUNNING BORDER BUTTON (From Uiverse.io by menezes11) */
+.btn-uiverse-menezes {
+  position: relative;
+  outline: none;
+  border: 1px solid #303030;
+  background: #18181b;
+  color: #cbd5e1;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.btn-uiverse-menezes:hover {
+  color: #ffffff;
+  border-color: rgba(174, 0, 255, 0.4);
+  box-shadow: 0 0 10px rgba(174, 0, 255, 0.4), 0 0 25px rgba(0, 30, 255, 0.3), 0 0 40px rgba(174, 0, 255, 0.2);
+  transition-delay: 0.2s;
+}
+
+.btn-uiverse-menezes-active {
+  background: linear-gradient(135deg, rgba(174, 0, 255, 0.25), rgba(0, 30, 255, 0.3)) !important;
+  border-color: #ae00ff !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(174, 0, 255, 0.5), 0 0 25px rgba(0, 30, 255, 0.35) !important;
+}
+
+.btn-uiverse-menezes span.light-line {
+  position: absolute;
+  pointer-events: none;
+}
+
+.btn-uiverse-menezes span.light-line:nth-child(1) {
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ae00ff);
+}
+
+.btn-uiverse-menezes:hover span.light-line:nth-child(1),
+.btn-uiverse-menezes-active span.light-line:nth-child(1) {
+  left: 100%;
+  transition: 0.7s;
+}
+
+.btn-uiverse-menezes span.light-line:nth-child(2) {
+  top: -100%;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, #ae00ff);
+}
+
+.btn-uiverse-menezes:hover span.light-line:nth-child(2),
+.btn-uiverse-menezes-active span.light-line:nth-child(2) {
+  top: 100%;
+  transition: 0.7s;
+  transition-delay: 0.17s;
+}
+
+.btn-uiverse-menezes span.light-line:nth-child(3) {
+  bottom: 0;
+  right: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #001eff);
+}
+
+.btn-uiverse-menezes:hover span.light-line:nth-child(3),
+.btn-uiverse-menezes-active span.light-line:nth-child(3) {
+  right: 100%;
+  transition: 0.7s;
+  transition-delay: 0.35s;
+}
+
+.btn-uiverse-menezes span.light-line:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, #001eff);
+}
+
+.btn-uiverse-menezes:hover span.light-line:nth-child(4),
+.btn-uiverse-menezes-active span.light-line:nth-child(4) {
+  bottom: 100%;
+  transition: 0.7s;
+  transition-delay: 0.52s;
+}
+
+.btn-uiverse-menezes:active {
+  background: linear-gradient(to top right, #ae00af, #001eff);
+  color: #bfbfbf;
+  box-shadow: 0 0 8px #ae00ff, 0 0 8px #001eff;
+}
+
+/* 10. UIVERSE CART SLIDE BUTTON (From Uiverse.io by Df12345677) */
+.btn-uiverse-df-cart {
+  position: relative;
+  background-color: #132233;
+  border: 1.5px solid rgba(96, 165, 250, 0.35);
+  color: #eee;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-uiverse-df-cart span {
+  display: inline-block;
+  transform: translateX(0);
+  transition: transform 0.4s ease, font-size 0.4s ease, opacity 0.4s ease;
+  white-space: nowrap;
+}
+
+.btn-uiverse-df-cart svg {
+  position: absolute;
+  left: 50%;
+  transform: translate(-200px, 0);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+  z-index: 3;
+  opacity: 0;
+}
+
+.btn-uiverse-df-cart:hover {
+  background-color: rgba(30, 58, 138, 0.7);
+  border-color: rgba(147, 197, 253, 0.8);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.45);
+}
+
+.btn-uiverse-df-cart:hover svg {
+  transform: translate(-50%, 0);
+  opacity: 1;
+}
+
+.btn-uiverse-df-cart:hover span {
+  transform: translateY(45px);
+  opacity: 0;
+  font-size: 0.1rem;
+}
+
+.btn-uiverse-df-cart:active {
+  transform: scale(0.96);
+}
+
+/* 11. UIVERSE GREEN SLIDING GRADIENT BUTTON (From Uiverse.io by tranphattrien) */
+.btn-uiverse-tranphattrien {
+  background-color: #050b07;
+  border: 1px solid rgba(0, 155, 73, 0.4);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-uiverse-tranphattrien::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #009b49, rgb(105, 184, 141));
+  transition: all 0.5s ease-in-out;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.btn-uiverse-tranphattrien:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 155, 73, 0.45);
+  border-color: rgba(105, 184, 141, 0.8);
+}
+
+.btn-uiverse-tranphattrien:hover::before {
+  left: 0;
+}
+
+.btn-uiverse-tranphattrien:active {
+  transform: scale(0.98);
+}
+
+/* 12. UIVERSE LOGOUT EXPANDING BUTTON (From Uiverse.io by TomMussard) */
+.btn-uiverse-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+  background-color: #ef4444;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.btn-uiverse-logout .logout-sign {
+  width: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-uiverse-logout .logout-sign svg {
+  width: 18px;
+  height: 18px;
+  color: white;
+}
+
+.btn-uiverse-logout .logout-text {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  text-align: center;
+}
+
+.btn-uiverse-logout:hover {
+  width: 125px;
+  border-radius: 30px;
+  background-color: #dc2626;
+  box-shadow: 0 6px 22px rgba(220, 38, 38, 0.55);
+}
+
+.btn-uiverse-logout:hover .logout-sign {
+  width: 32%;
+  padding-left: 12px;
+  justify-content: flex-start;
+}
+
+.btn-uiverse-logout:hover .logout-text {
+  opacity: 1;
+  width: 68%;
+  padding-right: 12px;
+}
+
+.btn-uiverse-logout:active {
+  transform: scale(0.95) translate(2px, 2px);
+}
+
+/* 13. UIVERSE MOHSINECH CURVED FILL BUTTON (From Uiverse.io by Mohsinech) */
+.btn-uiverse-mohsinech {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(100, 116, 139, 0.4);
+  outline: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transform: scaleX(1);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+}
+
+.btn-uiverse-mohsinech:hover {
+  animation: animate-mohsinech-scaleX 0.6s cubic-bezier(0.4, 0, 0, 1);
+  border-color: rgba(59, 130, 246, 0.8);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.35);
+}
+
+.btn-uiverse-mohsinech::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0, 1), border-radius 0.5s cubic-bezier(0.4, 0, 0, 1);
+  width: 100%;
+  height: 100%;
+  border-radius: 50% 50% 0 0;
+  transform: translateY(100%);
+  z-index: 1;
+}
+
+.btn-uiverse-mohsinech:hover::after {
+  transform: translateY(0%);
+  border-radius: 0;
+}
+
+.btn-uiverse-mohsinech span {
+  font-weight: 600;
+  overflow: hidden;
+  position: relative;
+  color: #cbd5e1;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.btn-uiverse-mohsinech span:after {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0, 1);
+  content: attr(data-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 3;
+  transform: translate(-50%, 100%);
+  color: #ffffff;
+}
+
+.btn-uiverse-mohsinech:hover span {
+  color: transparent;
+}
+
+.btn-uiverse-mohsinech:hover span:after {
+  transform: translate(-50%, 0);
+}
+
+.btn-uiverse-mohsinech:active {
+  transform: scale(0.96);
+}
+
+@keyframes animate-mohsinech-scaleX {
+  0% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(1.05);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* 14. UIVERSE GOHAR_7145 ANIMATED OUTLINE NAVBAR (From Uiverse.io by gohar_7145) */
+.gohar-nav {
+  position: relative;
+  border-radius: 40px;
+  display: inline-flex;
+}
+
+.gohar-container {
+  position: relative;
+  background: rgba(16, 16, 16, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.35em 0.5em;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gohar-outline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+.gohar-rect {
+  stroke-dashoffset: 5;
+  stroke-dasharray: 0 0 10 40 10 40;
+  transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke: #e4ae0b;
+}
+
+.gohar-container:hover .gohar-outline .gohar-rect {
+  transition: 999999s;
+  stroke-dashoffset: 1;
+  stroke-dasharray: 0;
+}
+
+.gohar-btn {
+  padding: 0.5em 1.25em;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  z-index: 2;
+  position: relative;
+}
+
+.gohar-btn:hover {
+  background: #e4ae0b;
+  color: #000000 !important;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(228, 174, 11, 0.4);
+}
+
+.gohar-btn:hover svg {
+  color: #000000 !important;
+}
+
+.gohar-btn-active {
+  background: #e4ae0b;
+  color: #000000 !important;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(228, 174, 11, 0.45);
+}
+
+.gohar-btn-active svg {
+  color: #000000 !important;
+}
+
+.gohar-btn:nth-child(1):hover ~ svg .gohar-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 2 8 73.3 8 10.7;
+}
+
+.gohar-btn:nth-child(2):hover ~ svg .gohar-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 12.6 9.5 49.3 9.5 31.6;
+}
+
+.gohar-btn:nth-child(3):hover ~ svg .gohar-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 24.5 8.5 27.5 8.5 55.5;
+}
+
+.gohar-btn:nth-child(4):hover ~ svg .gohar-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 34.7 6.9 10.2 6.9 76;
+}
+
+.gohar-btn:hover ~ .gohar-outline .gohar-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 0 10 40 10 40;
+  transition: 0.5s !important;
+}
+
+/* 15. UIVERSE TELEGRAM EXPANDING ROTATE BUTTON (From Uiverse.io by fanishah) */
+.btn-uiverse-telegram {
+  font-family: inherit;
+  background: #2CA0D9;
+  color: #ffffff;
+  padding: 0.35em 0;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.8em;
+  letter-spacing: 0.04em;
+  position: relative;
+  display: inline-flex;
+  align-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: 2.6em;
+  padding-left: 2.8em;
+  padding-right: 1em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 15px rgba(44, 160, 217, 0.35);
+}
+
+.btn-uiverse-telegram .telegram-icon {
+  background: #ffffff;
+  height: 2em;
+  width: 2em;
+  border-radius: 2em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 0.35em;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-uiverse-telegram .telegram-icon svg {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #2CA0D9;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.btn-uiverse-telegram:hover .telegram-icon svg,
+.group:hover .btn-uiverse-telegram .telegram-icon svg {
+  transform: rotate(360deg);
+}
+
+.btn-uiverse-telegram:hover .telegram-icon,
+.group:hover .btn-uiverse-telegram .telegram-icon {
+  width: calc(100% - 0.7rem);
+  border-radius: 0.6em;
+}
+
+.btn-uiverse-telegram-purple {
+  background: #8b5cf6;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+}
+
+.btn-uiverse-telegram:active {
+  transform: scale(0.96);
+}
+
+/* 16. UIVERSE SPLIT CURTAIN SLIDE BUTTON (From Uiverse.io by Kemboi-Dun) */
+.btn-uiverse-split-curtain {
+  text-decoration: none;
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  overflow: hidden;
+  position: relative;
+  transition: color 0.5s 0.25s, border-color 0.4s ease, box-shadow 0.4s ease;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.btn-uiverse-split-curtain::before,
+.btn-uiverse-split-curtain::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  z-index: -1;
+  transform: scaleX(0);
+  transition: transform 0.5s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+.btn-uiverse-split-curtain::before {
+  left: 0;
+  transform-origin: left;
+}
+
+.btn-uiverse-split-curtain::after {
+  right: 0;
+  transform-origin: right;
+}
+
+.btn-uiverse-split-curtain:hover::before,
+.btn-uiverse-split-curtain:hover::after {
+  transform: scaleX(1);
+}
+
+.btn-uiverse-split-curtain:hover {
+  color: #ffffff;
+  border-color: rgba(147, 197, 253, 0.8);
+  box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);
+  transition-delay: 0.2s;
+}
+
+.btn-uiverse-split-curtain:active {
+  transform: scale(0.98);
+}
+
+/* 17. UIVERSE SELF_MADE_SYSTEM CATEGORY TABS WITH ANIMATED DASH OUTLINE (From Uiverse.io by SelfMadeSystem) */
+.selfmade-nav {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  border-radius: 20px;
+}
+
+.selfmade-container {
+  position: relative;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4em 0.6em;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+}
+
+.selfmade-outline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+.selfmade-rect {
+  stroke-dashoffset: 5;
+  stroke-dasharray: 0 0 10 40 10 40;
+  transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke: #38bdf8;
+}
+
+.selfmade-container:hover .selfmade-outline .selfmade-rect {
+  transition: 999999s;
+  stroke-dashoffset: 1;
+  stroke-dasharray: 0;
+}
+
+.selfmade-btn {
+  padding: 0.55em 1.1em;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  background: transparent;
+  border: none;
+  z-index: 2;
+  position: relative;
+}
+
+.selfmade-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+.selfmade-btn-active {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(2, 132, 199, 0.4) !important;
+}
+
+.selfmade-btn:nth-child(1):hover ~ svg .selfmade-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 2 8 73.3 8 10.7;
+}
+
+.selfmade-btn:nth-child(2):hover ~ svg .selfmade-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 12.6 9.5 49.3 9.5 31.6;
+}
+
+.selfmade-btn:nth-child(3):hover ~ svg .selfmade-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 24.5 8.5 27.5 8.5 55.5;
+}
+
+.selfmade-btn:nth-child(4):hover ~ svg .selfmade-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 34.7 6.9 10.2 6.9 76;
+}
+
+.selfmade-btn:nth-child(5):hover ~ svg .selfmade-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 45 6.9 10.2 6.9 85;
+}
+
+.selfmade-btn:hover ~ .selfmade-outline .selfmade-rect {
+  stroke-dashoffset: 0;
+  stroke-dasharray: 0 0 10 40 10 40;
+  transition: 0.5s !important;
+}
+
+/* 18. UIVERSE GHARSH11032000 CATEGORY CARD GRADIENT SLIDE (From Uiverse.io by gharsh11032000) */
+.card-uiverse-gharsh {
+  position: relative;
+  background-color: rgba(15, 23, 42, 0.85);
+  color: #e8e8e8;
+  border-radius: 18px;
+  border: 1px solid rgba(51, 65, 85, 0.7);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.card-uiverse-gharsh::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(123, 67, 151, 0.28), rgba(220, 36, 48, 0.28));
+  transform: translate(-100%, 0%);
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  z-index: -1;
+}
+
+.card-uiverse-gharsh:hover::before {
+  transform: translate(0%, 0%);
+}
+
+.card-uiverse-gharsh:hover {
+  border-color: rgba(123, 67, 151, 0.65);
+  box-shadow: 0 10px 30px -5px rgba(123, 67, 151, 0.4), 0 0 20px rgba(220, 36, 48, 0.25);
+  transform: translateY(-3px);
+}
+
+.card-uiverse-gharsh:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* UIVERSE XUEYUANTAN - Neumorphic Gradient Fill Button */
+.btn-uiverse-xueyuantan {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  border: none;
+  border-radius: 30em;
+  background: rgba(30, 30, 40, 0.8);
+  color: #ffffff;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.4),
+              -6px -6px 12px rgba(60, 60, 80, 0.15);
+  transition: color 0.4s ease, box-shadow 0.3s ease;
+}
+
+.btn-uiverse-xueyuantan::before {
+  content: '';
+  width: 0;
+  height: 100%;
+  border-radius: 30em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
+  transition: width 0.5s ease;
+  display: block;
+  z-index: -1;
+}
+
+.btn-uiverse-xueyuantan:hover {
+  color: #0a0a0a;
+  box-shadow: 6px 6px 18px rgba(15, 216, 80, 0.25),
+              -6px -6px 18px rgba(249, 240, 71, 0.15);
+}
+
+.btn-uiverse-xueyuantan:hover::before {
+  width: 100%;
+}
+
+.btn-uiverse-xueyuantan:active {
+  transform: scale(0.97);
+}
+
+/* UIVERSE BTN-76 - Neon Border Trace Animation (by Kenny10000) */
+.btn-neon-76 {
+  -webkit-tap-highlight-color: transparent;
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+  text-transform: uppercase;
+  outline: 3px solid #fff;
+  outline-offset: -3px;
+  overflow: hidden;
+  position: relative;
+  transition: 0.2s linear 0.1s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  z-index: 1;
+}
+
+.btn-neon-76:hover {
+  background: var(--neon, #0ea5e9);
+  box-shadow: 0 0 5px var(--neon, #0ea5e9), 0 0 25px var(--neon, #0ea5e9), 0 0 50px var(--neon, #0ea5e9),
+    0 0 100px var(--neon, #0ea5e9);
+  color: #fff;
+  outline-color: transparent;
+  transition: 0.2s linear 0.6s;
+}
+
+.btn-neon-76 .neon-edge {
+  display: block;
+  inset: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.btn-neon-76 .neon-edge.top {
+  border-top: 3px solid var(--neon, #0ea5e9);
+  opacity: 0;
+  transform: translateX(calc(-100% + var(--progress, 0%)));
+  transition: none;
+}
+
+.btn-neon-76:hover .neon-edge.top {
+  --progress: 100%;
+  opacity: 1;
+  transition: transform 0.2s linear;
+}
+
+.btn-neon-76 .neon-edge.right {
+  border-right: 3px solid var(--neon, #0ea5e9);
+  opacity: 0;
+  transform: translateY(calc(-100% + var(--progress, 0%)));
+  transition: none;
+}
+
+.btn-neon-76:hover .neon-edge.right {
+  --progress: 100%;
+  opacity: 1;
+  transition: transform 0.2s linear 0.2s;
+}
+
+.btn-neon-76 .neon-edge.bottom {
+  border-bottom: 3px solid var(--neon, #0ea5e9);
+  opacity: 0;
+  transform: translateX(calc(100% - var(--progress, 0%)));
+  transition: none;
+}
+
+.btn-neon-76:hover .neon-edge.bottom {
+  --progress: 100%;
+  opacity: 1;
+  transition: transform 0.2s linear 0.4s;
+}
+
+.btn-neon-76 .neon-edge.left {
+  border-left: 3px solid var(--neon, #0ea5e9);
+  opacity: 0;
+  transform: translateY(calc(100% - var(--progress, 0%)));
+  transition: none;
+}
+
+.btn-neon-76:hover .neon-edge.left {
+  --progress: 100%;
+  opacity: 1;
+  transition: transform 0.2s linear 0.6s;
+}
+
+/* UIVERSE LAKSHAY-ART - Animated Conic-Gradient Search Input */
+.search-lakshay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.search-lakshay .search-input {
+  background-color: #010201;
+  border: none;
+  width: 100%;
+  height: 56px;
+  border-radius: 12px;
+  color: white;
+  padding-left: 52px;
+  padding-right: 44px;
+  font-size: 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.search-lakshay .search-input::placeholder {
+  color: #c0b9c0;
+}
+
+.search-lakshay .search-input:focus {
+  outline: none;
+}
+
+/* Border layers */
+.search-lakshay .border-glow,
+.search-lakshay .border-dark,
+.search-lakshay .border-white,
+.search-lakshay .border-outer-glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 12px;
+  filter: blur(3px);
+}
+
+.search-lakshay .border-white {
+  inset: 3px;
+  border-radius: 10px;
+  filter: blur(2px);
+}
+
+.search-lakshay .border-glow {
+  inset: 2px;
+  border-radius: 11px;
+  filter: blur(0.5px);
+}
+
+.search-lakshay .border-outer-glow {
+  inset: -8px;
+  filter: blur(30px);
+  opacity: 0.4;
+  border-radius: 16px;
+}
+
+/* Rotating conic gradient for all layers */
+.search-lakshay .border-white::before {
+  content: "";
+  z-index: -2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(83deg);
+  width: 600px;
+  height: 600px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  filter: brightness(1.4);
+  background-image: conic-gradient(
+    rgba(0, 0, 0, 0) 0%,
+    #a099d8,
+    rgba(0, 0, 0, 0) 8%,
+    rgba(0, 0, 0, 0) 50%,
+    #dfa2da,
+    rgba(0, 0, 0, 0) 58%
+  );
+  transition: all 2s;
+}
+
+.search-lakshay .border-glow::before {
+  content: "";
+  z-index: -2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(70deg);
+  width: 600px;
+  height: 600px;
+  filter: brightness(1.3);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: conic-gradient(
+    #1c191c,
+    #402fb5 5%,
+    #1c191c 14%,
+    #1c191c 50%,
+    #cf30aa 60%,
+    #1c191c 64%
+  );
+  transition: all 2s;
+}
+
+.search-lakshay .border-dark::before {
+  content: "";
+  z-index: -2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(82deg);
+  width: 600px;
+  height: 600px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: conic-gradient(
+    rgba(0, 0, 0, 0),
+    #18116a,
+    rgba(0, 0, 0, 0) 10%,
+    rgba(0, 0, 0, 0) 50%,
+    #6e1b60,
+    rgba(0, 0, 0, 0) 60%
+  );
+  transition: all 2s;
+}
+
+.search-lakshay .border-outer-glow::before {
+  content: "";
+  z-index: -2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(60deg);
+  width: 999px;
+  height: 999px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-image: conic-gradient(
+    #000,
+    #402fb5 5%,
+    #000 38%,
+    #000 50%,
+    #cf30aa 60%,
+    #000 87%
+  );
+  transition: all 2s;
+}
+
+/* Hover rotation */
+.search-lakshay:hover .border-dark::before {
+  transform: translate(-50%, -50%) rotate(-98deg);
+}
+.search-lakshay:hover .border-outer-glow::before {
+  transform: translate(-50%, -50%) rotate(-120deg);
+}
+.search-lakshay:hover .border-white::before {
+  transform: translate(-50%, -50%) rotate(-97deg);
+}
+.search-lakshay:hover .border-glow::before {
+  transform: translate(-50%, -50%) rotate(-110deg);
+}
+
+/* Focus-within rotation (full spin) */
+.search-lakshay:focus-within .border-dark::before {
+  transform: translate(-50%, -50%) rotate(442deg);
+  transition: all 4s;
+}
+.search-lakshay:focus-within .border-outer-glow::before {
+  transform: translate(-50%, -50%) rotate(420deg);
+  transition: all 4s;
+}
+.search-lakshay:focus-within .border-white::before {
+  transform: translate(-50%, -50%) rotate(443deg);
+  transition: all 4s;
+}
+.search-lakshay:focus-within .border-glow::before {
+  transform: translate(-50%, -50%) rotate(430deg);
+  transition: all 4s;
+}
+
+/* Pink mask glow */
+.search-lakshay .pink-mask {
+  pointer-events: none;
+  width: 30px;
+  height: 20px;
+  position: absolute;
+  background: #cf30aa;
+  top: 10px;
+  left: 8px;
+  filter: blur(20px);
+  opacity: 0.8;
+  transition: all 2s;
+  z-index: 3;
+}
+
+.search-lakshay:hover .pink-mask {
+  opacity: 0;
+}
+
+/* Search icon positioning */
+.search-lakshay .search-icon-wrap {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  color: #c0b9c0;
+  pointer-events: none;
+}
+
+/* UIVERSE JKHUGER - Animated Input with Floating Label (Dark Theme) */
+.input-jkhuger {
+  position: relative;
+  width: 100%;
+}
+
+.input-jkhuger input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  background: transparent;
+  border-left: 2px solid rgba(139, 92, 246, 0.5);
+  border-bottom: 2px solid rgba(139, 92, 246, 0.5);
+  transition: 0.3s;
+  border-bottom-left-radius: 8px;
+}
+
+.input-jkhuger input::placeholder {
+  color: transparent;
+}
+
+.input-jkhuger .input-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(2px);
+  margin-left: 36px;
+  padding: 10px 8px;
+  pointer-events: none;
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  transition: 0.5s;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.input-jkhuger input:focus ~ .input-label,
+.input-jkhuger input:not(:placeholder-shown) ~ .input-label {
+  transform: translateX(calc(100% - 20px)) translateY(-12px);
+  font-size: 0.7em;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  letter-spacing: 0.15em;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.input-jkhuger input:focus,
+.input-jkhuger input:not(:placeholder-shown) {
+  border: 2px solid rgba(139, 92, 246, 0.6);
+  border-radius: 8px;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.input-jkhuger .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8b5cf6;
+  pointer-events: none;
+  transition: 0.3s;
+  z-index: 2;
+}
+
+.input-jkhuger input:focus ~ .input-icon {
+  color: #a78bfa;
+}
+
+/* GOOGLE AUTH BUTTON */
+.btn-google-auth {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.85rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #f1f5f9;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.btn-google-auth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.15), rgba(234, 67, 53, 0.15), rgba(251, 188, 5, 0.15), rgba(52, 168, 83, 0.15));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  border-radius: inherit;
+}
+
+.btn-google-auth:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(66, 133, 244, 0.3), 0 0 20px -2px rgba(234, 67, 53, 0.2);
+  color: #ffffff;
+}
+
+.btn-google-auth:hover::before {
+  opacity: 1;
+}
+
+.btn-google-auth:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* UIVERSE BTN-53 (By doniaskima) - Drop Letter Animation Navbar Item */
+.nav-btn-53 {
+  -webkit-tap-highlight-color: transparent;
+  background-color: #0b0f19;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1.5;
+  margin: 0;
+  -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  overflow: hidden;
+  padding: 0.45rem 1.15rem;
+  position: relative;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  height: 38px;
+  min-width: 105px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+}
+
+.nav-btn-53:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+}
+
+.nav-btn-53 .original {
+  background: #111827;
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  inset: 0;
+  position: absolute;
+  transition: transform 0.25s cubic-bezier(0.87, 0, 0.13, 1);
+  border-radius: 999px;
+  z-index: 2;
+}
+
+.nav-btn-53:hover .original {
+  transform: translateY(100%);
+}
+
+.nav-btn-53.nav-btn-53-active .original {
+  background: #ffffff;
+  color: #09090b;
+  font-weight: 900;
+}
+
+.nav-btn-53.nav-btn-53-active {
+  border-color: #ffffff;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
+}
+
+.nav-btn-53 .letters {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5px;
+  color: #38bdf8;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.nav-btn-53 span.letter {
+  opacity: 0;
+  transform: translateY(-15px);
+  transition: transform 0.2s cubic-bezier(0.87, 0, 0.13, 1), opacity 0.2s;
+  display: inline-block;
+}
+
+.nav-btn-53 span.letter:nth-child(2n) {
+  transform: translateY(15px);
+}
+
+.nav-btn-53:hover span.letter {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav-btn-53:hover span.letter:nth-child(1) { transition-delay: 0.05s; }
+.nav-btn-53:hover span.letter:nth-child(2) { transition-delay: 0.1s; }
+.nav-btn-53:hover span.letter:nth-child(3) { transition-delay: 0.15s; }
+.nav-btn-53:hover span.letter:nth-child(4) { transition-delay: 0.2s; }
+.nav-btn-53:hover span.letter:nth-child(5) { transition-delay: 0.25s; }
+.nav-btn-53:hover span.letter:nth-child(6) { transition-delay: 0.3s; }
+.nav-btn-53:hover span.letter:nth-child(7) { transition-delay: 0.35s; }
+.nav-btn-53:hover span.letter:nth-child(8) { transition-delay: 0.4s; }
+.nav-btn-53:hover span.letter:nth-child(9) { transition-delay: 0.45s; }
+.nav-btn-53:hover span.letter:nth-child(10) { transition-delay: 0.5s; }
+
+/* UIVERSE MARQUEE SLIDER - Continuous Infinite Flow (By barisdogansutcu) */
+.hero-marquee-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  z-index: 0;
+}
+
+.hero-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: max-content;
+  height: 100%;
+  animation: hero-marquee-flow 32s linear infinite;
+  will-change: transform;
+}
+
+.hero-marquee-container:hover .hero-marquee-track {
+  animation-play-state: paused;
+}
+
+.hero-marquee-slide {
+  flex-shrink: 0;
+  width: 750px;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .hero-marquee-slide {
+    width: 950px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-marquee-slide {
+    width: 1150px;
+  }
+}
+
+.hero-marquee-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s ease;
+}
+
+.hero-marquee-slide:hover img {
+  transform: scale(1.03);
+}
+
+@keyframes hero-marquee-flow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* UIVERSE DERI-KURNIAWAN - Sweep Gradient Slide Tab */
+.btn-uiverse-deri {
+  position: relative;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #cbd5e1;
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn-uiverse-deri::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #007bff, #00bfff);
+  transition: all 0.65s ease-in-out;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+.btn-uiverse-deri:hover {
+  transform: scale(1.02);
+  color: #ffffff;
+  border-color: rgba(0, 191, 255, 0.5);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+}
+
+.btn-uiverse-deri:hover::before {
+  right: 0%;
+}
+
+.btn-uiverse-deri:active {
+  transform: scale(0.97);
+}
+
+.btn-uiverse-deri.btn-uiverse-deri-active {
+  background: linear-gradient(135deg, #007bff 0%, #00bfff 100%);
+  color: #ffffff;
+  border-color: #00bfff;
+  box-shadow: 0 0 20px rgba(0, 191, 255, 0.45);
+}
+
+.btn-uiverse-deri.btn-uiverse-deri-active::before {
+  display: none;
+}
+
+/* UIVERSE BTN-5 (By doniaskima) - Polygon Arrow Sweep Button */
+.btn-5 {
+  -webkit-tap-highlight-color: transparent;
+  background-color: #0b0f19;
+  color: #f1f5f9;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.5;
+  margin: 0;
+  -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 99rem;
+  overflow: hidden;
+  padding: 0.6rem 1.15rem;
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+
+.btn-5 span {
+  position: relative;
+  z-index: 2;
+  transition: color 0.25s ease;
+}
+
+.btn-5 .counter-badge {
+  position: relative;
+  z-index: 2;
+  font-family: monospace;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  transition: all 0.25s ease;
+}
+
+.btn-5:before {
+  --tilt: 1.2rem;
+  background: #ffffff;
+  -webkit-clip-path: polygon(
+    0 0,
+    calc(100% - var(--tilt)) 0,
+    100% 50%,
+    calc(100% - var(--tilt)) 100%,
+    0 100%
+  );
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--tilt)) 0,
+    100% 50%,
+    calc(100% - var(--tilt)) 100%,
+    0 100%
+  );
+  content: "";
+  display: block;
+  height: 100%;
+  left: calc(-100% - var(--tilt));
+  position: absolute;
+  top: 0;
+  transform: translateX(var(--progress, 0));
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  width: calc(100% + var(--tilt) + 8px);
+  z-index: 1;
+}
+
+.btn-5:hover:before {
+  --progress: calc(100% + var(--tilt) + 8px);
+}
+
+.btn-5:hover {
+  border-color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+}
+
+.btn-5:hover span {
+  color: #000000 !important;
+}
+
+.btn-5:hover .counter-badge {
+  background: rgba(0, 0, 0, 0.2);
+  color: #000000 !important;
+  font-weight: 800;
+}
+
+.btn-5.btn-5-active {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.4);
+  font-weight: 900;
+}
+
+.btn-5.btn-5-active:before {
+  display: none;
+}
+
+.btn-5.btn-5-active span {
+  color: #000000 !important;
+}
+
+.btn-5.btn-5-active .counter-badge {
+  background: rgba(0, 0, 0, 0.15);
+  color: #000000 !important;
+  font-weight: 900;
+}
+
+/* UIVERSE GOOGLE WAVE HOVER (By csozidev) - Color Ripples */
+.btn-uiverse-google-wave {
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 12.5px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  outline: none;
+  background-color: transparent;
+  color: #cbd5e1;
+  transition: all 0.25s ease;
+  width: 100%;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-uiverse-google-wave .nav-icon {
+  z-index: 6;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, color 0.25s ease;
+  color: #60a5fa;
+}
+
+.btn-uiverse-google-wave .nav-text {
+  z-index: 10;
+  position: relative;
+  transition: color 0.25s ease;
+}
+
+.btn-uiverse-google-wave:hover {
+  transform: translateX(4px);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+}
+
+.btn-uiverse-google-wave:hover .nav-text {
+  color: #ffffff;
+}
+
+.btn-uiverse-google-wave:hover .nav-icon {
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
+.btn-uiverse-google-wave:hover::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 9%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  opacity: 0;
+  border-radius: 300px;
+  animation: google-wave1 2.4s ease-in-out forwards;
+}
+
+.btn-uiverse-google-wave:hover::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 9%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  opacity: 0;
+  border-radius: 300px;
+  animation: google-wave2 2.4s ease-in-out forwards;
+}
+
+@keyframes google-wave1 {
+  0% {
+    z-index: 1;
+    background: #EB4335;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  1% {
+    z-index: 1;
+    background: #EB4335;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  25% {
+    z-index: 1;
+    background: #EB4335;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  26% {
+    z-index: 3;
+    background: #34A853;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  50% {
+    z-index: 3;
+    background: #34A853;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  70% {
+    z-index: 3;
+    background: #34A853;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  100% {
+    z-index: 3;
+    background: #34A853;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+}
+
+@keyframes google-wave2 {
+  0% {
+    z-index: 2;
+    background: #FBBC05;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  11% {
+    z-index: 2;
+    background: #FBBC05;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  35% {
+    z-index: 2;
+    background: #FBBC05;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  39% {
+    z-index: 2;
+    background: #FBBC05;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  40% {
+    z-index: 4;
+    background: #4285F4;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  64% {
+    z-index: 4;
+    background: #4285F4;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+  100% {
+    z-index: 4;
+    background: #4285F4;
+    width: 600px;
+    height: 600px;
+    opacity: 1;
+  }
+}
+
+.btn-uiverse-google-wave.btn-uiverse-google-active {
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #ffffff;
+  border-color: #60a5fa;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.45);
+}
+
+.btn-uiverse-google-wave.btn-uiverse-google-active .nav-icon {
+  color: #ffffff;
+}
+
+.btn-uiverse-google-wave.btn-uiverse-google-active::before,
+.btn-uiverse-google-wave.btn-uiverse-google-active::after {
+  display: none;
+}
+
+/* From Uiverse.io by Remon125 - Custom 4-Layer Sliding Wave */
+.btn-uiverse-remon125 {
+  padding: 7px 15px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  z-index: 1;
+  text-decoration: none;
+}
+
+.btn-uiverse-remon125.w-full {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-uiverse-remon125:hover {
+  transform: translateY(-1px);
+}
+
+.btn-uiverse-remon125 span.bg-layer {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 26%;
+}
+
+.btn-uiverse-remon125 span.bg-layer:nth-child(1) {
+  top: -100%;
+  left: 0;
+  right: 0;
+}
+.btn-uiverse-remon125:hover span.bg-layer:nth-child(1) {
+  top: 0;
+}
+
+.btn-uiverse-remon125 span.bg-layer:nth-child(2) {
+  top: 25%;
+  right: 100%;
+}
+.btn-uiverse-remon125:hover span.bg-layer:nth-child(2) {
+  right: 0;
+}
+
+.btn-uiverse-remon125 span.bg-layer:nth-child(3) {
+  top: 50%;
+  left: 100%;
+  right: 0;
+}
+.btn-uiverse-remon125:hover span.bg-layer:nth-child(3) {
+  left: 0;
+}
+
+.btn-uiverse-remon125 span.bg-layer:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+}
+.btn-uiverse-remon125:hover span.bg-layer:nth-child(4) {
+  bottom: 0;
+}
+
+/* Purple Variant (Admin) */
+.btn-uiverse-remon125-purple {
+  background: rgba(147, 51, 234, 0.12);
+  border: 1.5px solid #a855f7;
+  color: #e9d5ff;
+  box-shadow: 0 2px 10px rgba(168, 85, 247, 0.15);
+}
+.btn-uiverse-remon125-purple:hover {
+  color: #0c071e;
+  border-color: #d8b4fe;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+}
+.btn-uiverse-remon125-purple span.bg-layer {
+  background: linear-gradient(90deg, #d8b4fe, #a855f7, #c084fc);
+}
+
+/* Cyan / Blue Variant (Login) */
+.btn-uiverse-remon125-cyan {
+  background: rgba(14, 165, 233, 0.1);
+  border: 1.5px solid #0ea5e9;
+  color: #e0f2fe;
+  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.15);
+}
+.btn-uiverse-remon125-cyan:hover {
+  color: #031728;
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+}
+.btn-uiverse-remon125-cyan span.bg-layer {
+  background: linear-gradient(90deg, #7dd3fc, #38bdf8, #0ea5e9);
+}
+
+/* Electric Indigo Variant (Register) */
+.btn-uiverse-remon125-blue {
+  background: rgba(99, 102, 241, 0.14);
+  border: 1.5px solid #6366f1;
+  color: #e0e7ff;
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.18);
+}
+.btn-uiverse-remon125-blue:hover {
+  color: #070913;
+  border-color: #a5b4fc;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.55);
+}
+.btn-uiverse-remon125-blue span.bg-layer {
+  background: linear-gradient(90deg, #a5b4fc, #818cf8, #6366f1);
+}
+
+/* From Uiverse.io by gharsh11032000 */ 
+.animated-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 26px;
+  border: none;
+  font-size: 14px;
+  background-color: rgba(16, 185, 129, 0.15);
+  border-radius: 100px;
+  font-weight: 700;
+  color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.45);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+  text-decoration: none;
+}
+
+.animated-button span:last-child {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background-color: #10b981;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.320, 1);
+  z-index: 0;
+}
+
+.animated-button span:first-child {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.animated-button:hover {
+  box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.5);
+  color: #ffffff;
+}
+
+.animated-button:active {
+  transform: scale(0.95);
+}
+
+.animated-button:hover span:last-child {
+  width: 350px;
+  height: 350px;
+  opacity: 1;
+}
+
+/* From Uiverse.io by Uncannypotato69 - Smooth Gradient Mask Scrolling Ticker */
+.scrolling-ticker-wrapper {
+  min-height: 2.8rem;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 10%,
+    rgba(0, 0, 0, 1) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 1) 10%,
+    rgba(0, 0, 0, 1) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  display: flex;
+  align-items: center;
+}
+
+.scrolling-ticker-track {
+  display: flex;
+  white-space: nowrap;
+  gap: 3.5rem;
+  will-change: transform;
+  transform: translateZ(0);
+  animation: smooth-text-scroll 45s linear infinite;
+}
+
+.scrolling-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes smooth-text-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* From Uiverse.io by gharsh11032000 - Category Swipe Pill Button */
+.btn-uiverse-swipe-cat {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 16px;
+  color: #94a3b8;
+  background-color: rgba(15, 23, 42, 0.7);
+  border: 1.5px solid rgba(59, 130, 246, 0.25);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+  overflow: hidden;
+  text-align: left;
+}
+
+.btn-uiverse-swipe-cat::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  top: 0%;
+  left: -100%;
+  border-radius: inherit;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+  z-index: 0;
+}
+
+.btn-uiverse-swipe-cat span {
+  transition: all 0.5s;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-uiverse-swipe-cat .cat-name {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+
+.btn-uiverse-swipe-cat .cat-badge {
+  position: relative;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  transition: all 0.4s;
+}
+
+.btn-uiverse-swipe-cat:hover::before {
+  left: 0%;
+}
+
+.btn-uiverse-swipe-cat:hover {
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35);
+}
+
+.btn-uiverse-swipe-cat:hover .cat-badge {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.btn-uiverse-swipe-cat:active {
+  transform: scale(0.96);
+}
+
+/* Active / Selected State */
+.btn-uiverse-swipe-cat.active {
+  background: linear-gradient(135deg, #2563eb, #6366f1);
+  border-color: #60a5fa;
+  color: #ffffff;
+  box-shadow: 0 4px 25px rgba(37, 99, 235, 0.5);
+}
+
+.btn-uiverse-swipe-cat.active::before {
+  left: 0%;
+  background: linear-gradient(135deg, #2563eb, #6366f1);
+}
+
+.btn-uiverse-swipe-cat.active .cat-badge {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ==========================================
+   HERO CAROUSEL & MARQUEE TICKER STYLES
+   ========================================== */
+.scrolling-ticker-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.scrolling-ticker-track {
+  display: flex;
+  width: max-content;
+  gap: 3rem;
+  animation: hero-ticker-slide 35s linear infinite;
+}
+
+.scrolling-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes hero-ticker-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -140,9 +140,9 @@ export default function HeroBanner() {
   const currentSlide = slides[currentIndex] || slides[0] || DEFAULT_SLIDES[0];
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8 select-none">
+    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-4 sm:pb-8 select-none">
       {/* MAIN CAROUSEL CONTAINER */}
-      <div className="relative w-full min-h-[500px] sm:min-h-[540px] lg:min-h-[580px] rounded-3xl overflow-hidden border border-cyan-500/30 shadow-[0_0_60px_-15px_rgba(6,182,212,0.35)] flex items-center group bg-dark-950">
+      <div className="relative w-full min-h-[380px] sm:min-h-[500px] lg:min-h-[560px] rounded-2xl sm:rounded-3xl overflow-hidden border border-cyan-500/30 shadow-[0_0_50px_-15px_rgba(6,182,212,0.3)] flex items-center group bg-dark-950">
         {/* BACKGROUND SLIDES WITH INSTANT PRELOADED TRANSITIONS */}
         {slides.map((slide, idx) => (
           <div
@@ -164,47 +164,65 @@ export default function HeroBanner() {
         ))}
 
         {/* CINEMATIC GRADIENT OVERLAYS (Left dark for text, Right bright for art) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-dark-950/95 via-dark-950/50 to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark-950/90 via-transparent to-dark-950/30 pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-dark-950/95 via-dark-950/70 to-dark-950/30 sm:to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-transparent to-dark-950/40 pointer-events-none z-10" />
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/10 via-transparent to-purple-600/15 pointer-events-none z-10" />
 
         {/* FLOATING CONTENT OVER SLIDE */}
-        <div className="relative z-20 px-6 sm:px-10 lg:px-14 py-10 max-w-3xl space-y-6">
+        <div className="relative z-20 px-4 sm:px-10 lg:px-14 py-6 sm:py-10 max-w-3xl space-y-4 sm:space-y-6">
           {/* Top Glowing Store Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-purple-500/20 border border-cyan-400/40 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.25)]">
-            <span className="flex h-2 w-2 relative">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-purple-500/20 border border-cyan-400/40 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.25)]">
+            <span className="flex h-1.5 sm:h-2 w-1.5 sm:w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+              <span className="relative inline-flex rounded-full h-1.5 sm:h-2 w-1.5 sm:w-2 bg-cyan-500"></span>
             </span>
-            <span className="text-[11px] sm:text-xs font-bold text-cyan-300 tracking-wide uppercase">
-              {currentSlide.badge || '✨ ផ្លូវការ & ទំនុកចិត្តខ្ពស់ • 24/7 Auto Delivery'}
+            <span className="text-[10px] sm:text-xs font-bold text-cyan-300 tracking-wide uppercase truncate max-w-[240px] sm:max-w-none">
+              {currentSlide.badge || '✨ ផ្លូវការ & ទំនុកចិត្តខ្ពស់ • 24/7 Delivery'}
             </span>
           </div>
 
           {/* Main 3D Headline */}
           <div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] drop-shadow-2xl">
+            <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight sm:leading-[1.1] drop-shadow-2xl">
               <span className="bg-gradient-to-r from-white via-blue-200 to-cyan-300 bg-clip-text text-transparent filter drop-shadow-[0_4px_24px_rgba(56,189,248,0.4)]">
                 P-Two7 Store
               </span>
             </h1>
+            <p className="text-xs sm:text-base text-slate-300 mt-2 line-clamp-2 max-w-xl font-medium leading-relaxed">
+              {currentSlide.subtitle || 'Product Key ស្របច្បាប់ ១០០% ដំណើរការ Activate ពេញមួយជីវិត ផ្ញើជូនភ្លាមៗ 24/7។'}
+            </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-3.5 pt-1">
+          <div className="flex items-center gap-3 pt-1">
             <Link
               href="/products"
               prefetch={true}
-              className="btn-uiverse-buy px-8 py-4 rounded-2xl text-white font-black text-sm sm:text-base tracking-wide shadow-xl shadow-green-950/40 cursor-pointer"
+              className="btn-uiverse-buy px-6 sm:px-8 py-2.5 sm:py-4 rounded-xl sm:rounded-2xl text-white font-black text-xs sm:text-base tracking-wide shadow-xl shadow-green-950/40 cursor-pointer"
             >
-              <Zap className="w-5 h-5 text-green-400 animate-pulse" />
+              <Zap className="w-4 sm:w-5 h-4 sm:h-5 text-green-400 animate-pulse" />
               <span>{KHMER_TEXT.actions.buyNow}</span>
             </Link>
           </div>
 
-          {/* OPTION 4: LIVE COMMUNITY & TRUST STATS (3 GLASS COUNTER BADGES) */}
-          <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl">
-            {/* Stat 1: Customers Counter with Avatar Stack */}
+          {/* MOBILE COMPACT TRUST BAR (Clean 1-line on phones) */}
+          <div className="sm:hidden pt-2 flex items-center justify-between gap-1 text-[10px] text-slate-300 bg-dark-950/80 border border-slate-800/80 p-2.5 rounded-xl backdrop-blur-md">
+            <span className="flex items-center gap-1 font-bold text-white">
+              <span className="text-cyan-400">👥</span> 1,500+ នាក់
+            </span>
+            <span className="text-slate-600">•</span>
+            <span className="flex items-center gap-1 font-bold text-emerald-400">
+              <Zap className="w-3 h-3" /> &lt; 10 វិនាទី
+            </span>
+            <span className="text-slate-600">•</span>
+            <span className="flex items-center gap-1 font-bold text-amber-400">
+              <Star className="w-3 h-3 fill-amber-400" /> 4.9/5
+            </span>
+          </div>
+
+          {/* DESKTOP/TABLET GLASS STAT CARDS */}
+          <div className="hidden sm:grid pt-2 grid-cols-3 gap-3 max-w-2xl">
+            {/* Stat 1 */}
             <div className="p-3 rounded-2xl bg-dark-950/70 border border-slate-800/80 backdrop-blur-xl shadow-lg flex items-center gap-3 hover:border-cyan-500/40 transition-all">
               <div className="flex -space-x-2 shrink-0">
                 {CUSTOMER_AVATARS.map((src, i) => (
@@ -222,7 +240,7 @@ export default function HeroBanner() {
               </div>
             </div>
 
-            {/* Stat 2: Instant Auto Delivery Speed */}
+            {/* Stat 2 */}
             <div className="p-3 rounded-2xl bg-dark-950/70 border border-slate-800/80 backdrop-blur-xl shadow-lg flex items-center gap-3 hover:border-emerald-500/40 transition-all">
               <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
                 <Zap className="w-4 h-4 animate-pulse" />
@@ -233,7 +251,7 @@ export default function HeroBanner() {
               </div>
             </div>
 
-            {/* Stat 3: 4.9/5 Star Ratings */}
+            {/* Stat 3 */}
             <div className="p-3 rounded-2xl bg-dark-950/70 border border-slate-800/80 backdrop-blur-xl shadow-lg flex items-center gap-3 hover:border-amber-500/40 transition-all">
               <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
                 <Star className="w-4 h-4 fill-amber-400" />

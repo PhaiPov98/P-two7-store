@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { formatPrice, formatDateKhmer, KHMER_TEXT } from '@/lib/translations';
 
+import AdminSkeletonLoader from '@/components/admin/AdminSkeletonLoader';
+
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,16 +44,7 @@ export default function AdminDashboardPage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="h-20 bg-dark-900 rounded-2xl animate-pulse" />
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-32 bg-dark-900 rounded-2xl animate-pulse" />
-          ))}
-        </div>
-      </div>
-    );
+    return <AdminSkeletonLoader message="កំពុងផ្ទុកទិន្នន័យស្ថិតិ Dashboard..." />;
   }
 
   const statCards = [

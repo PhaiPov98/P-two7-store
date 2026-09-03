@@ -125,7 +125,13 @@ export async function DELETE(request: Request) {
       const fileIds = files.map((f) => f.id);
 
       if (fileIds.length > 0) {
+        // Unlink any products that might reference these files
+        await tx.product.updateMany({
+          where: { fileId: { in: fileIds } },
+          data: { fileId: null },
+        });
         await tx.download.deleteMany({ where: { fileId: { in: fileIds } } });
+        await tx.orderItem.deleteMany({ where: { fileId: { in: fileIds } } });
         await tx.file.deleteMany({ where: { id: { in: fileIds } } });
       }
 

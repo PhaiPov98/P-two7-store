@@ -101,18 +101,41 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Missing Category ID' }, { status: 400 });
     }
 
-    // Check if category has products
-    const productCount = await prisma.product.count({ where: { categoryId: id } });
-    if (productCount > 0) {
-      return NextResponse.json(
-        { error: `មិនអាចលុបបានទេ ពីព្រោះមាន ${productCount} ផលិតផលកំពុងប្រើប្រាស់ Category នេះ` },
-        { status: 400 }
-      );
-    }
+    // Safely clean up associated products, keys, reviews and files within a transaction
+    await prisma.$transaction(async (tx) => {
+      // 1. Find all products in this category
+      const products = await tx.product.findMany({
+        where: { categoryId: id },
+        select: { id: true },
+      });
+      const productIds = products.map((p) => p.id);
 
-    await prisma.category.delete({ where: { id } });
+      if (productIds.length > 0) {
+        // Delete related reviews and keys
+        await tx.review.deleteMany({ where: { productId: { in: productIds } } });
+        await tx.productKey.deleteMany({ where: { productId: { in: productIds } } });
+        await tx.product.deleteMany({ where: { id: { in: productIds } } });
+      }
+
+      // 2. Find all files in this category
+      const files = await tx.file.findMany({
+        where: { categoryId: id },
+        select: { id: true },
+      });
+      const fileIds = files.map((f) => f.id);
+
+      if (fileIds.length > 0) {
+        await tx.download.deleteMany({ where: { fileId: { in: fileIds } } });
+        await tx.file.deleteMany({ where: { id: { in: fileIds } } });
+      }
+
+      // 3. Delete the category itself
+      await tx.category.delete({ where: { id } });
+    });
+
     return NextResponse.json({ success: true, message: 'បានលុប Category ជោគជ័យ' });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Error deleting category:', error);
+    return NextResponse.json({ error: error.message || 'មិនអាចលុបបានទេ' }, { status: 500 });
   }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, KeyRound, Check, RefreshCw } from 'lucide-react';
+import { ShoppingBag, KeyRound, Check, RefreshCw, Trash2 } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 import { formatPrice, formatDateKhmer, KHMER_TEXT } from '@/lib/translations';
 
@@ -48,6 +48,26 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const handleDeleteOrder = async (orderId: string, orderNumber: string) => {
+    if (!confirm(`តើអ្នកពិតជាចង់លុបការបញ្ជាទិញ #${orderNumber} នេះមែនទេ?`)) return;
+
+    try {
+      const res = await fetch(`/api/admin/orders?id=${orderId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        success('បានលុបការបញ្ជាទិញជោគជ័យ!');
+        loadData();
+      } else {
+        error('បរាជ័យ', data.error || 'មិនអាចលុបបានទេ');
+      }
+    } catch (err) {
+      error('មានបញ្ហា', 'សូមព្យាយាមម្តងទៀត');
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
@@ -85,19 +105,28 @@ export default function AdminOrdersPage() {
                 <span className="text-slate-400 block text-[10px]">វិធីទូទាត់</span>
                 <span className="font-semibold text-purple-300">{ord.paymentMethod}</span>
               </div>
-              <div>
-                <span className="text-slate-400 block text-[10px]">ផ្លាស់ប្តូរ Status</span>
-                <select
-                  value={ord.orderStatus}
-                  onChange={(e) => handleStatusChange(ord.id, e.target.value)}
-                  className="bg-dark-850 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white"
+              <div className="flex items-center gap-2">
+                <div>
+                  <span className="text-slate-400 block text-[10px]">ផ្លាស់ប្តូរ Status</span>
+                  <select
+                    value={ord.orderStatus}
+                    onChange={(e) => handleStatusChange(ord.id, e.target.value)}
+                    className="bg-dark-850 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white"
+                  >
+                    <option value="PENDING">កំពុងរង់ចាំ (PENDING)</option>
+                    <option value="PROCESSING">កំពុងដំណើរការ (PROCESSING)</option>
+                    <option value="COMPLETED">បានបញ្ចប់ (COMPLETED)</option>
+                    <option value="CANCELLED">បានបោះបង់ (CANCELLED)</option>
+                    <option value="REFUNDED">បានសងប្រាក់ (REFUNDED)</option>
+                  </select>
+                </div>
+                <button
+                  onClick={() => handleDeleteOrder(ord.id, ord.orderNumber)}
+                  className="p-1.5 mt-3 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors"
+                  title="លុបការបញ្ជាទិញនេះ"
                 >
-                  <option value="PENDING">កំពុងរង់ចាំ (PENDING)</option>
-                  <option value="PROCESSING">កំពុងដំណើរការ (PROCESSING)</option>
-                  <option value="COMPLETED">បានបញ្ចប់ (COMPLETED)</option>
-                  <option value="CANCELLED">បានបោះបង់ (CANCELLED)</option>
-                  <option value="REFUNDED">បានសងប្រាក់ (REFUNDED)</option>
-                </select>
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
 

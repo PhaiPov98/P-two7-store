@@ -23,34 +23,32 @@ export default async function AccountDashboardPage() {
     redirect('/login?redirect=/account');
   }
 
-  // Fetch user data
-  const [orders, userKeys, downloadsCount] = await Promise.all([
+  // Fetch user data with fast optimized query
+  const [orders, downloadsCount] = await Promise.all([
     prisma.order.findMany({
       where: { userId: session.id },
       include: {
         items: {
-          include: { key: true },
+          include: {
+            key: {
+              include: {
+                product: { select: { name: true, slug: true } },
+              },
+            },
+          },
         },
       },
       orderBy: { createdAt: 'desc' },
-      take: 5,
-    }),
-    prisma.productKey.findMany({
-      where: {
-        orderItem: {
-          order: { userId: session.id },
-        },
-      },
-      include: {
-        product: { select: { name: true, slug: true } },
-      },
-      orderBy: { soldAt: 'desc' },
       take: 5,
     }),
     prisma.download.count({
       where: { userId: session.id },
     }),
   ]);
+
+  const userKeys = orders
+    .flatMap((o) => o.items.map((i) => i.key))
+    .filter((k): k is NonNullable<typeof k> => Boolean(k));
 
   return (
     <div className="space-y-8">

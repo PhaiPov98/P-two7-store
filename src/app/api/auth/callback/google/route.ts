@@ -3,8 +3,17 @@ import prisma from '@/lib/prisma';
 import { createToken, createTempSignupToken, COOKIE_NAME, TEMP_SIGNUP_COOKIE, UserSession } from '@/lib/auth';
 import { sendAdminLoginAlert } from '@/lib/telegram';
 
+function getAppBaseUrl(request: NextRequest): string {
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
+  const proto = request.headers.get('x-forwarded-proto') || (host?.includes('localhost') ? 'http' : 'https');
+  if (host) {
+    return `${proto}://${host}`;
+  }
+  return process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+}
+
 export async function GET(request: NextRequest) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = getAppBaseUrl(request);
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   const searchParams = request.nextUrl.searchParams;

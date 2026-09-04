@@ -41,59 +41,73 @@ const categoryIcons: Record<string, any> = {
 export const revalidate = 30; // Fast cached data with 30s background revalidation
 
 export default async function HomePage() {
-  const [featuredProducts, reviews, totalOrders, totalCustomers, reviewStats] = await Promise.all([
-    prisma.product.findMany({
-      where: { isActive: true },
-      include: {
-        category: true,
-      },
-      orderBy: [{ isBestSeller: 'desc' }, { soldCount: 'desc' }],
-      take: 8,
-    }),
-    prisma.review.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            avatar: true,
-          },
-        },
-        product: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 6,
-    }),
-    prisma.order.count({
-      where: {
-        OR: [
-          { orderStatus: 'COMPLETED' },
-          { paymentStatus: 'PAID' },
-        ],
-      },
-    }),
-    prisma.user.count({
-      where: { role: 'CUSTOMER' },
-    }),
-    prisma.review.aggregate({
-      _avg: { rating: true },
-      _count: { id: true },
-    }),
-  ]);
-
-  const stats = {
-    totalCustomers: Math.max(totalOrders, totalCustomers),
-    avgRating: reviewStats._avg.rating ? reviewStats._avg.rating.toFixed(1) : '0.0',
-    totalReviews: reviewStats._count.id,
+  let featuredProducts: any[] = [];
+  let reviews: any[] = [];
+  let stats = {
+    totalCustomers: 0,
+    avgRating: '0.0',
+    totalReviews: 0,
   };
+
+  try {
+    const [prods, revs, totalOrders, totalCustomers, reviewStats] = await Promise.all([
+      prisma.product.findMany({
+        where: { isActive: true },
+        include: {
+          category: true,
+        },
+        orderBy: [{ isBestSeller: 'desc' }, { soldCount: 'desc' }],
+        take: 8,
+      }),
+      prisma.review.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+          product: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: 6,
+      }),
+      prisma.order.count({
+        where: {
+          OR: [
+            { orderStatus: 'COMPLETED' },
+            { paymentStatus: 'PAID' },
+          ],
+        },
+      }),
+      prisma.user.count({
+        where: { role: 'CUSTOMER' },
+      }),
+      prisma.review.aggregate({
+        _avg: { rating: true },
+        _count: { id: true },
+      }),
+    ]);
+
+    featuredProducts = prods || [];
+    reviews = revs || [];
+    stats = {
+      totalCustomers: Math.max(totalOrders || 0, totalCustomers || 0),
+      avgRating: reviewStats?._avg?.rating ? reviewStats._avg.rating.toFixed(1) : '0.0',
+      totalReviews: reviewStats?._count?.id || 0,
+    };
+  } catch (error) {
+    console.error('HomePage data fetch error:', error);
+  }
 
   return (
     <div className="space-y-10 sm:space-y-16 pb-16">

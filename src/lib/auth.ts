@@ -82,16 +82,9 @@ export async function getCurrentUser(): Promise<UserSession | null> {
     if (!token) return null;
 
     const session = await verifyToken(token);
-    if (!session) return null;
+    if (!session || !session.id) return null;
 
-    // Optional db check
-    const user = await prisma.user.findUnique({
-      where: { id: session.id },
-      select: { id: true, name: true, email: true, role: true, avatar: true },
-    });
-
-    if (!user) return null;
-    return user as UserSession;
+    return session;
   } catch (error) {
     return null;
   }

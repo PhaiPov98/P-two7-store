@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import { requireAdmin } from '@/lib/auth';
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,13 +37,20 @@ export async function POST(request: NextRequest) {
       .replace(/[^a-z0-9]+/g, '-');
     const filename = `${Date.now()}-${safeBaseName}.${ext}`;
 
-    const storageDir = path.join(process.cwd(), 'storage', 'files');
-    if (!fs.existsSync(storageDir)) {
-      fs.mkdirSync(storageDir, { recursive: true });
+    // Try storage/files first, fallback to os.tmpdir() for serverless/Vercel
+    let storageDir = path.join(process.cwd(), 'storage', 'files');
+    try {
+      if (!fs.existsSync(storageDir)) {
+        fs.mkdirSync(storageDir, { recursive: true });
+      }
+      fs.writeFileSync(path.join(storageDir, filename), buffer);
+    } catch {
+      storageDir = path.join(os.tmpdir(), 'storage_files');
+      if (!fs.existsSync(storageDir)) {
+        fs.mkdirSync(storageDir, { recursive: true });
+      }
+      fs.writeFileSync(path.join(storageDir, filename), buffer);
     }
-
-    const targetPath = path.join(storageDir, filename);
-    fs.writeFileSync(targetPath, buffer);
 
     return NextResponse.json({
       success: true,
@@ -48,6 +62,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('File upload error:', error);
-    return NextResponse.json({ error: error.message || 'មានបញ្ហាក្នុងការ Upload ឯកសារ' }, { status: 500 });
+    return NextResponse.json({ 
+      error: error.message || 'មិនអាច Upload ឯកសារធំតាម Server បានទេ។ សូមប្រើប្រាស់ជម្រើស "Link Cloud (Drive / Mega)" ជំនួសវិញ។' 
+    }, { status: 500 });
   }
 }

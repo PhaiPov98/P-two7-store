@@ -155,10 +155,10 @@ export default function AdminFilesPage() {
               .replace(/[^a-z0-9]+/g, '-'),
         }));
       } else {
-        error('មិនអាច Upload បានទេ', resData.error || 'មានបញ្ហា');
+        error('មិនអាច Upload ឯកសារបានទេ', resData.error || 'ទំហំឯកសារធំពេក។ សូមជ្រើសរើស "Link Cloud (Drive / Mega)" ជំនួសវិញ');
       }
     } catch (err) {
-      error('មានបញ្ហាក្នុងការ Upload');
+      error('មិនអាច Upload ឯកសារបានទេ', 'ឯកសារអាចធំពេកលើសពីកម្រិត Server។ សូមជ្រើសរើស "Link Cloud (Drive / Mega)" ដើម្បីដាក់ Link Google Drive/Mega វិញបាទ');
     } finally {
       setUploading(false);
     }

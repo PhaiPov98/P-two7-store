@@ -102,29 +102,34 @@ export default function UserProfilePage() {
             </div>
           </div>
 
-          {/* Password Change Box */}
+          {/* Password Setting Box */}
           <div className="pt-4 border-t border-slate-800 space-y-4">
-            <h4 className="font-bold text-slate-200">ផ្លាស់ប្តូរពាក្យសម្ងាត់ (Optional)</h4>
+            <div>
+              <h4 className="font-bold text-slate-200">កំណត់ ឬផ្លាស់ប្តូរពាក្យសម្ងាត់ (Password)</h4>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                សម្រាប់គណនី Google អ្នកអាចវាយបញ្ចូលតែ <strong>ពាក្យសម្ងាត់ថ្មី</strong> ដើម្បីអាច Login ជាមួយ Email និង Password បាន។
+              </p>
+            </div>
 
             <div>
-              <label className="block font-bold text-slate-400 mb-1.5">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+              <label className="block font-bold text-slate-400 mb-1.5">ពាក្យសម្ងាត់បច្ចុប្បន្ន (ប្រសិនបើមាន)</label>
               <input
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
+                placeholder="ទុកទំនេរ ប្រសិនបើអ្នក Login ជាមួយ Google"
+                className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono placeholder:text-slate-500"
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-400 mb-1.5">ពាក្យសម្ងាត់ថ្មី</label>
+              <label className="block font-bold text-slate-400 mb-1.5">ពាក្យសម្ងាត់ថ្មី (យ៉ាងហោចណាស់ 6 តួ)</label>
               <input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
+                placeholder="វាយពាក្យសម្ងាត់ថ្មីរបស់អ្នក"
+                className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono placeholder:text-slate-500"
               />
             </div>
           </div>

@@ -38,7 +38,7 @@ const categoryIcons: Record<string, any> = {
   FolderDown,
 };
 
-export const revalidate = 0; // Fresh data
+export const revalidate = 30; // Fast cached data with 30s background revalidation
 
 export default async function HomePage() {
   const [featuredProducts, reviews, totalOrders, totalCustomers, reviewStats] = await Promise.all([

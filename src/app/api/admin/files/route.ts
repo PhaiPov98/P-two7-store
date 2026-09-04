@@ -42,9 +42,13 @@ export async function POST(request: Request) {
       count++;
     }
 
+    const fallbackTitle = (data.title || '').trim() || 
+      (data.filePath ? data.filePath.split('/').pop()?.split('?')[0]?.replace(/\.[^/.]+$/, '') : '') || 
+      `File ${new Date().toLocaleDateString()}`;
+
     const file = await prisma.file.create({
       data: {
-        title: data.title,
+        title: fallbackTitle,
         slug,
         description: data.description || '',
         version: data.version || '1.0',

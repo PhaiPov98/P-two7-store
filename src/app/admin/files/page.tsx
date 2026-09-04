@@ -193,9 +193,29 @@ export default function AdminFilesPage() {
       return;
     }
 
+    // Auto-generate title if left blank
+    let finalTitle = formData.title.trim();
+    if (!finalTitle) {
+      if (formData.filePath.startsWith('http')) {
+        try {
+          const urlObj = new URL(formData.filePath);
+          const pathname = urlObj.pathname.split('/').filter(Boolean).pop() || 'Download File';
+          finalTitle = decodeURIComponent(pathname).replace(/\.[^/.]+$/, '') || 'Cloud Download File';
+        } catch {
+          finalTitle = 'ឯកសារទាញយក (Digital File)';
+        }
+      } else {
+        finalTitle = formData.filePath.replace(/^\d+-/, '').replace(/\.[^/.]+$/, '') || 'ឯកសារទាញយក';
+      }
+    }
+
     try {
       const method = editingFile ? 'PUT' : 'POST';
-      const payload = editingFile ? { id: editingFile.id, ...formData } : formData;
+      const payload = {
+        ...(editingFile ? { id: editingFile.id } : {}),
+        ...formData,
+        title: finalTitle,
+      };
 
       const res = await fetch('/api/admin/files', {
         method,
@@ -429,15 +449,14 @@ export default function AdminFilesPage() {
               {/* Title */}
               <div>
                 <label className="block font-bold text-slate-300 mb-1.5">
-                  ឈ្មោះឯកសារ (File Title) <span className="text-red-400">*</span>
+                  ឈ្មោះឯកសារ (File Title) <span className="text-slate-500 font-normal text-xs">(មិនបាច់បំពេញក៏បាន — ប្រព័ន្ធនឹងបង្កើតតាមឈ្មោះ File ស្វ័យប្រវត្តិ)</span>
                 </label>
                 <input
                   type="text"
-                  required
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="ឧ. CapCut Pro Preset Pack ឬ Adobe Premiere Template"
-                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:border-blue-500 focus:outline-none"
+                  placeholder="ឧ. CapCut Pro Preset Pack ឬ ទុកចោលដើម្បីឱ្យប្រព័ន្ធដាក់តាមឈ្មោះ File"
+                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:border-blue-500 focus:outline-none placeholder:text-slate-600"
                 />
               </div>
 

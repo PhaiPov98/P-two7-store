@@ -41,9 +41,10 @@ function FreeHubContent() {
     async function loadData() {
       try {
         setLoading(true);
+        const timestamp = Date.now();
         const [filesRes, tutorialsRes] = await Promise.all([
-          fetch('/api/files/public', { cache: 'no-store' }),
-          fetch('/api/tutorials', { cache: 'no-store' }),
+          fetch(`/api/files/public?_t=${timestamp}`, { cache: 'no-store' }),
+          fetch(`/api/tutorials?_t=${timestamp}`, { cache: 'no-store' }),
         ]);
 
         if (filesRes.ok) {

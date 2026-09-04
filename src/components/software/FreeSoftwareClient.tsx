@@ -42,8 +42,29 @@ export default function FreeSoftwareClient({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGuide, setSelectedGuide] = useState<Tutorial | null>(null);
 
-  const files: DigitalFile[] = initialFiles;
-  const tutorials: Tutorial[] = initialTutorials;
+  const [files, setFiles] = useState<DigitalFile[]>(initialFiles);
+  const [tutorials, setTutorials] = useState<Tutorial[]>(initialTutorials);
+
+  useEffect(() => {
+    setFiles(initialFiles);
+  }, [initialFiles]);
+
+  useEffect(() => {
+    async function syncLatest() {
+      try {
+        const res = await fetch(`/api/files/public?_t=${Date.now()}`, { cache: 'no-store' });
+        if (res.ok) {
+          const d = await res.json();
+          if (d.files && Array.isArray(d.files)) {
+            setFiles(d.files.filter((f: any) => f.isFree));
+          }
+        }
+      } catch (e) {
+        // Fallback to initialFiles
+      }
+    }
+    syncLatest();
+  }, []);
 
   // Filter free files by tab and search query
   const filteredFiles = useMemo(() => {

@@ -109,7 +109,7 @@ export default function Navbar() {
             {/* 3. Free Software */}
             <Link
               href="/software"
-              prefetch={true}
+              prefetch={false}
               className={`nav-btn-53 ${currentPath.startsWith('/software') ? 'nav-btn-53-active' : ''}`}
             >
               <div className="original">

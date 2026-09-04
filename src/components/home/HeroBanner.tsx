@@ -132,7 +132,7 @@ export default function HeroBanner({ stats }: HeroBannerProps) {
   return (
     <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 space-y-3 sm:space-y-4 select-none">
       {/* 1. CAROUSEL BANNER CARD */}
-      <div className="relative w-full h-[220px] sm:h-[340px] md:h-[420px] lg:h-[480px] rounded-2xl sm:rounded-3xl overflow-hidden border border-cyan-500/25 shadow-xl bg-dark-950 flex items-end sm:items-center">
+      <div className="relative w-full h-[230px] sm:h-[340px] md:h-[420px] lg:h-[480px] rounded-2xl sm:rounded-3xl overflow-hidden border border-cyan-500/25 shadow-xl bg-dark-950 flex items-center">
         {/* SLIDE IMAGES */}
         {slides.map((slide, idx) => (
           <div
@@ -152,35 +152,35 @@ export default function HeroBanner({ stats }: HeroBannerProps) {
         ))}
 
         {/* GRADIENT OVERLAYS */}
-        <div className="absolute inset-0 bg-gradient-to-t from-dark-950/95 via-dark-950/60 to-dark-950/20 sm:bg-gradient-to-r sm:from-dark-950/95 sm:via-dark-950/60 sm:to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-dark-950/95 via-dark-950/60 to-dark-950/30 sm:bg-gradient-to-r sm:from-dark-950/95 sm:via-dark-950/60 sm:to-transparent pointer-events-none z-10" />
 
         {/* CONTENT */}
-        <div className="relative z-20 p-4 sm:p-8 lg:p-12 w-full max-w-2xl space-y-2 sm:space-y-4">
+        <div className="relative z-20 px-4 py-3 sm:p-8 lg:p-12 w-full max-w-2xl space-y-2 sm:space-y-4 pb-6 sm:pb-8">
           {/* Badge */}
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 backdrop-blur-md">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-cyan-500/25 border border-cyan-400/50 backdrop-blur-md shadow-md shadow-cyan-950/40">
             <span className="flex h-1.5 w-1.5 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
             </span>
-            <span className="text-[9px] sm:text-xs font-bold text-cyan-300 tracking-wide uppercase truncate max-w-[200px] sm:max-w-none">
+            <span className="text-[10px] sm:text-xs font-bold text-cyan-300 tracking-wide uppercase truncate max-w-[220px] sm:max-w-none">
               {currentSlide.badge || '✨ GENUINE LICENSE • 24/7'}
             </span>
           </div>
 
           {/* Title */}
           <div>
-            <h1 className="text-lg sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug drop-shadow-md">
+            <h1 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               <span className="bg-gradient-to-r from-white via-slate-100 to-cyan-200 bg-clip-text text-transparent">
                 {currentSlide.title}
               </span>
             </h1>
-            <p className="hidden sm:block text-xs sm:text-sm text-slate-300 mt-1 line-clamp-2 leading-relaxed">
+            <p className="hidden sm:block text-xs sm:text-sm text-slate-300 mt-1 line-clamp-2 leading-relaxed drop-shadow-md">
               {currentSlide.subtitle}
             </p>
           </div>
 
           {/* CTA Button */}
-          <div className="pt-1">
+          <div className="pt-0.5 sm:pt-1">
             <Link
               href="/products"
               prefetch={true}

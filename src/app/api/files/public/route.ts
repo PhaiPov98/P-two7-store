@@ -25,7 +25,7 @@ export async function GET() {
       fileType: f.fileType,
       downloadCount: f.downloadCount,
       isFree: f.isFree,
-      price: f.price,
+      price: f.price ? Number(f.price) : 0,
       changelog: f.changelog,
       categoryId: f.categoryId,
       category: f.category,

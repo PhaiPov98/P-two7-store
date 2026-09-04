@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET() {
   try {
@@ -31,7 +32,14 @@ export async function GET() {
       createdAt: f.createdAt,
     }));
 
-    return NextResponse.json({ files: safeFiles });
+    return NextResponse.json(
+      { files: safeFiles },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+        },
+      }
+    );
   } catch (error) {
     console.error('Failed to fetch public files:', error);
     return NextResponse.json({ error: 'Failed to fetch files' }, { status: 500 });

@@ -6,10 +6,8 @@ import {
   Zap,
   ChevronLeft,
   ChevronRight,
-  ShieldCheck,
-  Star,
   Users,
-  CheckCircle2,
+  Star,
 } from 'lucide-react';
 import { KHMER_TEXT } from '@/lib/translations';
 
@@ -19,6 +17,16 @@ interface SlideItem {
   title: string;
   subtitle?: string;
   badge?: string;
+}
+
+export interface HeroStats {
+  totalCustomers: number;
+  avgRating: string;
+  totalReviews: number;
+}
+
+interface HeroBannerProps {
+  stats?: HeroStats;
 }
 
 const DEFAULT_SLIDES: SlideItem[] = [
@@ -50,7 +58,7 @@ const DEFAULT_TICKER =
 
 const SLIDE_DURATION = 4000;
 
-export default function HeroBanner() {
+export default function HeroBanner({ stats }: HeroBannerProps) {
   const [slides, setSlides] = useState<SlideItem[]>(DEFAULT_SLIDES);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [ticker, setTicker] = useState(DEFAULT_TICKER);
@@ -176,9 +184,9 @@ export default function HeroBanner() {
             <Link
               href="/products"
               prefetch={true}
-              className="inline-flex items-center gap-1.5 px-4 sm:px-6 py-1.5 sm:py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-500/25 transition-transform active:scale-95"
+              className="btn-uiverse-buy px-4 sm:px-6 py-1.5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-lg"
             >
-              <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-amber-300 fill-amber-300" />
+              <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-green-400" />
               <span>{KHMER_TEXT.actions.buyNow}</span>
             </Link>
           </div>
@@ -217,20 +225,22 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* 2. TRUST STATS BAR (Single Clean Row on All Devices) */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-4 p-2.5 sm:p-4 rounded-2xl bg-dark-900/70 border border-slate-800/80 backdrop-blur-xl shadow-lg text-center">
-        {/* Item 1 */}
+      {/* 2. DYNAMIC REAL-TIME TRUST STATS BAR */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 p-2 sm:p-3.5 rounded-2xl bg-dark-900/70 border border-slate-800/80 backdrop-blur-xl shadow-lg text-center">
+        {/* Item 1: Real Customer Purchases */}
         <div className="flex items-center justify-center gap-1.5 sm:gap-2.5">
           <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
             <Users className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
           </div>
           <div className="text-left">
-            <p className="text-xs sm:text-sm font-black text-white font-mono leading-tight">1,500+</p>
+            <p className="text-xs sm:text-sm font-black text-white font-mono leading-tight">
+              {stats?.totalCustomers ? stats.totalCustomers.toLocaleString() : '0'}
+            </p>
             <p className="text-[9px] sm:text-xs text-slate-400 leading-tight truncate">អតិថិជនបានទិញ</p>
           </div>
         </div>
 
-        {/* Item 2 */}
+        {/* Item 2: Auto Key Delivery */}
         <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 border-x border-slate-800/80 px-1">
           <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
             <Zap className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
@@ -241,26 +251,35 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* Item 3 */}
+        {/* Item 3: Real Average Rating */}
         <div className="flex items-center justify-center gap-1.5 sm:gap-2.5">
           <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
             <Star className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-amber-400" />
           </div>
           <div className="text-left">
-            <p className="text-xs sm:text-sm font-black text-amber-400 font-mono leading-tight">4.9 / 5.0</p>
-            <p className="text-[9px] sm:text-xs text-slate-400 leading-tight truncate">ការវាយតម្លៃផ្កាយ 5</p>
+            <p className="text-xs sm:text-sm font-black text-amber-400 font-mono leading-tight">
+              {stats?.totalReviews && stats.totalReviews > 0 ? `${stats.avgRating} / 5.0` : '0.0 / 5.0'}
+            </p>
+            <p className="text-[9px] sm:text-xs text-slate-400 leading-tight truncate">
+              {stats?.totalReviews && stats.totalReviews > 0 ? `ការវាយតម្លៃ (${stats.totalReviews})` : '0 ការវាយតម្លៃ'}
+            </p>
           </div>
         </div>
       </div>
 
       {/* 3. TICKER MARQUEE */}
-      <div className="p-2 sm:p-2.5 rounded-xl bg-dark-950/80 border border-slate-800/60 flex items-center gap-2 overflow-hidden">
-        <span className="shrink-0 px-2 py-0.5 rounded-md bg-blue-500/20 border border-blue-500/30 text-blue-400 text-[10px] sm:text-xs font-bold flex items-center gap-1">
-          <ShieldCheck className="w-3 h-3" />
-          <span>ដំណឹង</span>
-        </span>
-        <div className="overflow-hidden whitespace-nowrap text-[11px] sm:text-xs text-slate-300 marquee-container">
-          <span className="marquee-content">{ticker}</span>
+      <div className="p-2 sm:p-2.5 rounded-xl bg-dark-950/80 border border-slate-800/60 overflow-hidden relative">
+        <div className="scrolling-ticker-wrapper">
+          <div className="scrolling-ticker-track text-[11px] sm:text-xs text-slate-300 font-medium whitespace-nowrap">
+            <span className="flex items-center gap-2">{ticker}</span>
+            <span className="text-slate-500">•</span>
+            <span className="flex items-center gap-2">{ticker}</span>
+            <span className="text-slate-500">•</span>
+            <span className="flex items-center gap-2">{ticker}</span>
+            <span className="text-slate-500">•</span>
+            <span className="flex items-center gap-2">{ticker}</span>
+            <span className="text-slate-500">•</span>
+          </div>
         </div>
       </div>
     </section>

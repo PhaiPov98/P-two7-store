@@ -42,6 +42,7 @@ export const metadata: Metadata = {
   keywords: 'Windows 11 Pro Key, Microsoft Office 2024, Adobe Photoshop, IDM Key, Antivirus, Product Key Cambodia, P-Two7',
 };
 
+import { ThemeProvider } from '@/context/ThemeContext';
 import MobileBottomNav from '@/components/layout/MobileBottomNav';
 
 export default function RootLayout({
@@ -50,21 +51,43 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="km" className={`dark ${notoSansKhmer.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white font-khmer pb-16 lg:pb-0">
+    <html lang="km" suppressHydrationWarning className={`dark ${notoSansKhmer.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'light') {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white font-khmer pb-16 lg:pb-0 transition-colors duration-300">
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>
-        <ToastProvider>
-          <AuthProvider>
-            <CartProvider>
-              <Navbar />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-              <MobileBottomNav />
-            </CartProvider>
-          </AuthProvider>
-        </ToastProvider>
+        <ThemeProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <CartProvider>
+                <Navbar />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+                <MobileBottomNav />
+              </CartProvider>
+            </AuthProvider>
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

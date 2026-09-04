@@ -23,6 +23,7 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { KHMER_TEXT } from '@/lib/translations';
+import ThemeToggle from '@/components/layout/ThemeToggle';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -149,6 +150,9 @@ export default function Navbar() {
 
           {/* Right Action Icons */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Theme Toggle (Dark / Light Mode) */}
+            <ThemeToggle />
+
             {/* Cart Button */}
             <Link
               href="/cart"
@@ -285,26 +289,11 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-1.5 sm:gap-2">
-                {/* Admin Link - visible on sm+ (on mobile it is in Hamburger Menu) */}
-                <Link
-                  href="/admin-login"
-                  prefetch={true}
-                  className="btn-uiverse-remon125 btn-uiverse-remon125-purple hidden sm:inline-flex !py-1.5 !px-3 text-xs shrink-0"
-                  title="ចូលជា Admin"
-                >
-                  <span className="bg-layer" />
-                  <span className="bg-layer" />
-                  <span className="bg-layer" />
-                  <span className="bg-layer" />
-                  <ShieldCheck className="w-3.5 h-3.5 relative z-10" />
-                  <span className="relative z-10">Admin</span>
-                </Link>
-
                 {/* Login Button */}
                 <Link
                   href="/login"
                   prefetch={true}
-                  className="btn-uiverse-remon125 btn-uiverse-remon125-cyan !py-1.5 !px-3 sm:!px-3.5 text-xs shrink-0"
+                  className="btn-uiverse-remon125 btn-uiverse-remon125-cyan !py-1.5 !px-2.5 sm:!px-3.5 text-xs shrink-0"
                   title={KHMER_TEXT.nav.login}
                 >
                   <span className="bg-layer" />
@@ -318,7 +307,7 @@ export default function Navbar() {
                 <Link
                   href="/register"
                   prefetch={true}
-                  className="btn-uiverse-remon125 btn-uiverse-remon125-blue hidden md:inline-flex !py-1.5 !px-3.5 text-xs shrink-0"
+                  className="btn-uiverse-remon125 btn-uiverse-remon125-blue !hidden md:!inline-flex !py-1.5 !px-3.5 text-xs shrink-0"
                   title={KHMER_TEXT.nav.register}
                 >
                   <span className="bg-layer" />
@@ -327,6 +316,21 @@ export default function Navbar() {
                   <span className="bg-layer" />
                   <UserPlus className="w-3.5 h-3.5 relative z-10" />
                   <span className="relative z-10">{KHMER_TEXT.nav.register}</span>
+                </Link>
+
+                {/* Admin Link - visible on sm+ (on mobile it is in Hamburger Menu) */}
+                <Link
+                  href="/admin-login"
+                  prefetch={true}
+                  className="btn-uiverse-remon125 btn-uiverse-remon125-purple !hidden sm:!inline-flex !py-1.5 !px-3 text-xs shrink-0"
+                  title="ចូលជា Admin"
+                >
+                  <span className="bg-layer" />
+                  <span className="bg-layer" />
+                  <span className="bg-layer" />
+                  <span className="bg-layer" />
+                  <ShieldCheck className="w-3.5 h-3.5 relative z-10" />
+                  <span className="relative z-10">Admin</span>
                 </Link>
               </div>
             )}

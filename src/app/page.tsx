@@ -41,7 +41,7 @@ const categoryIcons: Record<string, any> = {
 export const revalidate = 0; // Fresh data
 
 export default async function HomePage() {
-  const [featuredProducts, reviews] = await Promise.all([
+  const [featuredProducts, reviews, totalOrders, totalCustomers, reviewStats] = await Promise.all([
     prisma.product.findMany({
       where: { isActive: true },
       include: {
@@ -72,64 +72,91 @@ export default async function HomePage() {
       },
       take: 6,
     }),
+    prisma.order.count({
+      where: {
+        OR: [
+          { orderStatus: 'COMPLETED' },
+          { paymentStatus: 'PAID' },
+        ],
+      },
+    }),
+    prisma.user.count({
+      where: { role: 'CUSTOMER' },
+    }),
+    prisma.review.aggregate({
+      _avg: { rating: true },
+      _count: { id: true },
+    }),
   ]);
 
+  const stats = {
+    totalCustomers: Math.max(totalOrders, totalCustomers),
+    avgRating: reviewStats._avg.rating ? reviewStats._avg.rating.toFixed(1) : '0.0',
+    totalReviews: reviewStats._count.id,
+  };
+
   return (
-    <div className="space-y-20 pb-16">
-      {/* 1. HERO SECTION (Dynamic 3D Flipping Carousel with Badges Removed) */}
-      <HeroBanner />
+    <div className="space-y-10 sm:space-y-16 pb-16">
+      {/* 1. HERO SECTION (Dynamic 3D Flipping Carousel with Real Stats) */}
+      <HeroBanner stats={stats} />
 
       {/* 2. BESTSELLING PRODUCTS */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white">
+            <h2 className="text-base sm:text-2xl md:text-3xl font-bold sm:font-black text-white leading-tight">
               ផលិតផលលក់ដាច់បំផុត
             </h2>
           </div>
           <Link
             href="/products"
-            className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
+            className="text-[11px] sm:text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-0.5 sm:gap-1 transition-colors shrink-0 whitespace-nowrap"
           >
-            មើលផលិតផលទាំងអស់ <ChevronRight className="w-4 h-4" />
+            <span>មើលទាំងអស់</span> <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product as any} />
-          ))}
-        </div>
-      </section>
-
-      {/* 5. CUSTOMER REVIEWS (Dynamic Real Data) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-xl mx-auto mb-10">
-          <div className="flex items-center justify-center gap-1 text-amber-400 mb-2">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-amber-400" />
+        {featuredProducts && featuredProducts.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            {featuredProducts.map((product) => (
+              <ProductCard key={product.id} product={product as any} />
             ))}
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-white">
-            ការវាយតម្លៃពីអតិថិជន
-          </h2>
-          <p className="text-xs text-slate-400 mt-2">
-            មតិពិតៗពីអតិថិជនដែលបានទិញ និងប្រើប្រាស់សេវាកម្មរបស់យើង
-          </p>
-        </div>
+        ) : (
+          <div className="p-6 sm:p-10 rounded-2xl bg-dark-900/50 border border-slate-800/80 text-center space-y-2">
+            <p className="text-xs sm:text-sm text-slate-400">មិនទាន់មានផលិតផលដាក់លក់នៅឡើយទេ</p>
+          </div>
+        )}
+      </section>
 
-        {reviews && reviews.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* 5. CUSTOMER REVIEWS (Only show when real reviews exist) */}
+      {reviews && reviews.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-xl mx-auto mb-6 sm:mb-10">
+            <div className="flex items-center justify-center gap-1 text-amber-400 mb-1.5">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3.5 sm:w-4 h-3.5 sm:h-4 fill-amber-400" />
+              ))}
+            </div>
+            <h2 className="text-base sm:text-2xl md:text-3xl font-bold sm:font-black text-white">
+              ការវាយតម្លៃពីអតិថិជន
+            </h2>
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
+              មតិពិតៗពីអតិថិជនដែលបានទិញ និងប្រើប្រាស់សេវាកម្មរបស់យើង
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {reviews.map((review) => (
               <div
                 key={review.id}
-                className="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all group"
+                className="glass-card p-4 sm:p-6 rounded-2xl border border-slate-800 flex flex-col justify-between hover:border-slate-700 transition-all group"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-2 sm:mb-3">
                     <div className="flex items-center gap-1 text-amber-400">
                       {[...Array(review.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-amber-400" />
+                        <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
                       ))}
                     </div>
                     <span className="text-[10px] text-slate-500">
@@ -141,14 +168,14 @@ export default async function HomePage() {
                     </span>
                   </div>
 
-                  <p className="text-sm text-slate-300 leading-relaxed italic line-clamp-4">
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed italic line-clamp-4">
                     "{review.comment}"
                   </p>
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xs font-black flex-shrink-0 shadow overflow-hidden">
+                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-[11px] sm:text-xs font-black flex-shrink-0 shadow overflow-hidden">
                       {review.user?.avatar ? (
                         <img
                           src={review.user.avatar}
@@ -174,31 +201,15 @@ export default async function HomePage() {
                     </div>
                   </div>
 
-                  <span className="text-[10px] text-emerald-400 flex items-center gap-1 font-semibold flex-shrink-0">
-                    <CheckCircle className="w-3.5 h-3.5" /> បានផ្ទៀងផ្ទាត់
+                  <span className="text-[9px] sm:text-[10px] text-emerald-400 flex items-center gap-1 font-semibold flex-shrink-0">
+                    <CheckCircle className="w-3 h-3" /> បានផ្ទៀងផ្ទាត់
                   </span>
                 </div>
               </div>
             ))}
           </div>
-        ) : (
-          <div className="p-10 rounded-3xl bg-dark-900/60 border border-slate-800 text-center max-w-xl mx-auto space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400/10 text-amber-400 flex items-center justify-center mx-auto">
-              <Star className="w-6 h-6 fill-amber-400" />
-            </div>
-            <h3 className="text-sm font-bold text-white">មិនទាន់មានការវាយតម្លៃនៅឡើយទេ</h3>
-            <p className="text-xs text-slate-400">
-              ការវាយតម្លៃពីអតិថិជនទាំងអស់នឹងត្រូវបានបង្ហាញនៅទីនេះដោយស្វ័យប្រវត្តិ នៅពេលមានការវាយតម្លៃថ្មី។
-            </p>
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-lg shadow-blue-500/20 mt-2"
-            >
-              ស្វែងរកផលិតផលដើម្បីទិញ និងវាយតម្លៃ <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-        )}
-      </section>
+        </section>
+      )}
     </div>
   );
 }

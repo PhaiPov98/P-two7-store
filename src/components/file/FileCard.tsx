@@ -17,7 +17,7 @@ export default function FileCard({ file }: FileCardProps) {
   const { success, error, info } = useToast();
   const { user } = useAuth();
 
-  const handleDownload = async (e: React.MouseEvent) => {
+  const handleDownload = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!file.isFree && !user) {
       info('សូមចូលគណនី', 'ដើម្បីទាញយកឯកសារ Paid សូមចូលគណនីរបស់អ្នកជាមុនសិន');
@@ -26,31 +26,15 @@ export default function FileCard({ file }: FileCardProps) {
 
     try {
       setDownloading(true);
-      info('កំពុងរៀបចំ...', `កំពុងទាញយក ${file.title}`);
-
-      const res = await fetch(`/api/download/${file.id}`);
-      if (!res.ok) {
-        const errData = await res.json();
-        error('មិនអាចទាញយកបានទេ', errData.error || 'សូមព្យាយាមម្តងទៀត');
-        return;
-      }
-
-      // Trigger browser download
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${file.slug}.${file.fileType.toLowerCase()}`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-
-      success('ទាញយកជោគជ័យ!', `ឯកសារ ${file.title} ត្រូវបានទាញយករួចរាល់`);
+      info('កំពុងទាញយក...', `កំពុងរៀបចំឯកសារ ${file.title}`);
+      
+      // Direct navigation to download endpoint
+      window.open(`/api/download/${file.id}`, '_blank');
+      success('កំពុងទាញយក!', `ឯកសារ ${file.title} ត្រូវបានបើកដំណើរការទាញយក`);
     } catch (err) {
       error('មានបញ្ហា', 'មិនអាចភ្ជាប់ទៅកាន់ម៉ាស៊ីនបម្រើទាញយកបានទេ');
     } finally {
-      setDownloading(false);
+      setTimeout(() => setDownloading(false), 2000);
     }
   };
 

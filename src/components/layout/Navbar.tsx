@@ -148,16 +148,16 @@ export default function Navbar() {
 
 
           {/* Right Action Icons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {/* Cart Button */}
             <Link
               href="/cart"
-              className="btn-uiverse-icon p-2.5 rounded-xl text-slate-200 transition-all duration-200"
+              className="btn-uiverse-icon p-2 sm:p-2.5 rounded-xl text-slate-200 transition-all duration-200 shrink-0"
               title={KHMER_TEXT.nav.cart}
             >
-              <ShoppingBag className="w-5 h-5" />
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
               {totalItems > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/50 animate-bounce">
+                <span className="absolute -top-1.5 -right-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] sm:text-[11px] font-bold w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/50">
                   {totalItems}
                 </span>
               )}
@@ -165,7 +165,7 @@ export default function Navbar() {
 
             {/* User Dropdown / Login */}
             {user ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 {user.role === 'ADMIN' && (
                   <Link
                     href="/admin"
@@ -180,7 +180,7 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                    className="btn-uiverse-secondary flex items-center gap-2.5 p-1.5 pr-3 rounded-xl transition-all"
+                    className="btn-uiverse-secondary flex items-center gap-1.5 sm:gap-2.5 p-1 sm:p-1.5 sm:pr-3 rounded-xl transition-all"
                   >
                     <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white font-bold text-xs shadow-md overflow-hidden border border-slate-700/60 relative shrink-0">
                       {user.avatar ? (
@@ -198,7 +198,7 @@ export default function Navbar() {
                         {user.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <span className="text-xs font-medium max-w-[100px] truncate hidden sm:inline text-left">
+                    <span className="text-xs font-medium max-w-[90px] truncate hidden sm:inline text-left">
                       {user.name}
                     </span>
                   </button>
@@ -284,11 +284,12 @@ export default function Navbar() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                {/* Admin Link - Icon on mobile, full on tablet+ */}
                 <Link
                   href="/admin-login"
                   prefetch={true}
-                  className="btn-uiverse-remon125 btn-uiverse-remon125-purple"
+                  className="btn-uiverse-remon125 btn-uiverse-remon125-purple !py-1.5 !px-2 sm:!px-3 text-xs shrink-0"
                   title="ចូលជា Admin"
                 >
                   <span className="bg-layer" />
@@ -296,13 +297,14 @@ export default function Navbar() {
                   <span className="bg-layer" />
                   <span className="bg-layer" />
                   <ShieldCheck className="w-3.5 h-3.5 relative z-10" />
-                  <span className="relative z-10"><span className="hidden sm:inline">ចូលជា </span>Admin</span>
+                  <span className="relative z-10 hidden sm:inline">Admin</span>
                 </Link>
 
+                {/* Login Button */}
                 <Link
                   href="/login"
                   prefetch={true}
-                  className="btn-uiverse-remon125 btn-uiverse-remon125-cyan"
+                  className="btn-uiverse-remon125 btn-uiverse-remon125-cyan !py-1.5 !px-2.5 sm:!px-3.5 text-xs shrink-0"
                   title={KHMER_TEXT.nav.login}
                 >
                   <span className="bg-layer" />
@@ -312,10 +314,11 @@ export default function Navbar() {
                   <span className="relative z-10">{KHMER_TEXT.nav.login}</span>
                 </Link>
 
+                {/* Register Button - visible on sm+ */}
                 <Link
                   href="/register"
                   prefetch={true}
-                  className="btn-uiverse-remon125 btn-uiverse-remon125-blue hidden sm:inline-flex"
+                  className="btn-uiverse-remon125 btn-uiverse-remon125-blue hidden md:inline-flex !py-1.5 !px-3.5 text-xs shrink-0"
                   title={KHMER_TEXT.nav.register}
                 >
                   <span className="bg-layer" />
@@ -325,14 +328,14 @@ export default function Navbar() {
                   <UserPlus className="w-3.5 h-3.5 relative z-10" />
                   <span className="relative z-10">{KHMER_TEXT.nav.register}</span>
                 </Link>
-
               </div>
             )}
 
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="btn-uiverse-icon lg:hidden p-2 rounded-xl text-slate-300 hover:text-white"
+              className="btn-uiverse-icon lg:hidden p-2 rounded-xl text-slate-300 hover:text-white shrink-0"
+              aria-label="Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -342,7 +345,7 @@ export default function Navbar() {
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-slate-800 space-y-3 animate-in slide-in-from-top-4">
-            <div className="grid grid-cols-2 gap-2 pt-2 text-xs font-semibold">
+            <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}
@@ -392,6 +395,28 @@ export default function Navbar() {
                 <span>{KHMER_TEXT.nav.support}</span>
               </Link>
             </div>
+
+            {/* Additional Quick Actions in Mobile Menu */}
+            {!user && (
+              <div className="pt-2 border-t border-slate-800/80 flex items-center gap-2">
+                <Link
+                  href="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-md"
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  <span>{KHMER_TEXT.nav.register}</span>
+                </Link>
+                <Link
+                  href="/admin-login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="py-2.5 px-3 rounded-xl bg-purple-600/20 border border-purple-500/40 text-purple-300 text-xs font-bold text-center flex items-center justify-center gap-1.5"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Admin</span>
+                </Link>
+              </div>
+            )}
           </div>
         )}
       </div>

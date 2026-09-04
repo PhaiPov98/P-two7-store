@@ -22,6 +22,7 @@ async function main() {
 
   // 1. Create Users
   const adminPassword = await bcrypt.hash('admin123', 10);
+  const bobPassword = await bcrypt.hash('Phaipovpro9868@98581234567!@#$%^%', 10);
   const customerPassword = await bcrypt.hash('customer123', 10);
 
   const admin = await prisma.user.create({
@@ -29,6 +30,17 @@ async function main() {
       name: 'Bozz Pov (Admin)',
       email: 'admin@bozzpov.com',
       password: adminPassword,
+      phone: '+855 12 345 678',
+      role: 'ADMIN',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    },
+  });
+
+  const bobAdmin = await prisma.user.create({
+    data: {
+      name: 'Bozz Pov Admin',
+      email: 'bob800195@gmail.com',
+      password: bobPassword,
       phone: '+855 12 345 678',
       role: 'ADMIN',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',

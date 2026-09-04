@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 export default function AdminSkeletonLoader({ message = 'កំពុងដំណើរការទាញទិន្នន័យ Dashboard...' }: { message?: string }) {

@@ -19,14 +19,28 @@ function SetupPasswordContent() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams?.get('redirect') || '/account';
 
-  const [profile, setProfile] = useState<ProfileInfo | null>(null);
-  const [fetching, setFetching] = useState(true);
+  const emailParam = searchParams?.get('email');
+  const nameParam = searchParams?.get('name');
+  const avatarParam = searchParams?.get('avatar');
+
+  const initialProfile: ProfileInfo | null = emailParam
+    ? {
+        name: nameParam || 'Google User',
+        email: emailParam,
+        avatar: avatarParam || null,
+      }
+    : null;
+
+  const [profile, setProfile] = useState<ProfileInfo | null>(initialProfile);
+  const [fetching, setFetching] = useState(!initialProfile);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (initialProfile) return;
+
     async function fetchProfile() {
       try {
         const res = await fetch('/api/auth/setup-password');
@@ -47,7 +61,7 @@ function SetupPasswordContent() {
       }
     }
     fetchProfile();
-  }, [router]);
+  }, [router, initialProfile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

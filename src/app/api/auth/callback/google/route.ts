@@ -104,24 +104,36 @@ export async function GET(request: NextRequest) {
       where: { email },
     });
 
-    // 4. If User does NOT exist -> Auto-create account instantly and log in!
+    // 4. If User does NOT exist -> Prompt to set password for their account!
     if (!user) {
-      const crypto = await import('crypto');
-      const bcrypt = (await import('bcryptjs')).default;
-      const randomPassword = crypto.randomBytes(32).toString('hex');
-      const hashedPassword = await bcrypt.hash(randomPassword, 10);
-
-      user = await prisma.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          avatar,
-          role: 'CUSTOMER',
-        },
+      const tempToken = await createTempSignupToken({
+        email,
+        name,
+        avatar,
       });
-    } else if (!user.avatar && avatar) {
-      // Update avatar if not already set
+
+      const setupPasswordUrl = new URL('/auth/setup-password', appUrl);
+      setupPasswordUrl.searchParams.set('redirect', redirectPath);
+      setupPasswordUrl.searchParams.set('name', name);
+      setupPasswordUrl.searchParams.set('email', email);
+      if (avatar) setupPasswordUrl.searchParams.set('avatar', avatar);
+
+      const response = NextResponse.redirect(setupPasswordUrl);
+      response.cookies.set({
+        name: TEMP_SIGNUP_COOKIE,
+        value: tempToken,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 15, // 15 minutes
+      });
+
+      return response;
+    }
+
+    // 5. Existing User -> Update avatar if not set
+    if (!user.avatar && avatar) {
       user = await prisma.user.update({
         where: { id: user.id },
         data: { avatar },

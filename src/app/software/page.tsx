@@ -42,8 +42,8 @@ function FreeHubContent() {
       try {
         setLoading(true);
         const [filesRes, tutorialsRes] = await Promise.all([
-          fetch('/api/files/public'),
-          fetch('/api/tutorials'),
+          fetch('/api/files/public', { cache: 'no-store' }),
+          fetch('/api/tutorials', { cache: 'no-store' }),
         ]);
 
         if (filesRes.ok) {
@@ -85,10 +85,7 @@ function FreeHubContent() {
     } else if (activeTab === 'tools') {
       result = result.filter(
         (f) =>
-          f.fileType.toLowerCase() !== 'iso' ||
-          f.title.toLowerCase().includes('tool') ||
-          f.title.toLowerCase().includes('winrar') ||
-          f.title.toLowerCase().includes('activator')
+          f.fileType.toLowerCase() !== 'iso'
       );
     }
 

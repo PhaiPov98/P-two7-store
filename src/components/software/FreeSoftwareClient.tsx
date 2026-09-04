@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
@@ -315,17 +315,9 @@ export default function FreeSoftwareClient({
                       <span>អានការណែនាំលម្អិត</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
-                    {tut.videoUrl && (
-                      <a
-                        href={tut.videoUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-xs text-slate-400 hover:text-white flex items-center gap-1"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Video</span>
-                      </a>
-                    )}
+                    <span className="text-[11px] text-slate-500 font-medium">
+                      {tut.readTime || '3 នាទី'}
+                    </span>
                   </div>
                 </div>
               ))}

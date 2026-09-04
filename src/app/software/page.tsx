@@ -30,30 +30,39 @@ export default async function FreeSoftwarePage() {
 
     files = dbFiles.map((f) => ({
       id: f.id,
-      title: f.title,
-      slug: f.slug,
-      description: f.description,
-      version: f.version,
-      fileSize: f.fileSize,
-      fileType: f.fileType,
-      downloadCount: f.downloadCount,
-      isFree: f.isFree,
-      price: f.price,
-      changelog: f.changelog,
-      categoryId: f.categoryId,
-      category: f.category,
-      createdAt: f.createdAt.toISOString(),
+      title: f.title || '',
+      slug: f.slug || '',
+      description: f.description || '',
+      version: f.version || '1.0',
+      fileSize: f.fileSize || '10 MB',
+      fileType: f.fileType || 'ZIP',
+      downloadCount: f.downloadCount || 0,
+      isFree: Boolean(f.isFree),
+      price: f.price ? Number(f.price) : 0,
+      changelog: f.changelog || '',
+      categoryId: f.categoryId || '',
+      category: f.category
+        ? {
+            id: f.category.id,
+            nameKm: f.category.nameKm,
+            nameEn: f.category.nameEn,
+            slug: f.category.slug,
+          }
+        : null,
+      createdAt: f.createdAt ? f.createdAt.toISOString() : new Date().toISOString(),
     }));
 
     tutorials = dbTutorials.map((t) => ({
       id: t.id,
-      title: t.title,
-      slug: t.slug,
-      description: t.description,
-      category: t.category,
-      steps: t.steps,
-      videoUrl: t.videoUrl,
-      createdAt: t.createdAt.toISOString(),
+      title: t.title || '',
+      slug: t.slug || '',
+      description: t.description || '',
+      category: t.category || '',
+      steps: t.steps || '',
+      readTime: t.readTime || '3 នាទីអាន',
+      icon: t.icon || 'BookOpen',
+      views: t.views || 0,
+      createdAt: t.createdAt ? t.createdAt.toISOString() : new Date().toISOString(),
     }));
   } catch (error) {
     console.error('Failed to load free software page data:', error);

@@ -4,12 +4,6 @@ import fs from 'fs';
 import os from 'os';
 import { requireAdmin } from '@/lib/auth';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(request: NextRequest) {
   try {
     await requireAdmin();

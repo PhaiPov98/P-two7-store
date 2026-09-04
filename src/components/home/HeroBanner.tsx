@@ -132,7 +132,7 @@ export default function HeroBanner({ stats }: HeroBannerProps) {
   return (
     <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4 space-y-3 sm:space-y-4 select-none">
       {/* 1. CAROUSEL BANNER CARD */}
-      <div className="relative w-full h-[230px] sm:h-[340px] md:h-[420px] lg:h-[480px] rounded-2xl sm:rounded-3xl overflow-hidden border border-cyan-500/25 shadow-xl bg-dark-950 flex items-center">
+      <div className="relative w-full h-[230px] sm:h-[340px] md:h-[420px] lg:h-[480px] rounded-2xl sm:rounded-3xl overflow-hidden border border-cyan-500/25 shadow-xl bg-dark-950 flex items-start sm:items-center">
         {/* SLIDE IMAGES */}
         {slides.map((slide, idx) => (
           <div
@@ -155,7 +155,7 @@ export default function HeroBanner({ stats }: HeroBannerProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-dark-950/95 via-dark-950/60 to-dark-950/30 sm:bg-gradient-to-r sm:from-dark-950/95 sm:via-dark-950/60 sm:to-transparent pointer-events-none z-10" />
 
         {/* CONTENT */}
-        <div className="relative z-20 px-4 py-3 sm:p-8 lg:p-12 w-full max-w-2xl space-y-2 sm:space-y-4 pb-6 sm:pb-8">
+        <div className="relative z-20 px-4 pt-3.5 pb-2 sm:p-8 lg:p-12 w-full max-w-2xl space-y-1.5 sm:space-y-4">
           {/* Badge */}
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:py-1 rounded-full bg-cyan-500/25 border border-cyan-400/50 backdrop-blur-md shadow-md shadow-cyan-950/40">
             <span className="flex h-1.5 w-1.5 relative">
@@ -169,12 +169,12 @@ export default function HeroBanner({ stats }: HeroBannerProps) {
 
           {/* Title */}
           <div>
-            <h1 className="text-xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+            <h1 className="text-lg sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
               <span className="bg-gradient-to-r from-white via-slate-100 to-cyan-200 bg-clip-text text-transparent">
                 {currentSlide.title}
               </span>
             </h1>
-            <p className="hidden sm:block text-xs sm:text-sm text-slate-300 mt-1 line-clamp-2 leading-relaxed drop-shadow-md">
+            <p className="text-[11px] sm:text-sm text-slate-300 mt-0.5 sm:mt-1 line-clamp-1 sm:line-clamp-2 leading-relaxed drop-shadow-md">
               {currentSlide.subtitle}
             </p>
           </div>

@@ -47,7 +47,16 @@ export async function POST(request: Request) {
     }
 
     // 1. Identify or Create User
-    let userId = session?.id;
+    let userId: string | null = null;
+    if (session?.id) {
+      const userInDb = await prisma.user.findUnique({
+        where: { id: session.id },
+      });
+      if (userInDb) {
+        userId = userInDb.id;
+      }
+    }
+
     if (!userId) {
       const existingUser = await prisma.user.findUnique({
         where: { email: customerEmail.toLowerCase().trim() },

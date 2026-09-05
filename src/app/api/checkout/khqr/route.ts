@@ -68,9 +68,21 @@ export async function POST(request: Request) {
     // Create session PENDING order if items and customer details provided
     if (customerEmail && items && Array.isArray(items) && items.length > 0) {
       const session = await getCurrentUser();
-      let userId = session?.id;
+      let userId: string | null = null;
+
+      // Verify that session user actually exists in the database
+      if (session?.id) {
+        const userInDb = await prisma.user.findUnique({
+          where: { id: session.id },
+        });
+        if (userInDb) {
+          userId = userInDb.id;
+        }
+      }
+
       const cleanEmail = customerEmail.toLowerCase().trim();
 
+      // If no valid session user found in DB, find or create by email
       if (!userId) {
         const existingUser = await prisma.user.findUnique({
           where: { email: cleanEmail },
@@ -113,7 +125,7 @@ export async function POST(request: Request) {
       await prisma.order.create({
         data: {
           orderNumber,
-          userId: userId || undefined,
+          userId: userId!,
           customerName: customerName || 'Valued Customer',
           customerEmail: cleanEmail,
           customerPhone: customerPhone || null,

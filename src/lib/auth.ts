@@ -84,6 +84,33 @@ export async function getCurrentUser(): Promise<UserSession | null> {
     const session = await verifyToken(token);
     if (!session || !session.id) return null;
 
+    // Verify user exists in DB to prevent foreign key errors (e.g. after DB reset or migration)
+    try {
+      let dbUser = await prisma.user.findUnique({
+        where: { id: session.id },
+        select: { id: true, name: true, email: true, role: true, avatar: true },
+      });
+
+      if (!dbUser && session.email) {
+        dbUser = await prisma.user.findUnique({
+          where: { email: session.email.toLowerCase().trim() },
+          select: { id: true, name: true, email: true, role: true, avatar: true },
+        });
+      }
+
+      if (dbUser) {
+        return {
+          id: dbUser.id,
+          name: dbUser.name,
+          email: dbUser.email,
+          role: dbUser.role as 'CUSTOMER' | 'ADMIN',
+          avatar: dbUser.avatar,
+        };
+      }
+    } catch {
+      // In case DB is temporarily unreachable during non-critical read
+    }
+
     return session;
   } catch (error) {
     return null;

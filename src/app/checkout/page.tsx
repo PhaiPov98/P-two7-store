@@ -58,6 +58,15 @@ export default function CheckoutPage() {
   const [phone, setPhone] = useState(user?.phone || '');
   const [paymentMethod, setPaymentMethod] = useState<'ABA_PAY' | 'BAKONG_KHQR' | 'WING' | 'CREDIT_CARD'>('ABA_PAY');
 
+  // Auto-fill logged in user info when user data is loaded
+  useEffect(() => {
+    if (user) {
+      if (user.name) setName(user.name);
+      if (user.email) setEmail(user.email);
+      if (user.phone) setPhone(user.phone);
+    }
+  }, [user]);
+
   // Checkout Status & Modal
   const [processing, setProcessing] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
@@ -424,9 +433,16 @@ export default function CheckoutPage() {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-300 mb-1.5">
-                  Email (សម្រាប់ទទួល Product Key) <span className="text-red-400">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block font-bold text-slate-300">
+                    Email (សម្រាប់ទទួល Product Key) <span className="text-red-400">*</span>
+                  </label>
+                  {user?.email && (
+                    <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                      ✓ គណនីបាន Login ({user.email})
+                    </span>
+                  )}
+                </div>
                 <input
                   type="email"
                   required

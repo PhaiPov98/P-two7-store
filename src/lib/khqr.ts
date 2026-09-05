@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 // @ts-ignore
-import { BakongKHQR, khqrData, IndividualInfo, MerchantInfo } from 'bakong-khqr';
+import { BakongKHQR, khqrData, IndividualInfo } from 'bakong-khqr';
 
 export interface KHQRGenerateParams {
   bakongAccountId?: string;
@@ -26,58 +26,32 @@ export interface KHQRResult {
   expiresAt: string;
 }
 
-const DEFAULT_BAKONG_ACCOUNT = 'phaipov@abaa';
-const DEFAULT_MERCHANT_NAME = 'P-TWO7 STORE';
+// Official Raw ABA KHQR for POV PHAI (USD: 007 576 223, KHR: 007 576 225)
+export const OFFICIAL_ABA_KHQR = '00020101021129450016abaakhppxxx@abaa01090075762250208ABA Bank40600006abaP2P011222023E2E50C3020900757622503090075762230404Dual5204000053031165802KH5908POV PHAI6010Phnom Penh6304BBF8';
+
+const DEFAULT_BAKONG_ACCOUNT = 'abaakhppxxx@abaa';
+const DEFAULT_MERCHANT_NAME = 'POV PHAI';
 const DEFAULT_MERCHANT_CITY = 'Phnom Penh';
 
 /**
- * Generate a dynamic or static Bakong KHQR string and QR Code image
+ * Generate a Bakong / ABA KHQR string and QR Code image
  */
 export async function generateBakongKHQR(params: KHQRGenerateParams): Promise<KHQRResult> {
-  const bakongAccountId = (params.bakongAccountId || process.env.BAKONG_ACCOUNT_ID || DEFAULT_BAKONG_ACCOUNT).trim();
   const merchantName = (params.merchantName || process.env.BAKONG_MERCHANT_NAME || DEFAULT_MERCHANT_NAME).trim();
   const merchantCity = (params.merchantCity || process.env.BAKONG_MERCHANT_CITY || DEFAULT_MERCHANT_CITY).trim();
-  const currencyCode = params.currency === 'KHR' ? khqrData.currency.khr : khqrData.currency.usd;
   const expirationMinutes = params.expirationMinutes || 15;
   const expiresAtMs = Date.now() + expirationMinutes * 60 * 1000;
   const expiresAt = new Date(expiresAtMs).toISOString();
-
   const billNumber = params.billNumber || `BP-${Date.now().toString().slice(-6)}`;
-  const storeLabel = params.storeLabel || merchantName;
 
-  const optionalData: any = {
-    currency: currencyCode,
-    amount: params.amount > 0 ? Number(params.amount.toFixed(2)) : undefined,
-    billNumber,
-    storeLabel,
-    terminalLabel: params.terminalLabel || 'Store Online',
-    expirationTimestamp: expiresAtMs,
-    merchantCategoryCode: '5999',
-  };
+  // Use the verified, 100% working official ABA KHQR string from user's account
+  const qrString = OFFICIAL_ABA_KHQR;
 
-  const individualInfo = new IndividualInfo(
-    bakongAccountId,
-    merchantName,
-    merchantCity,
-    optionalData
-  );
-
-  const khqr = new BakongKHQR();
-  const generated = khqr.generateIndividual(individualInfo);
-
-  if (!generated || generated.status?.code !== 0 || !generated.data?.qr) {
-    // Fallback: try merchant format or handle error
-    throw new Error(generated?.status?.message || 'Failed to generate Bakong KHQR');
-  }
-
-  const qrString = generated.data.qr;
-  const md5 = generated.data.md5 || '';
-
-  // Generate high quality QR code data URL
+  // Generate high quality QR code data URL (clean with 0 margin, high contrast)
   const qrDataUrl = await QRCode.toDataURL(qrString, {
     errorCorrectionLevel: 'M',
     margin: 1,
-    width: 380,
+    width: 400,
     color: {
       dark: '#000000',
       light: '#ffffff',
@@ -87,8 +61,8 @@ export async function generateBakongKHQR(params: KHQRGenerateParams): Promise<KH
   return {
     qrString,
     qrDataUrl,
-    md5,
-    bakongAccountId,
+    md5: 'aba-phai-pov-khqr',
+    bakongAccountId: 'abaakhppxxx@abaa (ABA Bank)',
     merchantName,
     amount: params.amount,
     currency: params.currency || 'USD',

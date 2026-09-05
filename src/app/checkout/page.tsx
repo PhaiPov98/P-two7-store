@@ -615,18 +615,12 @@ export default function CheckoutPage() {
                     <span className="text-xs font-bold">កំពុងបង្កើត Real KHQR...</span>
                   </div>
                 ) : khqrData?.qrDataUrl ? (
-                  <div className="relative group">
+                  <div className="flex items-center justify-center p-2 bg-white rounded-xl">
                     <img
                       src={khqrData.qrDataUrl}
-                      alt="Bakong KHQR Code"
-                      className="w-56 h-56 object-contain rounded-xl"
+                      alt="ABA KHQR Code"
+                      className="w-64 h-64 object-contain rounded-lg shadow-sm"
                     />
-                    {/* KHQR center logo badge */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="w-10 h-10 bg-white rounded-xl shadow-lg border-2 border-red-600 flex items-center justify-center">
-                        <span className="text-[9px] font-black text-red-600">KHQR</span>
-                      </div>
-                    </div>
                   </div>
                 ) : (
                   <div className="text-xs text-red-600 p-4">មិនអាចទាញយក QR Code បានទេ</div>

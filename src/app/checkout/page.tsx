@@ -56,7 +56,7 @@ export default function CheckoutPage() {
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState(user?.phone || '');
-  const [paymentMethod, setPaymentMethod] = useState<'BAKONG_KHQR' | 'ABA_PAY' | 'WING' | 'CREDIT_CARD'>('BAKONG_KHQR');
+  const [paymentMethod, setPaymentMethod] = useState<'ABA_PAY' | 'BAKONG_KHQR' | 'WING' | 'CREDIT_CARD'>('ABA_PAY');
 
   // Checkout Status & Modal
   const [processing, setProcessing] = useState(false);
@@ -456,109 +456,42 @@ export default function CheckoutPage() {
           </div>
 
           {/* Section 2: Payment Method */}
-          <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <span className="w-6 h-6 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center text-xs">2</span>
-              វិធីទូទាត់ (Payment Method)
-            </h3>
+          <div className="glass-card p-6 rounded-3xl border border-blue-500/30 bg-gradient-to-b from-blue-950/20 via-dark-900 to-dark-900 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-xs">2</span>
+                វិធីទូទាត់ (Payment Method)
+              </h3>
+              <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                Official ABA Pay
+              </span>
+            </div>
 
-            <div className="space-y-3">
-              {/* Bakong KHQR */}
-              <label
-                onClick={() => setPaymentMethod('BAKONG_KHQR')}
-                className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
-                  paymentMethod === 'BAKONG_KHQR'
-                    ? 'bg-red-950/20 border-red-500/50 text-white shadow-lg shadow-red-950/30'
-                    : 'bg-dark-850 border-slate-800 text-slate-300 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-400 font-black text-xs">
-                    KHQR
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <p className="font-bold text-xs text-white">Bakong KHQR / ABA PAY</p>
-                      <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                        ស្កេនបានភ្លាមៗ
-                      </span>
-                    </div>
-                    <p className="text-[10px] text-slate-400">ស្កេនទូទាត់តាម ABA Mobile, ACLEDA, Wing, Canadia, Bakong និងគ្រប់ App</p>
-                  </div>
+            {/* Only ABA PAY */}
+            <div className="p-4 rounded-2xl border bg-blue-950/25 border-blue-500/60 text-white shadow-xl shadow-blue-950/30 flex items-center justify-between">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-600/40 flex-shrink-0">
+                  ABA
                 </div>
-                <div className="w-4 h-4 rounded-full border border-red-500 flex items-center justify-center p-0.5">
-                  {paymentMethod === 'BAKONG_KHQR' && <div className="w-full h-full bg-red-500 rounded-full" />}
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-black text-sm text-white">ABA Mobile & KHQR</p>
+                    <span className="px-2 py-0.5 text-[9px] font-black rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
+                      Tap to Pay & Scan
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300">
+                    ទូទាត់ផ្ទាល់តាម App ABA Mobile ឬ ស្កេន Bakong KHQR
+                  </p>
+                  <p className="text-[10px] font-mono font-bold text-emerald-400">
+                    គណនី: PHAI POV (007 576 225)
+                  </p>
                 </div>
-              </label>
+              </div>
 
-              {/* ABA PAY */}
-              <label
-                onClick={() => setPaymentMethod('ABA_PAY')}
-                className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
-                  paymentMethod === 'ABA_PAY'
-                    ? 'bg-blue-950/20 border-blue-500/50 text-white shadow-lg shadow-blue-950/30'
-                    : 'bg-dark-850 border-slate-800 text-slate-300 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
-                    <Building2 className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-xs text-white">ABA Mobile App (Tap to Pay)</p>
-                    <p className="text-[10px] text-slate-400">បើក App ABA Mobile ទូទាត់ផ្ទាល់</p>
-                  </div>
-                </div>
-                <div className="w-4 h-4 rounded-full border border-blue-500 flex items-center justify-center p-0.5">
-                  {paymentMethod === 'ABA_PAY' && <div className="w-full h-full bg-blue-500 rounded-full" />}
-                </div>
-              </label>
-
-              {/* Wing */}
-              <label
-                onClick={() => setPaymentMethod('WING')}
-                className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
-                  paymentMethod === 'WING'
-                    ? 'bg-lime-950/20 border-lime-500/50 text-white shadow-lg shadow-lime-950/30'
-                    : 'bg-dark-850 border-slate-800 text-slate-300 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-lime-600/20 border border-lime-500/30 flex items-center justify-center text-lime-400">
-                    <Building2 className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-xs text-white">Wing Bank Transfer</p>
-                    <p className="text-[10px] text-slate-400">Wing Money & Bank Transfer KHQR</p>
-                  </div>
-                </div>
-                <div className="w-4 h-4 rounded-full border border-lime-500 flex items-center justify-center p-0.5">
-                  {paymentMethod === 'WING' && <div className="w-full h-full bg-lime-500 rounded-full" />}
-                </div>
-              </label>
-
-              {/* Credit Card */}
-              <label
-                onClick={() => setPaymentMethod('CREDIT_CARD')}
-                className={`flex items-center justify-between p-4 rounded-2xl border cursor-pointer transition-all ${
-                  paymentMethod === 'CREDIT_CARD'
-                    ? 'bg-purple-950/20 border-purple-500/50 text-white shadow-lg shadow-purple-950/30'
-                    : 'bg-dark-850 border-slate-800 text-slate-300 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                    <CreditCard className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-xs text-white">Credit / Debit Card</p>
-                    <p className="text-[10px] text-slate-400">Visa, Mastercard, UnionPay</p>
-                  </div>
-                </div>
-                <div className="w-4 h-4 rounded-full border border-purple-500 flex items-center justify-center p-0.5">
-                  {paymentMethod === 'CREDIT_CARD' && <div className="w-full h-full bg-purple-500 rounded-full" />}
-                </div>
-              </label>
+              <div className="w-5 h-5 rounded-full border-2 border-blue-400 flex items-center justify-center p-0.5 flex-shrink-0">
+                <div className="w-full h-full bg-blue-500 rounded-full" />
+              </div>
             </div>
           </div>
         </div>

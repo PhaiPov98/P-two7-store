@@ -12,12 +12,12 @@ export async function POST(request: Request) {
     }
 
     // Load custom Bakong settings from DB if configured
-    let bakongAccountId = process.env.BAKONG_ACCOUNT_ID || 'phaipov@abaa';
-    let merchantName = process.env.BAKONG_MERCHANT_NAME || 'PHAI POV';
+    let bakongAccountId = process.env.BAKONG_ACCOUNT_ID || 'abaakhppxxx@abaa';
+    let merchantName = process.env.BAKONG_MERCHANT_NAME || 'POV PHAI';
     let merchantCity = process.env.BAKONG_MERCHANT_CITY || 'Phnom Penh';
     let bankName = 'ABA Bank';
     let accountNumber = '007 576 225';
-    let accountName = 'PHAI POV';
+    let accountName = 'POV PHAI';
     let abaPayLink = 'https://pay.ababank.com/oRF8/5ipp0sa2';
 
     try {

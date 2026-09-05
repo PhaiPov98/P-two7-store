@@ -26,6 +26,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!paymentSlip) {
+      return NextResponse.json(
+        { error: 'សូមស្កេនទូទាត់ប្រាក់តាម App ABA ឬភ្ជាប់រូបភាពបង្កាន់ដៃបង់ប្រាក់ (Payment Slip) ជាមុនសិន' },
+        { status: 400 }
+      );
+    }
+
     // Check Auto-fulfill setting
     let autoFulfill = true;
     try {

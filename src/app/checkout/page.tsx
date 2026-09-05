@@ -250,6 +250,32 @@ export default function CheckoutPage() {
     try {
       setProcessing(true);
 
+      // 1. First check if bank already confirmed via webhook
+      if (email.trim()) {
+        const statusRes = await fetch(`/api/checkout/status?email=${encodeURIComponent(email.trim())}`);
+        if (statusRes.ok) {
+          const statusData = await statusRes.json();
+          if (statusData.paid) {
+            setOrderSuccess(statusData);
+            setShowQRModal(false);
+            clearCart();
+            success('ការទូទាត់ជោគជ័យ!', 'ធនាគារ ABA បានបញ្ជាក់ការផ្ទេរប្រាក់ 100%');
+            return;
+          }
+        }
+      }
+
+      // 2. If not confirmed by bank yet and no slip uploaded -> BLOCK
+      if (!slipImage) {
+        error(
+          'មិនទាន់ឃើញមានការផ្ទេរប្រាក់ទេ!',
+          'សូមស្កេនទូទាត់តាម App ABA ឬ ភ្ជាប់រូបភាពបង្កាន់ដៃបង់ប្រាក់ (Payment Slip) ជាមុនសិន'
+        );
+        setProcessing(false);
+        return;
+      }
+
+      // 3. If slip is uploaded, submit order for Admin verification
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -258,7 +284,7 @@ export default function CheckoutPage() {
           customerEmail: email.trim(),
           customerPhone: phone.trim(),
           paymentMethod,
-          paymentSlip: slipImage || null,
+          paymentSlip: slipImage,
           couponCode: coupon?.code || null,
           items: items.map((i) => ({
             productId: i.productId,
@@ -279,7 +305,7 @@ export default function CheckoutPage() {
       setOrderSuccess(data);
       setShowQRModal(false);
       clearCart();
-      success('ការទូទាត់ជោគជ័យ!', 'ការបញ្ជាទិញរបស់អ្នកត្រូវបានបញ្ចប់ត្រឹមត្រូវ');
+      success('បានផ្ញើបង្កាន់ដៃជោគជ័យ!', 'ក្រុមការងារបានទទួលរូប Slip និងកំពុងផ្ទៀងផ្ទាត់ជូន');
     } catch (err) {
       error('មានបញ្ហា', 'មិនអាចបញ្ចប់ការទូទាត់បានទេ');
     } finally {

@@ -103,6 +103,46 @@ export default function CheckoutPage() {
     return () => clearInterval(interval);
   }, [showQRModal]);
 
+  // Real-time Bakong Auto-Verification Polling (checks bank ledger every 3s)
+  useEffect(() => {
+    if (!showQRModal || !khqrData?.md5 || orderSuccess) return;
+
+    let isMounted = true;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/checkout/bakong-check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            md5: khqrData.md5,
+            orderData: {
+              customerName: name.trim(),
+              customerEmail: email.trim(),
+              customerPhone: phone.trim(),
+              items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+            },
+          }),
+        });
+
+        const data = await res.json();
+        if (isMounted && data.paid && data.success) {
+          clearInterval(interval);
+          setOrderSuccess(data);
+          setShowQRModal(false);
+          clearCart();
+          success('ការទូទាត់ជោគជ័យ!', 'ធនាគារបានបញ្ជាក់ការផ្ទេរប្រាក់ 100%');
+        }
+      } catch (err) {
+        // Silently continue polling
+      }
+    }, 3000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [showQRModal, khqrData?.md5, orderSuccess, name, email, phone, items, clearCart, success]);
+
   // Format timer MM:SS
   const formatTimer = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -573,6 +613,15 @@ export default function CheckoutPage() {
               >
                 <X className="w-4 h-4" />
               </button>
+            </div>
+
+            {/* Live Bank Auto-Detection Status */}
+            <div className="flex items-center justify-center gap-2 py-1.5 px-3 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] text-emerald-300">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span>ប្រព័ន្ធកំពុងរង់ចាំការស្កេនទូទាត់ពី App ធនាគារ (Auto-Detect)...</span>
             </div>
 
             {/* Direct ABA Mobile Tap To Pay Button */}

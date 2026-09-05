@@ -32,6 +32,7 @@ export default function AdminSettingsPage() {
   const [bankName, setBankName] = useState('ABA Bank');
   const [accountNumber, setAccountNumber] = useState('000 123 456');
   const [accountName, setAccountName] = useState('PHAI POV');
+  const [bakongApiToken, setBakongApiToken] = useState('');
   const [autoFulfill, setAutoFulfill] = useState('true');
   const [heroTicker, setHeroTicker] = useState('');
 
@@ -48,6 +49,7 @@ export default function AdminSettingsPage() {
         if (s.payment_bank_name) setBankName(s.payment_bank_name);
         if (s.payment_account_number) setAccountNumber(s.payment_account_number);
         if (s.payment_account_name) setAccountName(s.payment_account_name);
+        if (s.bakong_api_token) setBakongApiToken(s.bakong_api_token);
         if (s.payment_auto_fulfill) setAutoFulfill(s.payment_auto_fulfill);
         if (s.hero_ticker_text) setHeroTicker(s.hero_ticker_text);
       }
@@ -78,6 +80,7 @@ export default function AdminSettingsPage() {
             payment_bank_name: bankName.trim(),
             payment_account_number: accountNumber.trim(),
             payment_account_name: accountName.trim(),
+            bakong_api_token: bakongApiToken.trim(),
             payment_auto_fulfill: autoFulfill,
             hero_ticker_text: heroTicker.trim(),
           },
@@ -264,6 +267,26 @@ export default function AdminSettingsPage() {
                 placeholder="ឧ. PHAI POV"
                 className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-red-500 font-mono uppercase"
               />
+            </div>
+
+            <div className="md:col-span-2 p-4 rounded-2xl bg-dark-950/70 border border-slate-700/60 space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block font-bold text-slate-200 text-xs flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-yellow-400" />
+                  <span>Bakong Open API Token (សម្រាប់ប្រព័ន្ធ Auto-Check ធនាគារ 100%)</span>
+                </label>
+                <span className="text-[10px] text-slate-400 font-normal">Optional</span>
+              </div>
+              <input
+                type="password"
+                value={bakongApiToken}
+                onChange={(e) => setBakongApiToken(e.target.value)}
+                placeholder="Paste your NBC Bakong Open API Bearer Token here..."
+                className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-yellow-500 font-mono"
+              />
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                💡 ប្រសិនបើមាន Token នេះ ប្រព័ន្ធនឹងឆែកទៅកាន់ធនាគារជាតិបាគងដោយស្វ័យប្រវត្ត។ នៅពេលអតិថិជនស្កេនបង់លុយពិតប្រាកដ ប្រព័ន្ធនឹងបញ្ចេញ Product Key ភ្លាមៗដោយស្វ័យប្រវត្តិ 100% ដោយមិនចាំបាច់ Admin ចុច Approve ឬអតិថិជន Upload Slip ឡើយ។
+              </p>
             </div>
           </div>
         </div>

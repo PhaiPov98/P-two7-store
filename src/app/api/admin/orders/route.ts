@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { requireAdmin } from '@/lib/auth';
+import { allocateKeyForOrderItem } from '@/lib/key-allocator';
 
 export async function GET() {
   try {
@@ -8,9 +9,11 @@ export async function GET() {
     const orders = await prisma.order.findMany({
       include: {
         user: { select: { id: true, name: true, email: true, phone: true } },
+        payments: true,
         items: {
           include: {
             key: true,
+            product: { select: { id: true, name: true } },
           },
         },
       },
@@ -29,11 +32,38 @@ export async function PUT(request: Request) {
 
     if (!id) return NextResponse.json({ error: 'Missing Order ID' }, { status: 400 });
 
+    const existingOrder = await prisma.order.findUnique({
+      where: { id },
+      include: { items: { include: { key: true } } },
+    });
+
+    if (!existingOrder) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+    }
+
+    // If moving from PENDING to PAID/COMPLETED, auto allocate keys if not allocated yet
+    if (paymentStatus === 'PAID' || orderStatus === 'COMPLETED') {
+      for (const item of existingOrder.items) {
+        if (item.productId && !item.key) {
+          try {
+            await allocateKeyForOrderItem(item.productId, item.id);
+          } catch (e) {
+            console.error('Failed to allocate key on status change:', e);
+          }
+        }
+      }
+    }
+
     const order = await prisma.order.update({
       where: { id },
       data: {
         orderStatus: orderStatus || undefined,
         paymentStatus: paymentStatus || undefined,
+      },
+      include: {
+        items: {
+          include: { key: true },
+        },
       },
     });
 
@@ -82,4 +112,3 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: error.message || 'មិនអាចលុបការបញ្ជាទិញបានទេ' }, { status: 500 });
   }
 }
-

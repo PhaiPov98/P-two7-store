@@ -15,6 +15,7 @@ export async function POST(request: Request) {
       customerPhone,
       items,
       paymentMethod,
+      paymentSlip,
       couponCode,
     } = body;
 
@@ -23,6 +24,19 @@ export async function POST(request: Request) {
         { error: 'សូមបំពេញព័ត៌មានអតិថិជន និងទំនិញឱ្យបានត្រឹមត្រូវ' },
         { status: 400 }
       );
+    }
+
+    // Check Auto-fulfill setting
+    let autoFulfill = true;
+    try {
+      const autoSetting = await prisma.setting.findUnique({
+        where: { key: 'payment_auto_fulfill' },
+      });
+      if (autoSetting && autoSetting.value === 'false') {
+        autoFulfill = false;
+      }
+    } catch (e) {
+      // default true
     }
 
     // 1. Identify or Create User
@@ -111,6 +125,9 @@ export async function POST(request: Request) {
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
     const orderNumber = `BP-${dateStr}-${randomSuffix}`;
 
+    const orderPaymentStatus = autoFulfill ? 'PAID' : 'PENDING';
+    const orderStatus = autoFulfill ? 'COMPLETED' : 'PENDING';
+
     // 5. Create Order & Items
     const order = await prisma.order.create({
       data: {
@@ -122,13 +139,15 @@ export async function POST(request: Request) {
         subtotal,
         discount,
         total,
-        paymentStatus: 'PAID', // Instant verification for simulation
-        orderStatus: 'COMPLETED',
+        paymentStatus: orderPaymentStatus,
+        orderStatus,
         paymentMethod: paymentMethod || 'BAKONG_KHQR',
         paymentDetails: JSON.stringify({
           gateway: paymentMethod || 'BAKONG_KHQR',
           transactionId: `TXN-${Date.now()}`,
-          verifiedAt: new Date().toISOString(),
+          verifiedAt: autoFulfill ? new Date().toISOString() : null,
+          hasSlip: Boolean(paymentSlip),
+          paymentSlip: paymentSlip || null,
         }),
         items: {
           create: validatedItems.map((item) => ({
@@ -144,17 +163,19 @@ export async function POST(request: Request) {
       },
     });
 
-    // 6. Allocate Product Keys for each ordered item
+    // 6. Allocate Product Keys for each ordered item (if autoFulfill)
     const allocatedKeys: Array<{ productName: string; key: string }> = [];
 
-    for (const orderItem of order.items) {
-      if (orderItem.productId) {
-        for (let i = 0; i < orderItem.quantity; i++) {
-          const allocation = await allocateKeyForOrderItem(orderItem.productId, orderItem.id);
-          allocatedKeys.push({
-            productName: orderItem.name,
-            key: allocation.keyString,
-          });
+    if (autoFulfill) {
+      for (const orderItem of order.items) {
+        if (orderItem.productId) {
+          for (let i = 0; i < orderItem.quantity; i++) {
+            const allocation = await allocateKeyForOrderItem(orderItem.productId, orderItem.id);
+            allocatedKeys.push({
+              productName: orderItem.name,
+              key: allocation.keyString,
+            });
+          }
         }
       }
     }
@@ -176,27 +197,29 @@ export async function POST(request: Request) {
       version?: string;
     }> = [];
 
-    for (const prod of productsWithDownloads) {
-      if (prod.file) {
-        downloads.push({
-          productId: prod.id,
-          productName: prod.name,
-          fileName: prod.file.title,
-          fileType: prod.file.fileType || 'EXE',
-          fileSize: prod.file.fileSize || 'Direct',
-          downloadUrl: `/api/download/${prod.file.id}`,
-          version: prod.file.version || prod.version || '1.0',
-        });
-      } else if (prod.downloadUrl) {
-        downloads.push({
-          productId: prod.id,
-          productName: prod.name,
-          fileName: prod.name,
-          fileType: prod.platform || 'EXE',
-          fileSize: 'Cloud',
-          downloadUrl: prod.downloadUrl,
-          version: prod.version || '1.0',
-        });
+    if (autoFulfill) {
+      for (const prod of productsWithDownloads) {
+        if (prod.file) {
+          downloads.push({
+            productId: prod.id,
+            productName: prod.name,
+            fileName: prod.file.title,
+            fileType: prod.file.fileType || 'EXE',
+            fileSize: prod.file.fileSize || 'Direct',
+            downloadUrl: `/api/download/${prod.file.id}`,
+            version: prod.file.version || prod.version || '1.0',
+          });
+        } else if (prod.downloadUrl) {
+          downloads.push({
+            productId: prod.id,
+            productName: prod.name,
+            fileName: prod.name,
+            fileType: prod.platform || 'EXE',
+            fileSize: 'Cloud',
+            downloadUrl: prod.downloadUrl,
+            version: prod.version || '1.0',
+          });
+        }
       }
     }
 
@@ -208,18 +231,24 @@ export async function POST(request: Request) {
         currency: 'USD',
         provider: paymentMethod || 'BAKONG_KHQR',
         transactionId: `TXN-${Date.now()}`,
-        status: 'SUCCESS',
-        payload: JSON.stringify({ orderNumber, itemsCount: validatedItems.length }),
+        status: autoFulfill ? 'SUCCESS' : 'PENDING',
+        payload: JSON.stringify({
+          orderNumber,
+          itemsCount: validatedItems.length,
+          hasSlip: Boolean(paymentSlip),
+        }),
       },
     });
 
-    // 8. Send Telegram New Order Alert to Admin
+    // 8. Send Telegram New Order Alert to Admin (with photo slip if attached)
     sendNewOrderAlert({
       orderNumber: order.orderNumber,
       customerName,
       customerEmail,
+      customerPhone: customerPhone || null,
       total,
       paymentMethod: paymentMethod || 'BAKONG_KHQR',
+      paymentSlip: paymentSlip || null,
       items: validatedItems.map((item) => ({ name: item.name, quantity: item.quantity })),
     }).catch((err) => console.error('Telegram order alert error:', err));
 
@@ -230,7 +259,10 @@ export async function POST(request: Request) {
       total,
       allocatedKeys,
       downloads,
-      message: 'ការទូទាត់ និងបញ្ជាទិញបានជោគជ័យ! Product Key និង File Download ត្រូវបានផ្ញើជូនរួចរាល់។',
+      paymentStatus: orderPaymentStatus,
+      message: autoFulfill
+        ? 'ការទូទាត់ និងបញ្ជាទិញបានជោគជ័យ! Product Key និង File Download ត្រូវបានផ្ញើជូនរួចរាល់។'
+        : 'ការបញ្ជាទិញទទួលបានជោគជ័យ! ក្រុមការងារកំពុងផ្ទៀងផ្ទាត់ការទូទាត់របស់អ្នក។',
     });
   } catch (error) {
     console.error('Checkout error:', error);

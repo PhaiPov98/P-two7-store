@@ -184,31 +184,97 @@ export async function sendBruteForceAlert(params: {
   return await sendTelegramNotification(text);
 }
 
+export async function sendTelegramPhoto(params: {
+  photo: string; // base64 data URL or HTTP URL
+  caption: string;
+}): Promise<boolean> {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!botToken || !chatId) {
+    return false;
+  }
+
+  try {
+    if (params.photo.startsWith('data:image/')) {
+      // Extract base64 and mime
+      const match = params.photo.match(/^data:(image\/[a-zA-Z0-9.+]+);base64,(.+)$/);
+      if (match) {
+        const mimeType = match[1];
+        const base64Data = match[2];
+        const buffer = Buffer.from(base64Data, 'base64');
+        const blob = new Blob([buffer], { type: mimeType });
+
+        const formData = new FormData();
+        formData.append('chat_id', chatId);
+        formData.append('photo', blob, 'payment_slip.jpg');
+        formData.append('caption', params.caption);
+        formData.append('parse_mode', 'HTML');
+
+        const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+          method: 'POST',
+          body: formData,
+        });
+        return res.ok;
+      }
+    }
+
+    // Direct URL
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        photo: params.photo,
+        caption: params.caption,
+        parse_mode: 'HTML',
+      }),
+    });
+    return res.ok;
+  } catch (err) {
+    console.error('Telegram photo notification failed:', err);
+    return false;
+  }
+}
+
 export async function sendNewOrderAlert(params: {
   orderNumber: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string | null;
   total: number;
   paymentMethod: string;
+  paymentSlip?: string | null;
   items: Array<{ name: string; quantity: number }>;
 }) {
   const time = getFormattedPhnomPenhTime();
   const itemList = params.items.map((i) => `  ▫️ ${i.name} (x${i.quantity})`).join('\n');
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
-  const text = `
+  const caption = `
 🛍️ <b>NEW ORDER RECEIVED! (#${params.orderNumber})</b>
 ━━━━━━━━━━━━━━━━━━━━
 • <b>អតិថិជន:</b> <code>${params.customerName}</code>
 • <b>Email:</b> <code>${params.customerEmail}</code>
-• <b>ទឹកប្រាក់:</b> <b>$${params.total.toFixed(2)}</b> (${params.paymentMethod})
-• <b>ទំនិញ:</b>
+${params.customerPhone ? `• <b>ទូរស័ព្ទ:</b> <code>${params.customerPhone}</code>\n` : ''}• <b>វិធីទូទាត់:</b> <b>${params.paymentMethod}</b>
+• <b>ទឹកប្រាក់សរុប:</b> <b>$${params.total.toFixed(2)}</b> (~៛${Math.round(params.total * 4100).toLocaleString()})
+• <b>ទំនិញបញ្ជាទិញ:</b>
 ${itemList}
+• <b>បង្កាន់ដៃ Slip:</b> ${params.paymentSlip ? '✅ បានភ្ជាប់ Slip ខាងលើ' : '⚠️ មិនមានរូបភាព Slip ទេ'}
 • <b>ពេលវេលា:</b> ${time}
 ━━━━━━━━━━━━━━━━━━━━
-👉 <a href="http://localhost:3000/admin/orders"><b>មើល Order ក្នុង Admin Dashboard</b></a>
+👉 <a href="${appUrl}/admin/orders"><b>ពិនិត្យ & ផ្ទៀងផ្ទាត់ Order ក្នុង Dashboard</b></a>
   `.trim();
 
-  return await sendTelegramNotification(text);
+  if (params.paymentSlip) {
+    const photoSent = await sendTelegramPhoto({
+      photo: params.paymentSlip,
+      caption,
+    });
+    if (photoSent) return true;
+  }
+
+  return await sendTelegramNotification(caption);
 }
 
 export async function sendPasswordResetAlert(params: {
@@ -237,3 +303,4 @@ export async function sendPasswordResetAlert(params: {
 
   return await sendTelegramNotification(text);
 }
+

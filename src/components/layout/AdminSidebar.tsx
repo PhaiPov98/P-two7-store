@@ -21,6 +21,7 @@ import {
   Star,
   Sparkles,
   Gift,
+  Settings,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
@@ -30,13 +31,14 @@ export default function AdminSidebar() {
 
   const links = [
     { href: '/admin', label: 'ផ្ទាំងគ្រប់គ្រង (Dashboard)', icon: LayoutDashboard },
+    { href: '/admin/orders', label: 'ការបញ្ជាទិញ (Orders)', icon: ShoppingBag },
+    { href: '/admin/settings', label: 'ការកំណត់ & KHQR (Settings)', icon: Settings },
     { href: '/admin/products', label: 'ផលិតផល (Products)', icon: Package },
     { href: '/admin/categories', label: 'ប្រភេទផលិតផល (Categories)', icon: Layers },
     { href: '/admin/keys', label: 'Product Keys (License)', icon: KeyRound },
     { href: '/admin/files', label: 'ឯកសារ & Tools (Files)', icon: FolderDown },
     { href: '/admin/gifts', label: 'ផ្ញើកាដូ (User Gifts)', icon: Gift },
     { href: '/admin/tutorials', label: 'មេរៀន & Tutorials', icon: BookOpen },
-    { href: '/admin/orders', label: 'ការបញ្ជាទិញ (Orders)', icon: ShoppingBag },
     { href: '/admin/reviews', label: 'ការវាយតម្លៃ (Reviews)', icon: Star },
     { href: '/admin/support', label: 'សារសាកសួរ (Support)', icon: MessageSquare },
     { href: '/admin/users', label: 'អតិថិជន & Users', icon: Users },

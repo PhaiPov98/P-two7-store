@@ -480,12 +480,6 @@ export default function CheckoutPage() {
                       Tap to Pay & Scan
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-300">
-                    ទូទាត់ផ្ទាល់តាម App ABA Mobile ឬ ស្កេន Bakong KHQR
-                  </p>
-                  <p className="text-[10px] font-mono font-bold text-emerald-400">
-                    គណនី: PHAI POV (007 576 225)
-                  </p>
                 </div>
               </div>
 

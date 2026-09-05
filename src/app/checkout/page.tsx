@@ -694,44 +694,7 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Quick Actions: Copy Account & QR String */}
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <button
-                type="button"
-                onClick={() => handleCopyAccount(khqrData?.accountNumber || '007 576 225')}
-                className="btn-uiverse-secondary px-3 py-2 rounded-xl text-[11px] flex items-center gap-1.5 text-blue-300 hover:text-white"
-              >
-                {copiedAcc ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>បានចម្លងលេខកុង</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3.5 h-3.5" />
-                    <span>ចម្លងលេខកុង ABA ({khqrData?.accountNumber || '007 576 225'})</span>
-                  </>
-                )}
-              </button>
 
-              <button
-                type="button"
-                onClick={handleCopyQRString}
-                className="btn-uiverse-copy px-3 py-2 rounded-xl text-[11px] flex items-center gap-1.5"
-              >
-                {copiedQR ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>បានចម្លង QR</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3.5 h-3.5" />
-                    <span>ចម្លង QR String</span>
-                  </>
-                )}
-              </button>
-            </div>
 
             {/* Slip Upload Box */}
             <div className="p-4 rounded-2xl bg-dark-850 border border-slate-800 text-left space-y-3">

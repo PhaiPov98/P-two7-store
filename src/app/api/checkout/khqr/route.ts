@@ -54,6 +54,8 @@ export async function POST(request: Request) {
       bakongAccountId,
       merchantName,
       merchantCity,
+      accountInformation: accountNumber,
+      acquiringBank: bankName,
       amount,
       currency,
       billNumber,

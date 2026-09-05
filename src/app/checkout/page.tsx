@@ -39,6 +39,7 @@ interface KHQRData {
   amount: number;
   currency: string;
   billNumber: string;
+  orderNumber?: string;
   expiresAt: string;
   bankName?: string;
   accountNumber?: string;
@@ -103,16 +104,16 @@ export default function CheckoutPage() {
     return () => clearInterval(interval);
   }, [showQRModal]);
 
-  // Real-time Bank & Webhook Auto-Verification Polling (every 2.5s)
+  // Real-time Bank & Webhook Auto-Verification Polling (checks only THIS specific order)
   useEffect(() => {
-    if (!showQRModal || orderSuccess) return;
+    if (!showQRModal || !khqrData?.orderNumber || orderSuccess) return;
 
     let isMounted = true;
     const interval = setInterval(async () => {
       try {
-        // 1. Check if order was already auto-paid via ABA Webhook
-        if (email.trim()) {
-          const statusRes = await fetch(`/api/checkout/status?email=${encodeURIComponent(email.trim())}`);
+        // 1. Check if THIS specific order was marked PAID by ABA Webhook
+        if (khqrData.orderNumber) {
+          const statusRes = await fetch(`/api/checkout/status?orderNumber=${encodeURIComponent(khqrData.orderNumber)}`);
           if (statusRes.ok) {
             const statusData = await statusRes.json();
             if (isMounted && statusData.paid) {
@@ -127,13 +128,14 @@ export default function CheckoutPage() {
         }
 
         // 2. Check via Bakong Open API (if md5 available)
-        if (khqrData?.md5) {
+        if (khqrData.md5 && khqrData.orderNumber) {
           const res = await fetch('/api/checkout/bakong-check', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               md5: khqrData.md5,
               orderData: {
+                orderNumber: khqrData.orderNumber,
                 customerName: name.trim(),
                 customerEmail: email.trim(),
                 customerPhone: phone.trim(),
@@ -160,7 +162,7 @@ export default function CheckoutPage() {
       isMounted = false;
       clearInterval(interval);
     };
-  }, [showQRModal, khqrData?.md5, orderSuccess, name, email, phone, items, clearCart, success]);
+  }, [showQRModal, khqrData?.orderNumber, khqrData?.md5, orderSuccess, clearCart, success]);
 
   // Format timer MM:SS
   const formatTimer = (seconds: number) => {
@@ -179,7 +181,11 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           amount: total,
           currency: 'USD',
-          billNumber: `BP-${Date.now().toString().slice(-6)}`,
+          customerName: name.trim(),
+          customerEmail: email.trim(),
+          customerPhone: phone.trim(),
+          items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+          couponCode: coupon?.code || null,
         }),
       });
 
@@ -250,9 +256,9 @@ export default function CheckoutPage() {
     try {
       setProcessing(true);
 
-      // 1. First check if bank already confirmed via webhook
-      if (email.trim()) {
-        const statusRes = await fetch(`/api/checkout/status?email=${encodeURIComponent(email.trim())}`);
+      // 1. First check if THIS specific order was confirmed by bank webhook
+      if (khqrData?.orderNumber) {
+        const statusRes = await fetch(`/api/checkout/status?orderNumber=${encodeURIComponent(khqrData.orderNumber)}`);
         if (statusRes.ok) {
           const statusData = await statusRes.json();
           if (statusData.paid) {
@@ -280,6 +286,7 @@ export default function CheckoutPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          orderNumber: khqrData?.orderNumber || null,
           customerName: name.trim(),
           customerEmail: email.trim(),
           customerPhone: phone.trim(),

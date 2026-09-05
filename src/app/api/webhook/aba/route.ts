@@ -9,13 +9,35 @@ import { sendTelegramNotification } from '@/lib/telegram';
  */
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    console.log('Incoming ABA Webhook Notification:', JSON.stringify(body));
+    let fullText = '';
+    let bodyObj: any = {};
 
-    // Handle various notification forwarder payload formats
-    const title = body.title || body.subText || '';
-    const text = body.text || body.content || body.body || body.message || '';
-    const fullText = `${title} ${text}`;
+    try {
+      const contentType = request.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        bodyObj = await request.json();
+        fullText = JSON.stringify(bodyObj);
+        if (bodyObj.title || bodyObj.text || bodyObj.notification || bodyObj.message) {
+          fullText = `${bodyObj.title || ''} ${bodyObj.text || ''} ${bodyObj.notification || ''} ${bodyObj.message || ''} ${bodyObj.content || ''}`;
+        }
+      } else if (contentType.includes('application/x-www-form-urlencoded')) {
+        const formData = await request.formData();
+        const entries = Object.fromEntries(formData.entries());
+        fullText = Object.values(entries).join(' ');
+      } else {
+        fullText = await request.text();
+      }
+    } catch {
+      fullText = await request.text();
+    }
+
+    // Also check query params
+    const { searchParams } = new URL(request.url);
+    if (searchParams.toString()) {
+      fullText += ' ' + searchParams.toString();
+    }
+
+    console.log('Incoming ABA Webhook Notification FullText:', fullText);
 
     if (!fullText.trim()) {
       return NextResponse.json({ error: 'Empty notification content' }, { status: 400 });

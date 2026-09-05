@@ -288,6 +288,50 @@ export default function AdminSettingsPage() {
                 💡 ប្រសិនបើមាន Token នេះ ប្រព័ន្ធនឹងឆែកទៅកាន់ធនាគារជាតិបាគងដោយស្វ័យប្រវត្ត។ នៅពេលអតិថិជនស្កេនបង់លុយពិតប្រាកដ ប្រព័ន្ធនឹងបញ្ចេញ Product Key ភ្លាមៗដោយស្វ័យប្រវត្តិ 100% ដោយមិនចាំបាច់ Admin ចុច Approve ឬអតិថិជន Upload Slip ឡើយ។
               </p>
             </div>
+
+            <div className="md:col-span-2 p-5 rounded-2xl bg-gradient-to-r from-blue-950/40 via-dark-950 to-blue-950/30 border border-blue-500/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block font-bold text-white text-xs flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-lg bg-blue-600 flex items-center justify-center text-white text-[10px] font-black">
+                    ABA
+                  </span>
+                  <span>វិធីទី ២: ABA Push Notification Webhook (Auto-Check តាម App ទូរស័ព្ទ)</span>
+                </label>
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                  Ready & Active
+                </span>
+              </div>
+              
+              <div className="space-y-1.5">
+                <span className="text-[11px] text-slate-300 font-bold block">Webhook URL សម្រាប់ដាក់ក្នុង App ទូរស័ព្ទ (POST):</span>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    readOnly
+                    value="https://pp-two7-store.vercel.app/api/webhook/aba"
+                    className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2 text-xs text-blue-400 font-mono focus:outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText('https://pp-two7-store.vercel.app/api/webhook/aba');
+                      success('បានចម្លង Webhook URL!');
+                    }}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold flex-shrink-0 transition-all"
+                  >
+                    Copy URL
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-xl bg-dark-900/80 border border-slate-800 text-[11px] text-slate-300 space-y-1 leading-relaxed">
+                <p className="font-bold text-white">📱 របៀបដំឡើងលើទូរស័ព្ទ Android ដែលមាន App ABA:</p>
+                <p>1. ដំឡើង App <strong>"Notification Forwarder"</strong> ឬ <strong>"Webhook / MacroDroid"</strong> ពី Play Store</p>
+                <p>2. ជ្រើសរើស App <strong>ABA Mobile</strong> ដើម្បីចាប់យក Notification</p>
+                <p>3. ដាក់ Target URL ជា: <code className="text-blue-400 bg-black/40 px-1.5 py-0.5 rounded">https://pp-two7-store.vercel.app/api/webhook/aba</code> (Method: <strong>POST</strong>)</p>
+                <p className="text-emerald-400">💡 ពេលមានលុយចូលកុង ABA ភ្លាម ទូរស័ព្ទនឹងបាញ់ដំណឹងមក Website ហើយប្រព័ន្ធនឹងបញ្ចេញ Product Key ជូនអតិថិជនស្វ័យប្រវត្តក្នុង 1 វិនាទី!</p>
+              </div>
+            </div>
           </div>
         </div>
 

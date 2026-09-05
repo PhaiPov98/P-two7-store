@@ -103,39 +103,58 @@ export default function CheckoutPage() {
     return () => clearInterval(interval);
   }, [showQRModal]);
 
-  // Real-time Bakong Auto-Verification Polling (checks bank ledger every 3s)
+  // Real-time Bank & Webhook Auto-Verification Polling (every 2.5s)
   useEffect(() => {
-    if (!showQRModal || !khqrData?.md5 || orderSuccess) return;
+    if (!showQRModal || orderSuccess) return;
 
     let isMounted = true;
     const interval = setInterval(async () => {
       try {
-        const res = await fetch('/api/checkout/bakong-check', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            md5: khqrData.md5,
-            orderData: {
-              customerName: name.trim(),
-              customerEmail: email.trim(),
-              customerPhone: phone.trim(),
-              items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
-            },
-          }),
-        });
+        // 1. Check if order was already auto-paid via ABA Webhook
+        if (email.trim()) {
+          const statusRes = await fetch(`/api/checkout/status?email=${encodeURIComponent(email.trim())}`);
+          if (statusRes.ok) {
+            const statusData = await statusRes.json();
+            if (isMounted && statusData.paid) {
+              clearInterval(interval);
+              setOrderSuccess(statusData);
+              setShowQRModal(false);
+              clearCart();
+              success('ការទូទាត់ជោគជ័យ!', 'ទទួលបានការផ្ទេរប្រាក់ពី App ABA រួចរាល់ 100%');
+              return;
+            }
+          }
+        }
 
-        const data = await res.json();
-        if (isMounted && data.paid && data.success) {
-          clearInterval(interval);
-          setOrderSuccess(data);
-          setShowQRModal(false);
-          clearCart();
-          success('ការទូទាត់ជោគជ័យ!', 'ធនាគារបានបញ្ជាក់ការផ្ទេរប្រាក់ 100%');
+        // 2. Check via Bakong Open API (if md5 available)
+        if (khqrData?.md5) {
+          const res = await fetch('/api/checkout/bakong-check', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              md5: khqrData.md5,
+              orderData: {
+                customerName: name.trim(),
+                customerEmail: email.trim(),
+                customerPhone: phone.trim(),
+                items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+              },
+            }),
+          });
+
+          const data = await res.json();
+          if (isMounted && data.paid && data.success) {
+            clearInterval(interval);
+            setOrderSuccess(data);
+            setShowQRModal(false);
+            clearCart();
+            success('ការទូទាត់ជោគជ័យ!', 'ធនាគារបានបញ្ជាក់ការផ្ទេរប្រាក់ 100%');
+          }
         }
       } catch (err) {
         // Silently continue polling
       }
-    }, 3000);
+    }, 2500);
 
     return () => {
       isMounted = false;

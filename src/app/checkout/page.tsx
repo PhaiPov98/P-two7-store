@@ -435,9 +435,6 @@ export default function CheckoutPage() {
                   placeholder="ឧ. example@gmail.com"
                   className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
-                  Product Key នឹងត្រូវបញ្ជូនទៅកាន់ Email នេះ និងបង្ហាញលើអេក្រង់ភ្លាមៗ។
-                </p>
               </div>
 
               <div>
@@ -538,11 +535,6 @@ export default function CheckoutPage() {
               <Lock className="w-4 h-4" />
               <span>បង់ប្រាក់ {formatPrice(total)}</span>
             </button>
-
-            <div className="p-3 rounded-xl bg-blue-950/40 border border-blue-500/20 text-[11px] text-blue-200 flex items-start gap-2">
-              <Zap className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
-              <span>ប្រព័ន្ធនឹងបង្ហាញ Real Dynamic KHQR ភ្លាមៗជាមួយទឹកប្រាក់ពិតប្រាកដ។</span>
-            </div>
           </div>
         </div>
       </form>

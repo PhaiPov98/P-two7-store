@@ -733,9 +733,8 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[8.5px] text-white/80 block font-medium">Account No.</span>
-                  <span className="text-[10px] font-mono font-bold text-white bg-black/35 px-1.5 py-0.5 rounded-md border border-white/20 inline-block mt-0.5 tracking-wide">
-                    {khqrData?.accountNumber || '007 576 225'}
+                  <span className="text-[9px] font-bold text-white/90 bg-black/35 px-2 py-0.5 rounded-md border border-white/20 inline-block tracking-wide">
+                    Scan to Pay
                   </span>
                 </div>
               </div>

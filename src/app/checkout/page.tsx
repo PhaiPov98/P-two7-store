@@ -760,7 +760,7 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              {/* KHQR Card Footer: Amount & Countdown Timer */}
+              {/* KHQR Card Footer: Amount Bar */}
               <div className="bg-black/40 rounded-xl p-2.5 backdrop-blur-md border border-white/15 flex items-center justify-between relative z-10 shadow-inner">
                 <div className="text-left">
                   <span className="text-[8.5px] text-white/70 uppercase font-semibold tracking-wider block">ចំនួនទឹកប្រាក់ត្រូវបង់</span>
@@ -769,13 +769,36 @@ export default function CheckoutPage() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs sm:text-sm font-mono font-black text-amber-300 block drop-shadow-sm">
+                  <span className="text-[8.5px] text-white/70 uppercase font-semibold tracking-wider block">ប្រាក់រៀល (KHR)</span>
+                  <span className="text-sm sm:text-base font-mono font-black text-amber-300 block drop-shadow-sm mt-0.5">
                     {formatPriceRiel(total)}
                   </span>
-                  <div className="inline-flex items-center gap-1 text-[8.5px] text-white/90 bg-black/50 px-1.5 py-0.5 rounded-full mt-0.5 border border-white/10">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                    <span>ផុតកំណត់: <strong className="font-mono text-white">{formatTimer(timeLeft)}</strong></span>
+                </div>
+              </div>
+
+              {/* Big & Cool Glowing Neon Countdown Box */}
+              <div className="mt-2 py-2 px-3.5 rounded-xl bg-gradient-to-r from-black/70 via-black/85 to-black/70 border border-amber-400/50 shadow-[0_0_20px_rgba(245,158,11,0.25)] flex items-center justify-between backdrop-blur-md relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-orange-500/15 to-amber-500/10 animate-pulse pointer-events-none" />
+                <div className="flex items-center gap-2 relative z-10">
+                  <div className="w-7 h-7 rounded-lg bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shadow-sm shadow-amber-500/20">
+                    <Clock className="w-4 h-4 animate-spin" style={{ animationDuration: '6s' }} />
                   </div>
+                  <div className="text-left">
+                    <span className="text-[11px] font-bold text-amber-200 block leading-tight">
+                      ផុតកំណត់ក្នុងរយៈពេល
+                    </span>
+                    <span className="text-[9px] text-white/60 font-medium">Payment Timer</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 relative z-10">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></span>
+                  </span>
+                  <span className="font-mono text-xl sm:text-2xl font-black text-amber-300 tracking-widest drop-shadow-[0_0_12px_rgba(251,191,36,0.7)]">
+                    {formatTimer(timeLeft)}
+                  </span>
                 </div>
               </div>
             </div>

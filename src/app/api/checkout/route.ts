@@ -33,17 +33,21 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check Auto-fulfill setting
-    let autoFulfill = true;
-    try {
-      const autoSetting = await prisma.setting.findUnique({
-        where: { key: 'payment_auto_fulfill' },
-      });
-      if (autoSetting && autoSetting.value === 'false') {
-        autoFulfill = false;
+    // Slip uploads require manual admin review and approval before keys are delivered
+    const hasManualSlip = Boolean(paymentSlip);
+    let autoFulfill = false; // When slip is uploaded, always require admin to review and click Approve
+
+    if (!hasManualSlip) {
+      try {
+        const autoSetting = await prisma.setting.findUnique({
+          where: { key: 'payment_auto_fulfill' },
+        });
+        if (autoSetting && autoSetting.value === 'true') {
+          autoFulfill = true;
+        }
+      } catch (e) {
+        // default false for manual slip
       }
-    } catch (e) {
-      // default true
     }
 
     // 1. Identify or Create User
@@ -276,9 +280,10 @@ export async function POST(request: Request) {
       allocatedKeys,
       downloads,
       paymentStatus: orderPaymentStatus,
+      waitingAdminApproval: !autoFulfill,
       message: autoFulfill
         ? 'ការទូទាត់ និងបញ្ជាទិញបានជោគជ័យ! Product Key និង File Download ត្រូវបានផ្ញើជូនរួចរាល់។'
-        : 'ការបញ្ជាទិញទទួលបានជោគជ័យ! ក្រុមការងារកំពុងផ្ទៀងផ្ទាត់ការទូទាត់របស់អ្នក។',
+        : 'ការបញ្ជាទិញទទួលបានជោគជ័យ! បង្កាន់ដៃ Slip ត្រូវបានផ្ញើជូន Admin តាម Telegram រួចរាល់។ សូមរង់ចាំ Admin ពិនិត្យ និងយល់ព្រម (Approve)។',
     });
   } catch (error) {
     console.error('Checkout error:', error);

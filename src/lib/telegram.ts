@@ -251,8 +251,9 @@ export async function sendNewOrderAlert(params: {
   const itemList = params.items.map((i) => `  ▫️ ${i.name} (x${i.quantity})`).join('\n');
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
+  const isPendingReview = Boolean(params.paymentSlip);
   const caption = `
-🛍️ <b>NEW ORDER RECEIVED! (#${params.orderNumber})</b>
+🔔 <b>🚨 ${isPendingReview ? 'ORDER WAITING FOR APPROVAL' : 'NEW ORDER RECEIVED'} (#${params.orderNumber})</b>
 ━━━━━━━━━━━━━━━━━━━━
 • <b>អតិថិជន:</b> <code>${params.customerName}</code>
 • <b>Email:</b> <code>${params.customerEmail}</code>
@@ -260,10 +261,11 @@ ${params.customerPhone ? `• <b>ទូរស័ព្ទ:</b> <code>${params.cu
 • <b>ទឹកប្រាក់សរុប:</b> <b>$${params.total.toFixed(2)}</b> (~៛${Math.round(params.total * 4100).toLocaleString()})
 • <b>ទំនិញបញ្ជាទិញ:</b>
 ${itemList}
-• <b>បង្កាន់ដៃ Slip:</b> ${params.paymentSlip ? '✅ បានភ្ជាប់ Slip ខាងលើ' : '⚠️ មិនមានរូបភាព Slip ទេ'}
+• <b>ស្ថានភាព:</b> ${isPendingReview ? '⏳ <b>រង់ចាំ Admin ពិនិត្យ Slip និងចុច Approve</b>' : '✅ បានទូទាត់ជោគជ័យ'}
+• <b>បង្កាន់ដៃ Slip:</b> ${params.paymentSlip ? '📸 <b>បានភ្ជាប់រូបភាព Slip (សូមមើលរូបខាងលើ)</b>' : '⚠️ មិនមានរូបភាព Slip ទេ'}
 • <b>ពេលវេលា:</b> ${time}
 ━━━━━━━━━━━━━━━━━━━━
-👉 <a href="${appUrl}/admin/orders"><b>ពិនិត្យ & ផ្ទៀងផ្ទាត់ Order ក្នុង Dashboard</b></a>
+👉 <a href="${appUrl}/admin/orders"><b>ចុចទីនេះដើម្បីពិនិត្យ & Approve Order</b></a>
   `.trim();
 
   if (params.paymentSlip) {

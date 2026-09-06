@@ -387,8 +387,99 @@ export default function CheckoutPage() {
     setTimeout(() => setCopiedAcc(false), 3000);
   };
 
-  // SUCCESS SCREEN
+  // SUCCESS SCREEN (Admin Approval / Instant Paid)
   if (orderSuccess) {
+    const isPendingApproval = orderSuccess.waitingAdminApproval || orderSuccess.paymentStatus === 'PENDING';
+
+    if (isPendingApproval) {
+      return (
+        <div className="max-w-3xl mx-auto px-4 py-12 space-y-8 animate-in fade-in zoom-in-95">
+          <div className="glass-card rounded-3xl p-8 border border-amber-500/40 text-center space-y-6 shadow-2xl bg-gradient-to-b from-dark-900 via-dark-850 to-dark-900 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="w-20 h-20 rounded-3xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-xl shadow-amber-500/20 animate-pulse">
+              <Clock className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 bg-amber-500/15 px-3.5 py-1 rounded-full border border-amber-500/30">
+                <Sparkles className="w-3.5 h-3.5" />
+                កំពុងរង់ចាំ Admin ពិនិត្យ (Pending Admin Approval)
+              </span>
+              <h1 className="text-2xl sm:text-3xl font-black text-white mt-2">
+                បានផ្ញើបង្កាន់ដៃបង់ប្រាក់ជោគជ័យ!
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-300">
+                លេខបញ្ជាទិញ: <strong className="text-amber-400 font-mono text-base">{orderSuccess.orderNumber}</strong>
+              </p>
+            </div>
+
+            {/* Explanation box */}
+            <div className="p-6 rounded-2xl bg-dark-950/90 border border-slate-800 text-left space-y-4">
+              <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>ដំណាក់កាលបន្ទាប់ (Next Steps):</span>
+              </h3>
+
+              <div className="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-900/90 border border-slate-800">
+                  <span className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5">
+                    1
+                  </span>
+                  <div>
+                    <strong className="text-white">បានផ្ញើទៅ Admin តាម Telegram Bot រួចរាល់:</strong> រូបភាព Slip និងព័ត៌មានបញ្ជាទិញរបស់អ្នកត្រូវបានផ្ញើជូន Admin ពិនិត្យភ្លាមៗ។
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-900/90 border border-slate-800">
+                  <span className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5">
+                    2
+                  </span>
+                  <div>
+                    <strong className="text-white">Admin ចុចយល់ព្រម (Approve):</strong> នៅពេល Admin ផ្ទៀងផ្ទាត់ទឹកប្រាក់រួចរាល់ និងចុច Approve ប្រព័ន្ធនឹងប្រគល់ Product Key និង Link Download ជូនលោកអ្នកដោយស្វ័យប្រវត្តិ។
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-dark-900/90 border border-slate-800">
+                  <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center flex-shrink-0 text-xs mt-0.5">
+                    3
+                  </span>
+                  <div>
+                    <strong className="text-white">ពិនិត្យមើល Keys របស់អ្នក:</strong> លោកអ្នកអាចចូលពិនិត្យស្ថានភាពបញ្ជាទិញក្នុង <strong>ប្រវត្តិបញ្ជាទិញ</strong> ឬ <strong>Product Keys របស់ខ្ញុំ</strong> បានគ្រប់ពេលវេលា។
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Links */}
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Link
+                href="/account/orders"
+                className="btn-uiverse-xueyuantan px-6 py-3 rounded-full text-xs sm:text-sm"
+              >
+                <Clock className="w-4 h-4 text-amber-400" />
+                <span>មើលប្រវត្តិបញ្ជាទិញ (My Orders)</span>
+              </Link>
+              <Link
+                href="/account/keys"
+                className="btn-uiverse-xueyuantan px-6 py-3 rounded-full text-xs sm:text-sm"
+              >
+                <KeyRound className="w-4 h-4 text-blue-400" />
+                <span>មើល Keys របស់ខ្ញុំ (My Keys)</span>
+              </Link>
+              <Link
+                href="/products"
+                className="btn-uiverse-xueyuantan px-6 py-3 rounded-full text-xs sm:text-sm"
+              >
+                <span>{KHMER_TEXT.actions.continueShopping}</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="max-w-3xl mx-auto px-4 py-12 space-y-8 animate-in fade-in zoom-in-95">
         <div className="glass-card rounded-3xl p-8 border border-emerald-500/30 text-center space-y-6 shadow-2xl bg-gradient-to-b from-dark-900 via-dark-850 to-dark-900">

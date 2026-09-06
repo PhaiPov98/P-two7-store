@@ -104,6 +104,18 @@ export default function CheckoutPage() {
     return () => clearInterval(interval);
   }, [showQRModal]);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (showQRModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showQRModal]);
+
   // Real-time Bank & Webhook Auto-Verification Polling (checks only THIS specific order)
   useEffect(() => {
     if (!showQRModal || !khqrData?.orderNumber || orderSuccess) return;
@@ -649,7 +661,7 @@ export default function CheckoutPage() {
 
       {/* REAL BAKONG KHQR & ABA PAY MODAL */}
       {showQRModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-xl animate-in fade-in overflow-y-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-dark-950/98 backdrop-blur-2xl animate-in fade-in overflow-y-auto">
           <div className="glass-card max-w-md w-full rounded-3xl p-5 sm:p-6 border border-slate-700/80 bg-dark-900/95 shadow-2xl space-y-4 text-center my-4 relative">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">

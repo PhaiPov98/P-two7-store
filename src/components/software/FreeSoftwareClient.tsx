@@ -59,12 +59,24 @@ export default function FreeSoftwareClient({
             setFiles(d.files.filter((f: any) => f.isFree));
           }
         }
-      } catch (e) {
-        // Fallback to initialFiles
+      } catch (err) {
+        console.error('Failed to sync files:', err);
       }
     }
     syncLatest();
   }, []);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedGuide) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedGuide]);
 
   // Filter free files by search query
   const filteredFiles = useMemo(() => {
@@ -311,7 +323,7 @@ export default function FreeSoftwareClient({
 
       {/* Guide Detail Modal */}
       {selectedGuide && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-dark-950/98 backdrop-blur-2xl">
           <div className="glass-card w-full max-w-2xl rounded-3xl p-6 sm:p-8 border border-slate-700 max-h-[85vh] overflow-y-auto space-y-6">
             <div className="flex items-start justify-between">
               <div>

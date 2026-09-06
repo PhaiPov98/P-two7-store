@@ -14,8 +14,20 @@ interface FileCardProps {
 
 export default function FileCard({ file }: FileCardProps) {
   const [downloading, setDownloading] = useState(false);
+  const [downloadCount, setDownloadCount] = useState(file.downloadCount || 0);
   const { success, error, info } = useToast();
   const { user } = useAuth();
+
+  React.useEffect(() => {
+    setDownloadCount(file.downloadCount || 0);
+  }, [file.downloadCount]);
+
+  const formatDownloads = (num: number) => {
+    if (!num || num <= 0) return '0';
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
+    return num.toLocaleString();
+  };
 
   const handleDownload = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -26,6 +38,7 @@ export default function FileCard({ file }: FileCardProps) {
 
     try {
       setDownloading(true);
+      setDownloadCount((prev) => prev + 1);
       info('កំពុងទាញយក...', `កំពុងរៀបចំឯកសារ ${file.title}`);
       
       // Direct navigation to download endpoint
@@ -96,7 +109,7 @@ export default function FileCard({ file }: FileCardProps) {
           <div>
             <span className="text-slate-400 block text-[10px]">Downloads</span>
             <span className="font-semibold text-emerald-400 truncate block">
-              {(file.downloadCount / 1000).toFixed(1)}k
+              {formatDownloads(downloadCount)}
             </span>
           </div>
         </div>

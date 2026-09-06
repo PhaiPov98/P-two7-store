@@ -192,15 +192,19 @@ export async function POST(request: Request) {
       });
 
       // Send Telegram notification to Admin
-      sendNewOrderAlert({
-        orderNumber: order.orderNumber,
-        customerName,
-        customerEmail,
-        customerPhone,
-        total,
-        paymentMethod: 'BAKONG_KHQR (Auto-Verified)',
-        items: validatedItems.map((item) => ({ name: item.name, quantity: item.quantity })),
-      }).catch((err) => console.error('Telegram alert error:', err));
+      try {
+        await sendNewOrderAlert({
+          orderNumber: order.orderNumber,
+          customerName,
+          customerEmail,
+          customerPhone,
+          total,
+          paymentMethod: 'BAKONG_KHQR (Auto-Verified)',
+          items: validatedItems.map((item) => ({ name: item.name, quantity: item.quantity })),
+        });
+      } catch (err) {
+        console.error('Telegram alert error:', err);
+      }
 
       return NextResponse.json({
         paid: true,

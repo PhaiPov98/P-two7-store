@@ -192,7 +192,11 @@ export async function POST(request: Request) {
       `━━━━━━━━━━━━━━━━━━\n` +
       `✅ <i>ប្រព័ន្ធបានបញ្ចេញ Product Key ជូនអតិថិជនស្វ័យប្រវត្ត 100%!</i>`;
 
-    sendTelegramNotification(tgMsg).catch((e) => console.error(e));
+    try {
+      await sendTelegramNotification(tgMsg);
+    } catch (e) {
+      console.error('Telegram notification error:', e);
+    }
 
     return NextResponse.json({
       success: true,

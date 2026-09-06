@@ -261,16 +261,20 @@ export async function POST(request: Request) {
     });
 
     // 8. Send Telegram New Order Alert to Admin (with photo slip if attached)
-    sendNewOrderAlert({
-      orderNumber: order.orderNumber,
-      customerName,
-      customerEmail,
-      customerPhone: customerPhone || null,
-      total,
-      paymentMethod: paymentMethod || 'BAKONG_KHQR',
-      paymentSlip: paymentSlip || null,
-      items: validatedItems.map((item) => ({ name: item.name, quantity: item.quantity })),
-    }).catch((err) => console.error('Telegram order alert error:', err));
+    try {
+      await sendNewOrderAlert({
+        orderNumber: order.orderNumber,
+        customerName,
+        customerEmail,
+        customerPhone: customerPhone || null,
+        total,
+        paymentMethod: paymentMethod || 'BAKONG_KHQR',
+        paymentSlip: paymentSlip || null,
+        items: validatedItems.map((item) => ({ name: item.name, quantity: item.quantity })),
+      });
+    } catch (err) {
+      console.error('Telegram order alert error:', err);
+    }
 
     return NextResponse.json({
       success: true,

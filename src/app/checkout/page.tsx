@@ -264,7 +264,7 @@ export default function CheckoutPage() {
     fetchDynamicKHQR();
   };
 
-  // Handle Slip Image File selection
+  // Handle Slip Image File selection with auto-compression
   const handleSlipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -274,16 +274,52 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (file.size > 8 * 1024 * 1024) {
-      error('ទំហំ File ធំពេក', 'សូមជ្រើសរើសរូបភាពដែលមានទំហំតូចជាង 8MB');
+    if (file.size > 15 * 1024 * 1024) {
+      error('ទំហំ File ធំពេក', 'សូមជ្រើសរើសរូបភាពដែលមានទំហំតូចជាង 15MB');
       return;
     }
 
     setSlipFileName(file.name);
     const reader = new FileReader();
     reader.onload = () => {
-      setSlipImage(reader.result as string);
-      success('បានជ្រើសរើស Slip រួចរាល់!', file.name);
+      const rawDataUrl = reader.result as string;
+      
+      // Auto compress image via canvas to guarantee fast upload & Telegram delivery
+      const img = new Image();
+      img.onload = () => {
+        const maxWidth = 1200;
+        const maxHeight = 1200;
+        let { width, height } = img;
+
+        if (width > maxWidth || height > maxHeight) {
+          if (width > height) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          setSlipImage(compressedDataUrl);
+          success('បានជ្រើសរើស Slip រួចរាល់!', file.name);
+        } else {
+          setSlipImage(rawDataUrl);
+          success('បានជ្រើសរើស Slip រួចរាល់!', file.name);
+        }
+      };
+      img.onerror = () => {
+        setSlipImage(rawDataUrl);
+        success('បានជ្រើសរើស Slip រួចរាល់!', file.name);
+      };
+      img.src = rawDataUrl;
     };
     reader.readAsDataURL(file);
   };

@@ -46,8 +46,8 @@ model Product {
   comparePrice       Float?
   discountPercent    Int?
   images             String       // JSON string array or main image URL
-  category           Category     @relation(fields: [categoryId], references: [id])
-  categoryId         String
+  category           Category?    @relation(fields: [categoryId], references: [id])
+  categoryId         String?
   version            String?
   platform           String?      // Windows, Mac, Multi-platform
   systemRequirements String?

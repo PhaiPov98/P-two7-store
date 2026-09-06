@@ -301,12 +301,15 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">ប្រភេទ (Category) *</label>
+                  <label className="block font-bold text-slate-300 mb-1">
+                    ប្រភេទ (Category) <span className="text-slate-500 font-normal text-xs">(មិនចាំបាច់ / Optional)</span>
+                  </label>
                   <select
-                    value={formData.categoryId}
+                    value={formData.categoryId || ''}
                     onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
                   >
+                    <option value="">(គ្មានប្រភេទ / ទូទៅ - General)</option>
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.nameKm} ({c.nameEn})

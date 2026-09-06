@@ -694,48 +694,54 @@ export default function CheckoutPage() {
       {/* REAL BAKONG KHQR & ABA PAY MODAL */}
       {showQRModal && mounted && createPortal(
         <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-4 bg-dark-950/92 backdrop-blur-2xl animate-in fade-in overflow-y-auto">
-          <div className="glass-card max-w-md w-full rounded-3xl p-4 sm:p-5 border border-slate-700/80 bg-dark-900/98 shadow-2xl space-y-3 text-center my-auto max-h-[94vh] overflow-y-auto relative">
+          <div className="max-w-[400px] w-full rounded-[28px] p-4 sm:p-5 border border-slate-700/60 bg-gradient-to-b from-[#141b2c]/98 via-[#0e1322]/98 to-[#090d18]/98 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_35px_rgba(238,28,37,0.1)] backdrop-blur-2xl space-y-3.5 text-center my-auto max-h-[95vh] overflow-y-auto relative ring-1 ring-white/10">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
-              <div className="flex items-center gap-2 text-xs font-bold text-white text-left">
-                <span className="px-2 py-0.5 rounded-md bg-[#EE1C25] text-white font-black text-[10px] tracking-wider shadow-sm">
+              <div className="flex items-center gap-2.5 text-left">
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#EE1C25] to-[#B91018] flex items-center justify-center shadow-md shadow-red-500/25 text-white font-black text-[10px] tracking-wider border border-white/20">
                   KHQR
-                </span>
-                <span className="text-sm">ស្កេនទូទាត់ប្រាក់ (KHQR Payment)</span>
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-sm font-black text-white leading-tight">ស្កេនទូទាត់ប្រាក់</h3>
+                  <p className="text-[10px] text-slate-400 font-medium">Bakong KHQR • ABA Bank</p>
+                </div>
               </div>
               <button
                 onClick={() => setShowQRModal(false)}
-                className="w-7 h-7 rounded-xl bg-dark-800 hover:bg-dark-750 text-slate-400 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60"
+                className="w-7 h-7 rounded-xl bg-dark-800/80 hover:bg-dark-750 text-slate-400 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
             {/* Premium Official KHQR Card */}
-            <div className="relative bg-gradient-to-b from-[#EE1C25] via-[#DE141E] to-[#B91018] p-3.5 sm:p-4 rounded-2xl shadow-2xl border border-white/20 text-white max-w-[320px] mx-auto overflow-hidden">
+            <div className="relative bg-gradient-to-b from-[#EE1C25] via-[#DE141E] to-[#99080F] p-3.5 sm:p-4 rounded-[22px] shadow-[0_12px_32px_-6px_rgba(238,28,37,0.35)] border border-white/25 text-white max-w-[330px] mx-auto overflow-hidden">
               {/* Gloss highlight */}
-              <div className="absolute -top-12 -right-12 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/12 rounded-full blur-2xl pointer-events-none" />
 
               {/* KHQR Card Header */}
               <div className="flex items-center justify-between pb-2 border-b border-white/20 relative z-10">
-                <div className="text-left">
-                  <span className="inline-block bg-white text-[#EE1C25] text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm">
-                    KHQR
-                  </span>
-                  <p className="text-[11px] font-black mt-0.5 text-white tracking-wide uppercase">
-                    {khqrData?.accountName || khqrData?.merchantName || 'PHAI POV'}
-                  </p>
+                <div className="text-left flex items-center gap-2">
+                  <div className="bg-white px-1.5 py-0.5 rounded shadow-sm flex items-center justify-center">
+                    <span className="text-[#EE1C25] text-[10px] font-black tracking-wider">KHQR</span>
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-black text-white tracking-wide uppercase leading-tight">
+                      {khqrData?.accountName || khqrData?.merchantName || 'PHAI POV'}
+                    </p>
+                    <span className="text-[8.5px] text-white/80 block">ABA Merchant</span>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[9px] text-white/80 block">ABA Account</span>
-                  <span className="text-[10px] font-mono font-bold text-white bg-black/30 px-1.5 py-0.5 rounded-md border border-white/20 inline-block mt-0.5">
+                  <span className="text-[8.5px] text-white/80 block font-medium">Account No.</span>
+                  <span className="text-[10px] font-mono font-bold text-white bg-black/35 px-1.5 py-0.5 rounded-md border border-white/20 inline-block mt-0.5 tracking-wide">
                     {khqrData?.accountNumber || '007 576 225'}
                   </span>
                 </div>
               </div>
 
               {/* Dynamic QR Canvas */}
-              <div className="my-2.5 bg-white p-2.5 rounded-xl shadow-inner flex flex-col items-center justify-center min-h-[190px] relative z-10">
+              <div className="my-2.5 bg-white p-2.5 rounded-xl shadow-inner flex flex-col items-center justify-center min-h-[190px] relative z-10 ring-1 ring-black/5">
                 {generatingQR ? (
                   <div className="flex flex-col items-center justify-center space-y-2 text-slate-700 py-8">
                     <div className="w-7 h-7 border-3 border-[#EE1C25] border-t-transparent rounded-full animate-spin" />
@@ -755,19 +761,19 @@ export default function CheckoutPage() {
               </div>
 
               {/* KHQR Card Footer: Amount & Countdown Timer */}
-              <div className="bg-black/35 rounded-xl p-2.5 backdrop-blur-sm border border-white/15 flex items-center justify-between relative z-10">
+              <div className="bg-black/40 rounded-xl p-2.5 backdrop-blur-md border border-white/15 flex items-center justify-between relative z-10 shadow-inner">
                 <div className="text-left">
-                  <span className="text-[8.5px] text-white/75 uppercase font-medium block">ចំនួនទឹកប្រាក់ត្រូវបង់</span>
+                  <span className="text-[8.5px] text-white/70 uppercase font-semibold tracking-wider block">ចំនួនទឹកប្រាក់ត្រូវបង់</span>
                   <p className="text-base sm:text-lg font-black text-white font-mono leading-tight mt-0.5">
                     {formatPrice(total)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs font-mono font-black text-yellow-300 block">
+                  <span className="text-xs sm:text-sm font-mono font-black text-amber-300 block drop-shadow-sm">
                     {formatPriceRiel(total)}
                   </span>
-                  <div className="inline-flex items-center gap-1 text-[8.5px] text-white/80 bg-black/40 px-1.5 py-0.5 rounded-full mt-0.5 border border-white/10">
-                    <Clock className="w-2.5 h-2.5 text-yellow-400" />
+                  <div className="inline-flex items-center gap-1 text-[8.5px] text-white/90 bg-black/50 px-1.5 py-0.5 rounded-full mt-0.5 border border-white/10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
                     <span>ផុតកំណត់: <strong className="font-mono text-white">{formatTimer(timeLeft)}</strong></span>
                   </div>
                 </div>
@@ -775,13 +781,13 @@ export default function CheckoutPage() {
             </div>
 
             {/* Slip Upload Box */}
-            <div className="p-2.5 rounded-xl bg-dark-850 border border-slate-800 text-left space-y-2">
+            <div className="p-2.5 rounded-xl bg-dark-850/80 border border-slate-800 text-left space-y-1.5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <Upload className="w-3.5 h-3.5 text-purple-400" />
-                  <span className="text-xs font-bold text-slate-200">ភ្ជាប់បង្កាន់ដៃបង់ប្រាក់ (Slip / Screenshot)</span>
+                <div className="flex items-center gap-1.5 text-slate-300">
+                  <Upload className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="text-[11px] font-bold text-slate-200">ភ្ជាប់បង្កាន់ដៃបង់ប្រាក់ (Slip / Screenshot)</span>
                 </div>
-                <span className="text-[9px] text-slate-400 font-medium">(Optional)</span>
+                <span className="text-[9px] text-slate-400 px-1.5 py-0.5 rounded bg-dark-800 border border-slate-700/50">Optional</span>
               </div>
 
               <input
@@ -818,9 +824,9 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full py-2 px-3 rounded-lg border border-dashed border-slate-700/80 hover:border-purple-500/50 bg-dark-900/40 hover:bg-purple-950/20 text-slate-400 hover:text-slate-200 flex items-center justify-center gap-2 text-xs transition-all cursor-pointer"
+                  className="w-full py-2 px-3 rounded-lg border border-dashed border-slate-700/80 hover:border-blue-500/50 bg-dark-900/40 hover:bg-blue-950/20 text-slate-400 hover:text-slate-200 flex items-center justify-center gap-2 text-[11px] transition-all cursor-pointer"
                 >
-                  <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+                  <ImageIcon className="w-3.5 h-3.5 text-blue-400" />
                   <span>ចុចត្រង់នេះដើម្បី Upload រូបភាព Slip ឬ Screenshot</span>
                 </button>
               )}
@@ -831,7 +837,7 @@ export default function CheckoutPage() {
               <button
                 type="button"
                 onClick={() => setShowQRModal(false)}
-                className="btn-uiverse-secondary flex-1 py-2.5 rounded-xl text-xs"
+                className="flex-1 py-2.5 px-3 rounded-xl bg-dark-800 hover:bg-dark-750 text-slate-300 hover:text-white font-semibold text-xs transition-all border border-slate-700/60 active:scale-98"
               >
                 បោះបង់
               </button>
@@ -839,10 +845,10 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handleConfirmPayment}
                 disabled={processing}
-                className="btn-uiverse-emerald flex-2 py-2.5 px-4 rounded-xl text-xs font-bold disabled:opacity-50"
+                className="flex-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-1.5 transition-all transform active:scale-98 disabled:opacity-50"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>{processing ? 'កំពុងផ្ទៀងផ្ទាត់...' : KHMER_TEXT.actions.confirmPayment}</span>
+                <span>{processing ? 'កំពុងផ្ទៀងផ្ទាត់...' : 'ខ្ញុំបានទូទាត់ប្រាក់រួចរាល់'}</span>
               </button>
             </div>
           </div>

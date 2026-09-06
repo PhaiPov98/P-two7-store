@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Package,
   Plus,
@@ -11,6 +11,9 @@ import {
   X,
   KeyRound,
   Eye,
+  Upload,
+  Image as ImageIcon,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 import { formatPrice } from '@/lib/translations';
@@ -23,6 +26,10 @@ export default function AdminProductsPage() {
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
+  const [imageMode, setImageMode] = useState<'upload' | 'url'>('upload');
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -133,6 +140,62 @@ export default function AdminProductsPage() {
       newKeys: '',
     });
     setShowModal(true);
+  };
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      error('ប្រភេទ File មិនត្រឹមត្រូវ', 'សូមជ្រើសរើសរូបភាព (JPG, PNG, WEBP)');
+      return;
+    }
+
+    try {
+      setUploadingImage(true);
+      const reader = new FileReader();
+      reader.onload = (readerEvent) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1000;
+          const MAX_HEIGHT = 1000;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          setFormData((prev) => ({ ...prev, images: compressedDataUrl }));
+          success('បាន Upload រូបភាពជោគជ័យ!');
+          setUploadingImage(false);
+        };
+        img.onerror = () => {
+          error('មិនអាចផ្ទុករូបភាពបានទេ');
+          setUploadingImage(false);
+        };
+        img.src = readerEvent.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      error('មានបញ្ហាក្នុងការ Upload រូបភាព');
+      setUploadingImage(false);
+    }
   };
 
   const handleDeleteKey = async (keyId: string) => {
@@ -379,14 +442,119 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block font-bold text-slate-300 mb-1">រូបភាព (Image URL)</label>
-                <input
-                  type="text"
-                  value={formData.images}
-                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
-                />
+              {/* Product Image Upload / URL */}
+              <div className="space-y-2 p-3.5 bg-dark-900 rounded-2xl border border-slate-700/80">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                    <ImageIcon className="w-4 h-4 text-purple-400" />
+                    <span>រូបភាពផលិតផល (Product Image)</span>
+                  </label>
+                  <div className="flex items-center gap-1 bg-dark-850 p-0.5 rounded-lg border border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setImageMode('upload')}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 transition-all ${
+                        imageMode === 'upload'
+                          ? 'bg-purple-600 text-white shadow'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <Upload className="w-3 h-3" />
+                      <span>Upload រូបភាព</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setImageMode('url')}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 transition-all ${
+                        imageMode === 'url'
+                          ? 'bg-purple-600 text-white shadow'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <LinkIcon className="w-3 h-3" />
+                      <span>Image URL</span>
+                    </button>
+                  </div>
+                </div>
+
+                {imageMode === 'upload' ? (
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      ref={imageInputRef}
+                      accept="image/*"
+                      onChange={handleImageFileChange}
+                      className="hidden"
+                    />
+
+                    {formData.images ? (
+                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-dark-850 border border-slate-700">
+                        <img
+                          src={formData.images}
+                          alt="Product preview"
+                          className="w-16 h-16 rounded-lg object-cover border border-slate-600 bg-black"
+                        />
+                        <div className="flex-1 min-w-0 text-xs">
+                          <span className="font-bold text-emerald-400 block truncate">✅ រូបភាពរួចរាល់</span>
+                          <span className="text-[10px] text-slate-400 block truncate mt-0.5">
+                            បានផ្ទុកក្នុងប្រព័ន្ធ និងត្រៀមបង្ហាញលើ Store
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => imageInputRef.current?.click()}
+                            className="text-[11px] font-bold text-purple-400 hover:text-purple-300 underline mt-1 block text-left"
+                          >
+                            ប្តូររូបភាពថ្មី
+                          </button>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setFormData((prev) => ({ ...prev, images: '' }))}
+                          className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                          title="ដករូបចេញ"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => imageInputRef.current?.click()}
+                        disabled={uploadingImage}
+                        className="w-full py-4 px-4 rounded-xl border-2 border-dashed border-slate-700 hover:border-purple-500 bg-dark-850/60 hover:bg-dark-850 text-slate-300 flex flex-col items-center justify-center gap-1.5 text-xs transition-all cursor-pointer"
+                      >
+                        <Upload className="w-6 h-6 text-purple-400 animate-bounce" />
+                        <span className="font-bold text-white">
+                          {uploadingImage ? 'កំពុងដំណើរការ...' : 'ចុចត្រង់នេះដើម្បីជ្រើសរើសរូបភាពពី Computer ឬ ទូរស័ព្ទ'}
+                        </span>
+                        <span className="text-[10px] text-slate-400">គាំទ្រ JPG, PNG, WEBP (ប្រព័ន្ធនឹង Optimize ទំហំស្វ័យប្រវត្តិ)</span>
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <input
+                      type="url"
+                      value={formData.images}
+                      onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                      placeholder="https://images.unsplash.com/... ឬ link រូបភាព"
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:border-purple-500 focus:outline-none"
+                    />
+                    {formData.images && (
+                      <div className="flex items-center gap-2 p-2 rounded-xl bg-dark-850 border border-slate-800">
+                        <img
+                          src={formData.images}
+                          alt="URL preview"
+                          className="w-10 h-10 rounded-lg object-cover bg-black border border-slate-700"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                        <span className="text-[11px] text-slate-400 truncate">Image Preview ពី URL</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>

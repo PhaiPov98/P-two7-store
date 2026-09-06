@@ -9,8 +9,8 @@ const DEFAULT_SETTINGS: Record<string, string> = {
   bakong_merchant_name: 'P-TWO7 STORE',
   bakong_merchant_city: 'Phnom Penh',
   payment_bank_name: 'ABA Bank',
-  payment_account_number: '000 123 456',
-  payment_account_name: 'PHAI POV',
+  payment_account_number: '007 576 225',
+  payment_account_name: 'P-Two7',
   payment_auto_fulfill: 'true',
 };
 

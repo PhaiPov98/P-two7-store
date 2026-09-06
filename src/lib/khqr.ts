@@ -33,7 +33,7 @@ export interface KHQRResult {
  */
 export async function generateBakongKHQR(params: KHQRGenerateParams): Promise<KHQRResult> {
   const bakongAccountId = (params.bakongAccountId || process.env.BAKONG_ACCOUNT_ID || 'abaakhppxxx@abaa').trim();
-  const merchantName = (params.merchantName || process.env.BAKONG_MERCHANT_NAME || 'POV PHAI').trim();
+  const merchantName = (params.merchantName || process.env.BAKONG_MERCHANT_NAME || 'P-Two7').trim();
   const merchantCity = (params.merchantCity || process.env.BAKONG_MERCHANT_CITY || 'Phnom Penh').trim();
   const accountInformation = (params.accountInformation || '007576225').replace(/\s+/g, '');
   const acquiringBank = (params.acquiringBank || 'ABA Bank').trim();

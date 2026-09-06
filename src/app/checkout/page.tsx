@@ -727,7 +727,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <p className="text-[11px] font-black text-white tracking-wide uppercase leading-tight">
-                      {khqrData?.accountName || khqrData?.merchantName || 'PHAI POV'}
+                      {khqrData?.accountName || khqrData?.merchantName || 'P-Two7'}
                     </p>
                     <span className="text-[8.5px] text-white/80 block">ABA Merchant</span>
                   </div>

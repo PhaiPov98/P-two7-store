@@ -1,4 +1,32 @@
+import prisma from '@/lib/prisma';
+
 // Telegram Bot Alert Notification Utility
+const DEFAULT_BOT_TOKEN = '8945507065:AAHcMIMeBf4Z4XwBhdp_w36NFmYG3gxEQd8';
+const DEFAULT_CHAT_ID = '1344580473';
+
+export async function getTelegramCredentials(): Promise<{ botToken: string; chatId: string }> {
+  let botToken = process.env.TELEGRAM_BOT_TOKEN?.trim();
+  let chatId = process.env.TELEGRAM_CHAT_ID?.trim();
+
+  if (!botToken || !chatId) {
+    try {
+      const dbSettings = await prisma.setting.findMany({
+        where: { key: { in: ['telegram_bot_token', 'telegram_chat_id'] } },
+      });
+      for (const s of dbSettings) {
+        if (s.key === 'telegram_bot_token' && s.value) botToken = s.value.trim();
+        if (s.key === 'telegram_chat_id' && s.value) chatId = s.value.trim();
+      }
+    } catch {
+      // ignore DB read error
+    }
+  }
+
+  return {
+    botToken: botToken || DEFAULT_BOT_TOKEN,
+    chatId: chatId || DEFAULT_CHAT_ID,
+  };
+}
 
 function parseDeviceAndBrowser(ua: string): { device: string; browser: string } {
   if (!ua) return { device: 'Computer', browser: 'Browser' };
@@ -47,9 +75,7 @@ let cachedTelegramUsername: string | null = null;
 export async function getTelegramUsername(): Promise<string | null> {
   if (cachedTelegramUsername) return cachedTelegramUsername;
 
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
+  const { botToken, chatId } = await getTelegramCredentials();
   if (!botToken || !chatId) return null;
 
   try {
@@ -69,10 +95,9 @@ export async function getTelegramUsername(): Promise<string | null> {
 }
 
 export async function sendTelegramNotification(message: string): Promise<boolean> {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-
+  const { botToken, chatId } = await getTelegramCredentials();
   if (!botToken || !chatId) {
+    console.warn('Telegram credentials not configured');
     return false;
   }
 
@@ -89,7 +114,13 @@ export async function sendTelegramNotification(message: string): Promise<boolean
       }),
     });
 
-    return res.ok;
+    if (!res.ok) {
+      const errTxt = await res.text();
+      console.error('Telegram sendMessage error:', errTxt);
+      return false;
+    }
+
+    return true;
   } catch (err) {
     console.error('Telegram notification failed:', err);
     return false;
@@ -188,12 +219,17 @@ export async function sendTelegramPhoto(params: {
   photo: string; // base64 data URL or HTTP URL
   caption: string;
 }): Promise<boolean> {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
+  const { botToken, chatId } = await getTelegramCredentials();
 
   if (!botToken || !chatId) {
+    console.warn('Telegram credentials not configured');
     return false;
   }
+
+  // Telegram photo caption maximum limit is 1024 characters
+  const safeCaption = params.caption.length > 1000 
+    ? params.caption.slice(0, 995) + '...' 
+    : params.caption;
 
   try {
     if (params.photo.startsWith('data:image/')) {
@@ -208,14 +244,20 @@ export async function sendTelegramPhoto(params: {
         const formData = new FormData();
         formData.append('chat_id', chatId);
         formData.append('photo', blob, 'payment_slip.jpg');
-        formData.append('caption', params.caption);
+        formData.append('caption', safeCaption);
         formData.append('parse_mode', 'HTML');
 
         const res = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
           method: 'POST',
           body: formData,
         });
-        return res.ok;
+
+        if (!res.ok) {
+          const errText = await res.text();
+          console.error('Telegram sendPhoto (blob) error:', errText);
+          return false;
+        }
+        return true;
       }
     }
 
@@ -226,11 +268,18 @@ export async function sendTelegramPhoto(params: {
       body: JSON.stringify({
         chat_id: chatId,
         photo: params.photo,
-        caption: params.caption,
+        caption: safeCaption,
         parse_mode: 'HTML',
       }),
     });
-    return res.ok;
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error('Telegram sendPhoto (url) error:', errText);
+      return false;
+    }
+
+    return true;
   } catch (err) {
     console.error('Telegram photo notification failed:', err);
     return false;
@@ -249,7 +298,7 @@ export async function sendNewOrderAlert(params: {
 }) {
   const time = getFormattedPhnomPenhTime();
   const itemList = params.items.map((i) => `  ▫️ ${i.name} (x${i.quantity})`).join('\n');
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pp-two7-store.vercel.app';
 
   const isPendingReview = Boolean(params.paymentSlip);
   const caption = `
@@ -276,6 +325,7 @@ ${itemList}
     if (photoSent) return true;
   }
 
+  // Fallback to text message
   return await sendTelegramNotification(caption);
 }
 

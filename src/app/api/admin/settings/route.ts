@@ -12,6 +12,8 @@ const DEFAULT_SETTINGS: Record<string, string> = {
   payment_account_number: '007 576 225',
   payment_account_name: 'P-Two7',
   payment_auto_fulfill: 'true',
+  telegram_bot_token: '8945507065:AAHcMIMeBf4Z4XwBhdp_w36NFmYG3gxEQd8',
+  telegram_chat_id: '1344580473',
 };
 
 export async function GET() {

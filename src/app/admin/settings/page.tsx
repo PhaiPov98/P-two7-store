@@ -34,6 +34,8 @@ export default function AdminSettingsPage() {
   const [accountName, setAccountName] = useState('PHAI POV');
   const [bakongApiToken, setBakongApiToken] = useState('');
   const [autoFulfill, setAutoFulfill] = useState('true');
+  const [telegramBotToken, setTelegramBotToken] = useState('8945507065:AAHcMIMeBf4Z4XwBhdp_w36NFmYG3gxEQd8');
+  const [telegramChatId, setTelegramChatId] = useState('1344580473');
   const [heroTicker, setHeroTicker] = useState('');
 
   const loadSettings = async () => {
@@ -51,6 +53,8 @@ export default function AdminSettingsPage() {
         if (s.payment_account_name) setAccountName(s.payment_account_name);
         if (s.bakong_api_token) setBakongApiToken(s.bakong_api_token);
         if (s.payment_auto_fulfill) setAutoFulfill(s.payment_auto_fulfill);
+        if (s.telegram_bot_token) setTelegramBotToken(s.telegram_bot_token);
+        if (s.telegram_chat_id) setTelegramChatId(s.telegram_chat_id);
         if (s.hero_ticker_text) setHeroTicker(s.hero_ticker_text);
       }
     } catch (e) {
@@ -82,6 +86,8 @@ export default function AdminSettingsPage() {
             payment_account_name: accountName.trim(),
             bakong_api_token: bakongApiToken.trim(),
             payment_auto_fulfill: autoFulfill,
+            telegram_bot_token: telegramBotToken.trim(),
+            telegram_chat_id: telegramChatId.trim(),
             hero_ticker_text: heroTicker.trim(),
           },
         }),
@@ -416,17 +422,45 @@ export default function AdminSettingsPage() {
             </button>
           </div>
 
-          <div className="p-4 rounded-2xl bg-dark-850 border border-slate-800 text-xs text-slate-300 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-slate-400">Telegram Bot Token:</span>
-              <span className="font-mono text-emerald-400 font-bold">Configured (.env)</span>
+          <div className="p-5 rounded-2xl bg-dark-850 border border-slate-800 text-xs text-slate-300 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-bold text-slate-200 mb-1.5">
+                  Telegram Bot Token <span className="text-sky-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={telegramBotToken}
+                  onChange={(e) => setTelegramBotToken(e.target.value)}
+                  placeholder="8945507065:AAHcMIMe..."
+                  className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-emerald-400 focus:outline-none focus:border-sky-500 font-mono"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Token ដែលទទួលបានពី @BotFather
+                </p>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-200 mb-1.5">
+                  Telegram Chat ID / Group ID <span className="text-sky-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={telegramChatId}
+                  onChange={(e) => setTelegramChatId(e.target.value)}
+                  placeholder="1344580473"
+                  className="w-full bg-dark-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-sky-500 font-mono"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                  ID គណនី Telegram ឬ Group របស់អ្នក (ឧ. 1344580473)
+                </p>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-400">Telegram Chat ID:</span>
-              <span className="font-mono text-white font-bold">1344580473</span>
-            </div>
+
             <p className="text-[11px] text-slate-400 pt-2 border-t border-slate-800">
-              💡 រាល់ពេលអតិថិជនដាក់បញ្ជាទិញ Bot នឹងផ្ញើរូបភាពបង្កាន់ដៃ (Slip) និងព័ត៌មានអតិថិជនចូល Telegram Chat ID ខាងលើដោយផ្ទាល់។
+              💡 រាល់ពេលអតិថិជនដាក់បញ្ជាទិញ ឬ Upload Slip ប្រព័ន្ធនឹងបញ្ជូនរូបភាព Slip និងព័ត៌មានអតិថិជនចូល Telegram Chat ID ខាងលើភ្លាមៗ 24/7។
             </p>
           </div>
         </div>

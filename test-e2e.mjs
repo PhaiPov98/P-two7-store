@@ -59,7 +59,7 @@ async function test() {
   const resAdminLogin = await fetch('http://localhost:3000/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: 'admin@bozzpov.com', password: 'admin123' }),
+    body: JSON.stringify({ email: 'bob800195@gmail.com', password: 'Phaipovpro9868@98581234567!@#$%^%' }),
   });
   const dataAdminLogin = await resAdminLogin.json();
   console.log('7. Admin Login:', dataAdminLogin.user?.name, `(${dataAdminLogin.user?.role})`, '✅');

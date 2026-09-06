@@ -50,7 +50,7 @@ export default function UserSidebar() {
         </div>
         <div className="overflow-hidden">
           <p className="font-bold text-sm text-white truncate">{user?.name || 'គណនីអតិថិជន'}</p>
-          <p className="text-xs text-slate-400 truncate">{user?.email || 'customer@bozzpov.com'}</p>
+          <p className="text-xs text-slate-400 truncate">{user?.email || ''}</p>
         </div>
       </div>
 

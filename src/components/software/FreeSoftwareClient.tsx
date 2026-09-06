@@ -66,28 +66,9 @@ export default function FreeSoftwareClient({
     syncLatest();
   }, []);
 
-  // Filter free files by tab and search query
+  // Filter free files by search query
   const filteredFiles = useMemo(() => {
     let result = files;
-
-    if (activeTab === 'iso') {
-      result = result.filter(
-        (f) =>
-          f.fileType.toLowerCase() === 'iso' ||
-          f.title.toLowerCase().includes('windows') ||
-          f.slug.toLowerCase().includes('windows')
-      );
-    } else if (activeTab === 'office') {
-      result = result.filter(
-        (f) =>
-          f.title.toLowerCase().includes('office') ||
-          f.slug.toLowerCase().includes('office')
-      );
-    } else if (activeTab === 'tools') {
-      result = result.filter(
-        (f) => f.fileType.toLowerCase() !== 'iso'
-      );
-    }
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
@@ -100,7 +81,7 @@ export default function FreeSoftwareClient({
     }
 
     return result;
-  }, [files, activeTab, searchQuery]);
+  }, [files, searchQuery]);
 
   // Filter tutorials by search query
   const filteredTutorials = useMemo(() => {
@@ -128,9 +109,6 @@ export default function FreeSoftwareClient({
 
   const navTabs = [
     { id: 'all', label: 'ទាំងអស់ (All Free)', icon: Boxes, count: files.length },
-    { id: 'iso', label: 'Windows ISOs', icon: HardDrive },
-    { id: 'office', label: 'Office Installers', icon: FileCode },
-    { id: 'tools', label: 'Tools & Utilities', icon: Wrench },
     { id: 'guides', label: 'មេរៀនដំឡើង', icon: BookOpen, count: tutorials.length },
   ];
 

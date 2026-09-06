@@ -800,14 +800,6 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            {/* Instruction Steps */}
-            <div className="p-3 rounded-xl bg-dark-850/80 border border-slate-800 text-[11px] text-slate-300 text-left space-y-1">
-              <p className="font-semibold text-white">របៀបបង់ប្រាក់:</p>
-              <p>1. ចុចប៊ូតុង <strong>"បើកក្នុង App ABA Mobile"</strong> (លើទូរស័ព្ទ) ឬស្កេន QR ខាងលើ</p>
-              <p>2. ពិនិត្យមើលឈ្មោះ <strong>{khqrData?.accountName || 'PHAI POV'}</strong> និងចំនួនទឹកប្រាក់</p>
-              <p>3. ផ្ទេរប្រាក់រួច ចុចប៊ូតុង <strong>"ខ្ញុំបានទូទាត់ប្រាក់រួចរាល់"</strong></p>
-            </div>
-
             {/* Action Buttons */}
             <div className="flex gap-2 pt-1">
               <button

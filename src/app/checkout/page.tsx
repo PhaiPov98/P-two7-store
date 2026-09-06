@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -52,6 +53,11 @@ export default function CheckoutPage() {
   const { user } = useAuth();
   const { success, error } = useToast();
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Form State
   const [name, setName] = useState(user?.name || '');
@@ -660,8 +666,8 @@ export default function CheckoutPage() {
       </form>
 
       {/* REAL BAKONG KHQR & ABA PAY MODAL */}
-      {showQRModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 bg-dark-950/98 backdrop-blur-2xl animate-in fade-in overflow-y-auto">
+      {showQRModal && mounted && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-in fade-in overflow-y-auto">
           <div className="glass-card max-w-md w-full rounded-3xl p-4 sm:p-5 border border-slate-700/80 bg-dark-900/98 shadow-2xl space-y-3 text-center my-auto max-h-[94vh] overflow-y-auto relative">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
@@ -814,7 +820,8 @@ export default function CheckoutPage() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -59,7 +59,7 @@ export async function POST(request: Request) {
         price: data.isFree ? 0 : parseFloat(data.price || '0'),
         changelog: data.changelog || '',
         requirements: data.requirements || '',
-        categoryId: data.categoryId,
+        categoryId: data.categoryId || null,
         isActive: Boolean(data.isActive ?? true),
       },
     });
@@ -109,7 +109,7 @@ export async function PUT(request: Request) {
         price: updateData.isFree ? 0 : parseFloat(updateData.price || '0'),
         changelog: updateData.changelog,
         requirements: updateData.requirements,
-        categoryId: updateData.categoryId,
+        categoryId: updateData.categoryId || null,
         isActive: Boolean(updateData.isActive),
       },
     });

@@ -97,7 +97,7 @@ export default function AdminFilesPage() {
       price: '0',
       changelog: '- កំណែប្រែដំបូង (Initial Release)',
       requirements: 'Windows 10/11 ឬ macOS',
-      categoryId: categories[0]?.id || '',
+      categoryId: '',
       isActive: true,
     });
     setShowModal(true);
@@ -182,11 +182,6 @@ export default function AdminFilesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formData.categoryId) {
-      error('សូមជ្រើសរើស Category', 'ប្រសិនបើមិនទាន់មាន Category ទេ សូមបង្កើតជាមុនសិន');
-      return;
-    }
 
     if (!formData.filePath) {
       error('សូម Upload ឯកសារ ឬ ដាក់ Link ទាញយក', 'អ្នកមិនទាន់បានបញ្ចូល File Path ឬ Link នៅឡើយទេ');
@@ -418,32 +413,29 @@ export default function AdminFilesPage() {
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               {/* Category selector */}
               <div>
-                <label className="block font-bold text-slate-300 mb-1.5">
-                  ប្រភេទ (Category) <span className="text-red-400">*</span>
-                </label>
-                {categories.length === 0 ? (
-                  <div className="text-amber-400 text-xs p-3 bg-amber-500/10 rounded-xl border border-amber-500/20 flex items-center justify-between">
-                    <span>⚠️ មិនទាន់មាន Category នៅឡើយទេ</span>
-                    <Link
-                      href="/admin/categories"
-                      className="text-blue-400 font-bold underline hover:text-blue-300"
-                    >
-                      + បង្កើត Category ជាមុន
-                    </Link>
-                  </div>
-                ) : (
-                  <select
-                    value={formData.categoryId}
-                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:border-blue-500 focus:outline-none"
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="font-bold text-slate-300">
+                    ប្រភេទ (Category) <span className="text-slate-500 font-normal text-xs">(មិនចាំបាច់ / Optional)</span>
+                  </label>
+                  <Link
+                    href="/admin/categories"
+                    className="text-blue-400 font-bold text-[11px] underline hover:text-blue-300"
                   >
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.nameKm}
-                      </option>
-                    ))}
-                  </select>
-                )}
+                    + គ្រប់គ្រង Category
+                  </Link>
+                </div>
+                <select
+                  value={formData.categoryId || ''}
+                  onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white focus:border-blue-500 focus:outline-none"
+                >
+                  <option value="">(គ្មានប្រភេទ / ទូទៅ - General)</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.nameKm}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Title */}

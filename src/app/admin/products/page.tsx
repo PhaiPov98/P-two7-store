@@ -44,6 +44,7 @@ export default function AdminProductsPage() {
     isFeatured: false,
     isBestSeller: false,
     isActive: true,
+    newKeys: '',
   });
 
   const { success, error } = useToast();
@@ -103,6 +104,7 @@ export default function AdminProductsPage() {
       isFeatured: false,
       isBestSeller: false,
       isActive: true,
+      newKeys: '',
     });
     setShowModal(true);
   };
@@ -128,8 +130,31 @@ export default function AdminProductsPage() {
       isFeatured: product.isFeatured,
       isBestSeller: product.isBestSeller,
       isActive: product.isActive,
+      newKeys: '',
     });
     setShowModal(true);
+  };
+
+  const handleDeleteKey = async (keyId: string) => {
+    if (!confirm('តើអ្នកពិតជាចង់លុប Key នេះចេញពីស្តុកមែនទេ?')) return;
+    try {
+      const res = await fetch(`/api/admin/keys?id=${keyId}`, { method: 'DELETE' });
+      if (res.ok) {
+        success('បានលុប Key ជោគជ័យ!');
+        if (editingProduct) {
+          setEditingProduct((prev: any) => ({
+            ...prev,
+            keys: prev.keys?.filter((k: any) => k.id !== keyId),
+          }));
+        }
+        loadData();
+      } else {
+        const d = await res.json();
+        error('មិនអាចលុបបានទេ', d.error || 'មានបញ្ហា');
+      }
+    } catch {
+      error('មានបញ្ហា');
+    }
   };
 
   const handleDelete = async (id: string, name: string) => {
@@ -382,6 +407,85 @@ export default function AdminProductsPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
                 />
+              </div>
+
+              {/* Product License Keys Management Section */}
+              <div className="p-3.5 rounded-2xl bg-dark-900 border border-blue-500/30 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <KeyRound className="w-4 h-4 text-blue-400" />
+                    <label className="text-xs font-bold text-white">
+                      🔑 បញ្ចូល Product Keys (License Activation)
+                    </label>
+                  </div>
+                  {editingProduct?.keys && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
+                      {editingProduct.keys.filter((k: any) => k.status === 'AVAILABLE').length} Available Keys ក្នុងស្តុក
+                    </span>
+                  )}
+                </div>
+
+                {/* Show existing keys if editing */}
+                {editingProduct?.keys && editingProduct.keys.length > 0 && (
+                  <div className="space-y-1.5 pt-1 border-t border-slate-800">
+                    <p className="text-[11px] text-slate-400 font-medium">Keys ដែលមានក្នុងផលិតផលនេះបច្ចុប្បន្ន៖</p>
+                    <div className="max-h-28 overflow-y-auto space-y-1 pr-1">
+                      {editingProduct.keys.map((k: any) => (
+                        <div
+                          key={k.id}
+                          className="flex items-center justify-between p-2 rounded-lg bg-dark-850 border border-slate-800 text-[11px] font-mono"
+                        >
+                          <span className={k.status === 'AVAILABLE' ? 'text-emerald-400' : 'text-slate-500 line-through'}>
+                            {k.key}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                              k.status === 'AVAILABLE'
+                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                : 'bg-slate-800 text-slate-400'
+                            }`}>
+                              {k.status}
+                            </span>
+                            {k.status === 'AVAILABLE' && (
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteKey(k.id)}
+                                className="text-red-400 hover:text-red-300 p-0.5 rounded"
+                                title="លុប Key នេះ"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Textarea to paste new keys */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-bold text-slate-300">
+                      {editingProduct ? '+ បញ្ចូល / Paste Keys ថ្មីបន្ថែម' : 'Paste Product Keys (មួយជួរម្តងៗ)'}
+                    </label>
+                    {formData.newKeys && (
+                      <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                        ⚡ រកឃើញ {formData.newKeys.split('\n').filter((k) => k.trim().length > 0).length} Keys
+                      </span>
+                    )}
+                  </div>
+                  <textarea
+                    rows={3}
+                    value={formData.newKeys}
+                    onChange={(e) => setFormData({ ...formData, newKeys: e.target.value })}
+                    placeholder={"ឧទាហរណ៍ (Paste មួយជួរ ឬច្រើនជួរ):\nDEMO-W11PR-VK7JG-NPHTM-C97JM-9MPGT\nDEMO-W11PR-NRG8B-VKK3Q-CXVCJ-9G2XF"}
+                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono placeholder:text-slate-600 focus:border-blue-500 focus:outline-none"
+                  />
+                  <p className="text-[10px] text-slate-500">
+                    💡 លោកអ្នកអាច Copy & Paste Keys ពី Excel, Notepad ឬ Keygen ចូលទីនេះបានភ្លាមៗ (មួយជួរ = Key មួយ)
+                  </p>
+                </div>
               </div>
 
               {/* Attached Download File Section */}

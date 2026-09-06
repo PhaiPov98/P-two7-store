@@ -9,6 +9,10 @@ export async function GET() {
       include: {
         category: true,
         file: true,
+        keys: {
+          select: { id: true, key: true, status: true, soldAt: true, createdAt: true },
+          orderBy: { createdAt: 'desc' },
+        },
         _count: {
           select: {
             keys: { where: { status: 'AVAILABLE' } },
@@ -72,6 +76,29 @@ export async function POST(request: Request) {
       },
     });
 
+    // Bulk create product keys if passed
+    if (data.newKeys && typeof data.newKeys === 'string') {
+      const keyLines = data.newKeys
+        .split('\n')
+        .map((k: string) => k.trim())
+        .filter((k: string) => k.length > 0);
+
+      if (keyLines.length > 0) {
+        await prisma.productKey.createMany({
+          data: keyLines.map((k: string) => ({
+            key: k,
+            status: 'AVAILABLE',
+            productId: product.id,
+          })),
+        });
+
+        await prisma.product.update({
+          where: { id: product.id },
+          data: { stockCount: { increment: keyLines.length } },
+        });
+      }
+    }
+
     return NextResponse.json({ success: true, product });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -130,6 +157,29 @@ export async function PUT(request: Request) {
         category: true,
       },
     });
+
+    // Bulk create product keys if passed in edit mode
+    if (updateData.newKeys && typeof updateData.newKeys === 'string') {
+      const keyLines = updateData.newKeys
+        .split('\n')
+        .map((k: string) => k.trim())
+        .filter((k: string) => k.length > 0);
+
+      if (keyLines.length > 0) {
+        await prisma.productKey.createMany({
+          data: keyLines.map((k: string) => ({
+            key: k,
+            status: 'AVAILABLE',
+            productId: product.id,
+          })),
+        });
+
+        await prisma.product.update({
+          where: { id: product.id },
+          data: { stockCount: { increment: keyLines.length } },
+        });
+      }
+    }
 
     return NextResponse.json({ success: true, product });
   } catch (error: any) {

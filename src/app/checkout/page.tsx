@@ -110,15 +110,41 @@ export default function CheckoutPage() {
     return () => clearInterval(interval);
   }, [showQRModal]);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll and cleanly blur/fade background & header when modal is open
   useEffect(() => {
+    const header = document.querySelector('header');
+    const main = document.querySelector('main');
+    
     if (showQRModal) {
       document.body.style.overflow = 'hidden';
+      if (header) {
+        header.style.opacity = '0';
+        header.style.pointerEvents = 'none';
+        header.style.transition = 'opacity 0.2s ease';
+      }
+      if (main) {
+        main.style.filter = 'blur(10px)';
+        main.style.transition = 'filter 0.2s ease';
+      }
     } else {
       document.body.style.overflow = 'unset';
+      if (header) {
+        header.style.opacity = '1';
+        header.style.pointerEvents = 'auto';
+      }
+      if (main) {
+        main.style.filter = 'none';
+      }
     }
     return () => {
       document.body.style.overflow = 'unset';
+      if (header) {
+        header.style.opacity = '1';
+        header.style.pointerEvents = 'auto';
+      }
+      if (main) {
+        main.style.filter = 'none';
+      }
     };
   }, [showQRModal]);
 
@@ -667,7 +693,7 @@ export default function CheckoutPage() {
 
       {/* REAL BAKONG KHQR & ABA PAY MODAL */}
       {showQRModal && mounted && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-in fade-in overflow-y-auto">
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-4 bg-dark-950/92 backdrop-blur-2xl animate-in fade-in overflow-y-auto">
           <div className="glass-card max-w-md w-full rounded-3xl p-4 sm:p-5 border border-slate-700/80 bg-dark-900/98 shadow-2xl space-y-3 text-center my-auto max-h-[94vh] overflow-y-auto relative">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">

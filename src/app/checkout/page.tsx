@@ -679,29 +679,6 @@ export default function CheckoutPage() {
               </button>
             </div>
 
-            {/* Live Bank Auto-Detection Status */}
-            <div className="flex items-center justify-center gap-2 py-1 px-3 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[10px] sm:text-[11px] text-emerald-400 font-medium">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span>កំពុងរង់ចាំការស្កេនទូទាត់ពី App ធនាគារ (Auto-Detect)...</span>
-            </div>
-
-            {/* Direct ABA Mobile Tap To Pay Button */}
-            {khqrData?.abaPayLink && (
-              <a
-                href={khqrData.abaPayLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 via-sky-600 to-blue-600 hover:from-blue-500 hover:to-sky-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/25 transition-all transform active:scale-98 border border-blue-400/30"
-              >
-                <Smartphone className="w-4 h-4 text-sky-200" />
-                <span>📲 បើកក្នុង App ABA Mobile (Tap to Pay)</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-80" />
-              </a>
-            )}
-
             {/* Premium Official KHQR Card */}
             <div className="relative bg-gradient-to-b from-[#EE1C25] via-[#DE141E] to-[#B91018] p-3.5 sm:p-4 rounded-2xl shadow-2xl border border-white/20 text-white max-w-[320px] mx-auto overflow-hidden">
               {/* Gloss highlight */}

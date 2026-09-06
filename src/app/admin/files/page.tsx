@@ -31,6 +31,7 @@ export default function AdminFilesPage() {
   const [editingFile, setEditingFile] = useState<any | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadMode, setUploadMode] = useState<'upload' | 'link'>('upload');
+  const [inspectingUrl, setInspectingUrl] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -161,6 +162,54 @@ export default function AdminFilesPage() {
       error('មិនអាច Upload ឯកសារបានទេ', 'ឯកសារអាចធំពេកលើសពីកម្រិត Server។ សូមជ្រើសរើស "Link Cloud (Drive / Mega)" ដើម្បីដាក់ Link Google Drive/Mega វិញបាទ');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleInspectUrl = async (customUrl?: string) => {
+    const targetUrl = (customUrl || formData.filePath || '').trim();
+    if (!targetUrl || !targetUrl.startsWith('http')) return;
+
+    try {
+      setInspectingUrl(true);
+      const res = await fetch('/api/admin/files/inspect-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: targetUrl }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setFormData((prev) => {
+          const next = { ...prev };
+          if (data.fileSize) {
+            next.fileSize = data.fileSize;
+          }
+          if (data.fileType) {
+            next.fileType = data.fileType;
+          }
+          if (data.title && !prev.title) {
+            next.title = data.title;
+            if (!prev.slug) {
+              next.slug = data.title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            }
+          }
+          return next;
+        });
+
+        if (data.fileSize) {
+          success(
+            'បានទាញទំហំ និងព័ត៌មានដោយស្វ័យប្រវត្តិ!',
+            `ទំហំ (Size): ${data.fileSize} | ប្រភេទ: ${data.fileType}`
+          );
+        }
+      }
+    } catch (err) {
+      console.warn('Inspect URL failed:', err);
+    } finally {
+      setInspectingUrl(false);
     }
   };
 
@@ -510,16 +559,40 @@ export default function AdminFilesPage() {
                     </div>
                   </div>
                 ) : (
-                  <div>
-                    <input
-                      type="url"
-                      value={formData.filePath}
-                      onChange={(e) => setFormData({ ...formData, filePath: e.target.value })}
-                      placeholder="https://drive.google.com/file/d/... ឬ Mega/Mediafire link"
-                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs focus:border-blue-500 focus:outline-none"
-                    />
-                    <p className="text-[10px] text-slate-500 mt-1">
-                      ដាក់ Link ទាញយកផ្ទាល់ពី Google Drive, Mega, Telegram, ឬ Cloud Drive ផ្សេងៗ
+                  <div className="space-y-1.5">
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        value={formData.filePath}
+                        onChange={(e) => setFormData({ ...formData, filePath: e.target.value })}
+                        onPaste={(e) => {
+                          const pasted = e.clipboardData.getData('text');
+                          if (pasted && pasted.startsWith('http')) {
+                            setFormData((prev) => ({ ...prev, filePath: pasted }));
+                            handleInspectUrl(pasted);
+                          }
+                        }}
+                        onBlur={() => {
+                          if (formData.filePath?.startsWith('http') && !formData.fileSize) {
+                            handleInspectUrl();
+                          }
+                        }}
+                        placeholder="https://drive.google.com/file/d/... ឬ Mega/Mediafire link"
+                        className="flex-1 bg-dark-850 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs focus:border-blue-500 focus:outline-none placeholder:text-slate-600"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleInspectUrl()}
+                        disabled={inspectingUrl || !formData.filePath}
+                        className="px-3 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-blue-400 text-xs font-bold flex items-center gap-1.5 transition-all disabled:opacity-40 shrink-0"
+                        title="ចុចដើម្បីទាញទំហំ (Size) និងព័ត៌មានពី Google Drive / Link ស្វ័យប្រវត្តិ"
+                      >
+                        <Sparkles className={`w-3.5 h-3.5 ${inspectingUrl ? 'animate-spin text-blue-300' : ''}`} />
+                        <span>{inspectingUrl ? 'កំពុងទាញ...' : 'Auto Size'}</span>
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-slate-500">
+                      ✨ ពេល Paste Link Google Drive / Cloud ប្រព័ន្ធនឹងទាញទំហំ (Size), ទម្រង់ (Format) និងឈ្មោះ File ដោយស្វ័យប្រវត្តិ
                     </p>
                   </div>
                 )}
@@ -538,14 +611,28 @@ export default function AdminFilesPage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">ទំហំ (Size)</label>
-                  <input
-                    type="text"
-                    value={formData.fileSize}
-                    onChange={(e) => setFormData({ ...formData, fileSize: e.target.value })}
-                    placeholder="ឧ. 150 MB"
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
-                  />
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold text-slate-300">ទំហំ (Size)</label>
+                    {inspectingUrl && (
+                      <span className="text-[10px] text-blue-400 font-bold animate-pulse flex items-center gap-0.5">
+                        <Sparkles className="w-2.5 h-2.5" /> Auto...
+                      </span>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={formData.fileSize}
+                      onChange={(e) => setFormData({ ...formData, fileSize: e.target.value })}
+                      placeholder="ឧ. 150 MB ឬ 5.4 GB"
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder:text-slate-600 focus:border-blue-500 focus:outline-none"
+                    />
+                    {formData.fileSize && (
+                      <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono font-bold pointer-events-none">
+                        AUTO
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label className="block font-bold text-slate-300 mb-1">ជំនាន់ (Version)</label>

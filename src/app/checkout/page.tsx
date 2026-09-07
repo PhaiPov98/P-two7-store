@@ -849,14 +849,14 @@ export default function CheckoutPage() {
               {/* KHQR Card Header */}
               <div className="flex items-center justify-between pb-2 border-b border-white/20 relative z-10">
                 <div className="text-left flex items-center gap-2">
-                  <div className="bg-white px-1.5 py-0.5 rounded shadow-sm flex items-center justify-center">
-                    <span className="text-[#EE1C25] text-[10px] font-black tracking-wider">KHQR</span>
+                  <div className="bg-white px-2 py-0.5 rounded shadow-sm flex items-center justify-center">
+                    <span className="text-[#EE1C25] text-[11px] font-black tracking-wider">KHQR</span>
                   </div>
                   <div>
                     <p className="text-[11px] font-black text-white tracking-wide uppercase leading-tight">
-                      {khqrData?.accountName || khqrData?.merchantName || 'P-Two7'}
+                      P-TWO7 STORE
                     </p>
-                    <span className="text-[8.5px] text-white/80 block">ABA Merchant</span>
+                    <span className="text-[8.5px] text-white/80 block">Bakong Payment</span>
                   </div>
                 </div>
                 <div className="text-right">

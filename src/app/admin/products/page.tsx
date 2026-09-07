@@ -14,6 +14,8 @@ import {
   Upload,
   Image as ImageIcon,
   Link as LinkIcon,
+  Sparkles,
+  Wand2,
 } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 import { formatPrice } from '@/lib/translations';
@@ -235,6 +237,70 @@ export default function AdminProductsPage() {
     } catch (err) {
       error('មានបញ្ហា', 'សូមព្យាយាមម្តងទៀត');
     }
+  };
+
+  const generateDescriptions = (target: 'short' | 'full' | 'both') => {
+    if (!formData.name?.trim()) {
+      error('សូមបញ្ចូលឈ្មោះផលិតផលជាមុនសិន', 'ប្រព័ន្ធត្រូវការឈ្មោះផលិតផលដើម្បី Generate ការពិពណ៌នា');
+      return;
+    }
+
+    const cleanName = formData.name.trim();
+    const lower = cleanName.toLowerCase();
+    const selectedCat = categories.find((c) => c.id === formData.categoryId);
+    const catName = selectedCat ? (selectedCat.nameKm || selectedCat.nameEn) : '';
+
+    let shortDesc = '';
+    let fullDesc = '';
+
+    if (lower.includes('windows 11') || lower.includes('win 11') || lower.includes('w11')) {
+      const isPro = lower.includes('pro');
+      const edition = isPro ? 'Windows 11 Pro' : 'Windows 11';
+      shortDesc = `Digital License Key ${edition} សុទ្ធ 100% ប្រើប្រាស់បានមួយជីវិត (Lifetime) គាំទ្រ Update ផ្ទាល់ពី Microsoft`;
+      fullDesc = `🌟 លក្ខណៈពិសេសសំខាន់ៗ៖\n• Genuine Digital License Key សម្រាប់ ${edition} (64-bit / 32-bit)\n• ប្រើប្រាស់បានរហូត (Lifetime Activation) លើកុំព្យូទ័រ 1 គ្រឿង\n• អាច Update Windows ថ្មីៗដោយផ្ទាល់ពី Microsoft Security Center\n• គាំទ្រទាំងការដំឡើងថ្មី (Clean Install) និង Upgrade ពី Windows ចាស់\n\n🛡️ ការធានា និងសេវាកម្ម៖\n• ធានា Key សុទ្ធ 100% អាច Activate តាម Online ភ្លាមៗ\n• ផ្តល់ជូនការណែនាំដំឡើង និងជំនួយបច្ចេកទេស 24/7`;
+    } else if (lower.includes('windows 10') || lower.includes('win 10') || lower.includes('w10')) {
+      const isPro = lower.includes('pro');
+      const edition = isPro ? 'Windows 10 Pro' : 'Windows 10';
+      shortDesc = `Digital License Key ${edition} សុទ្ធ 100% ប្រើប្រាស់បានមួយជីវិត (Lifetime) សម្រាប់ PC និង Laptop`;
+      fullDesc = `🌟 លក្ខណៈពិសេសសំខាន់ៗ៖\n• Genuine Digital License Key សម្រាប់ ${edition} (64-bit / 32-bit)\n• ប្រើប្រាស់បានរហូត (Lifetime Activation) គ្មានផុតកំណត់\n• Update ប្រព័ន្ធសុវត្ថិភាព និង Feature ថ្មីៗពី Microsoft ដោយសុវត្ថិភាព\n• ដំណើរការរលូនជាមួយកម្មវិធីការងារ និង Game គ្រប់ប្រភេទ\n\n🛡️ ការធានា និងសេវាកម្ម៖\n• Key សុទ្ធពីក្រុមហ៊ុន Active តាម Online ភ្លាមៗ\n• Support ជួយដោះស្រាយបញ្ហាគ្រប់ជំហាន`;
+    } else if (lower.includes('office') || lower.includes('365') || lower.includes('word') || lower.includes('excel')) {
+      shortDesc = `កញ្ចប់កម្មវិធី ${cleanName} កំណែពេញលេញ ប្រើប្រាស់សម្រាប់ការិយាល័យ ការសិក្សា និងអាជីវកម្ម`;
+      fullDesc = `🌟 កម្មវិធីរួមបញ្ចូល៖\n• Microsoft Word, Excel, PowerPoint, Outlook, OneNote, Access...\n• មុខងារ AI និង Template ទំនើបៗជួយសម្រួលការងារ\n• គាំទ្រភាសាខ្មែរ និង Font ខ្មែរគ្រប់ប្រភេទ\n\n⚡ អត្ថប្រយោជន៍៖\n• កំណែពេញលេញ គ្មានការរំខានផ្ទាំង Activate\n• ដំណើរការរលូននៅលើ Windows និង macOS\n\n🛡️ ការធានា៖\n• ធានាការប្រើប្រាស់ និង Support បច្ចេកទេសរហ័សទាន់ចិត្ត`;
+    } else if (lower.includes('adobe') || lower.includes('photoshop') || lower.includes('illustrator') || lower.includes('premiere') || lower.includes('acrobat')) {
+      shortDesc = `កម្មវិធី ${cleanName} កំណែពេញលេញសម្រាប់ Graphic Design, កាត់តរូបភាព និង Video កម្រិតអាជីព`;
+      fullDesc = `🌟 លក្ខណៈពិសេស៖\n• ដំឡើងងាយស្រួល ប្រើប្រាស់មុខងារ Professional គ្រប់បែបយ៉ាង\n• Export រូបភាព និង Video កម្រិតច្បាស់អតិបរមា (HD, 4K)\n• គាំទ្រ Plugin, Preset និង Font ពេញលេញ\n\n⚡ ស័ក្តិសមសម្រាប់៖\n• អ្នកឌីហ្សាញ (Graphic Designer), Video Editor, Content Creator\n\n🛡️ ការធានា៖\n• ផ្តល់ជូន Link ដោនឡូតលឿន និងការណែនាំដំឡើងមួយជំហានម្តងៗ`;
+    } else if (lower.includes('capcut') || lower.includes('filmora') || lower.includes('davinci') || lower.includes('video')) {
+      shortDesc = `កម្មវិធីកាត់តវីដេអូ ${cleanName} ប្រើប្រាស់មុខងារ VIP/Pro គ្មាន Watermark Export 4K លឿនរហ័ស`;
+      fullDesc = `🌟 មុខងារពិសេស៖\n• ដោះសោ Effect, Transition, Sound FX, Filters កម្រិត VIP ពេញលេញ\n• Export វីដេអូ 2K/4K គ្មានជាប់ Watermark/Logo\n• មុខងារ Auto Caption និង AI ឆ្លាតវៃ\n\n🛡️ ការធានា៖\n• ធានាប្រើប្រាស់បានស្រួល មិនរអាក់រអួល`;
+    } else if (lower.includes('canva') || lower.includes('chatgpt') || lower.includes('midjourney') || lower.includes('ai') || lower.includes('claude') || lower.includes('netflix')) {
+      shortDesc = `គណនី ${cleanName} ប្រើប្រាស់មុខងារ Premium ពេញលេញ ល្បឿនលឿន និងគ្មានដែនកំណត់`;
+      fullDesc = `🌟 លក្ខណៈពិសេស៖\n• ប្រើប្រាស់មុខងារ Pro/Premium និង Template រាប់លានឥតគិតថ្លៃ\n• AI ជំនួយការឆ្លាតវៃ ជួយសន្សំពេលវេលាធ្វើការងារ\n• ដំណើរការបានគ្រប់ Device (Phone, Tablet, PC/Laptop)\n\n🛡️ ការធានា៖\n• ធានាគណនីប្រើប្រាស់បានពេញលេញតាមកាលកំណត់ និង Support 24/7`;
+    } else if (lower.includes('idm') || lower.includes('internet download manager')) {
+      shortDesc = `Internet Download Manager (IDM) License ប្រើប្រាស់មួយជីវិត បង្កើនល្បឿន Download ដល់ 5X`;
+      fullDesc = `🌟 លក្ខណៈពិសេស៖\n• បង្កើនល្បឿនទាញយក File, Video, Music រហូតដល់ 5 ដង\n• ដំណើរការស្វ័យប្រវត្តិលើ Google Chrome, MS Edge, Brave, Firefox\n• មុខងារ Resume ទាញយកបន្តពេលដាច់ Internet\n\n🛡️ ការធានា៖\n• ប្រើប្រាស់បានរហូត គ្មានលោត Pop-up Fake Serial`;
+    } else if (lower.includes('antivirus') || lower.includes('kaspersky') || lower.includes('bitdefender') || lower.includes('nod32') || lower.includes('malwarebytes')) {
+      shortDesc = `License Key ${cleanName} សុទ្ធ ការពារកុំព្យូទ័រពីមេរោគ Ransomware, Trojan និង Hackers 100%`;
+      fullDesc = `🌟 ការពារកម្រិតខ្ពស់៖\n• កម្ចាត់មេរោគ, Ransomware, Spyware និង Phishing Web\n• ការពារប្រតិបត្តិការធនាគារ និងទិន្នន័យឯកជនភាព\n• Update Database មេរោគថ្មីៗរៀងរាល់ថ្ងៃ\n\n🛡️ ការធានា៖\n• Key សុទ្ធ 100% Active ផ្ទាល់លើ Software ផ្លូវការ`;
+    } else {
+      const catText = catName ? ` ក្នុងជំពូក ${catName}` : '';
+      shortDesc = `${cleanName} គុណភាពខ្ពស់ សុទ្ធ 100% ផ្តល់ជូនការប្រើប្រាស់ពេញលេញ ជាមួយការធានា និងជំនួយបច្ចេកទេស`;
+      fullDesc = `🌟 ព័ត៌មានលម្អិតអំពី ${cleanName}៖\n• ផលិតផលឌីជីថល / License គុណភាពខ្ពស់${catText}\n• ទទួលបានទិន្នន័យ (Key / File / គណនី) ស្វ័យប្រវត្តភ្លាមៗបន្ទាប់ពីទូទាត់\n• ងាយស្រួលដំឡើង និងប្រើប្រាស់ គាំទ្រទាំងលើ ${formData.platform || 'PC/Laptop'}\n\n⚡ អត្ថប្រយោជន៍ទទួលបាន៖\n• ដំណើរការរលូន សុវត្ថិភាព 100%\n• មានការណែនាំដំឡើងយ៉ាងក្បោះក្បាយ\n\n🛡️ ការធានា និងការគាំទ្រ៖\n• ធានាគុណភាព ១០០% និងផ្តល់សេវា Support ជូនអតិថិជនរហ័សទាន់ចិត្ត`;
+    }
+
+    if (target === 'short' || target === 'both') {
+      setFormData((prev) => ({ ...prev, shortDesc }));
+    }
+    if (target === 'full' || target === 'both') {
+      setFormData((prev) => ({ ...prev, description: fullDesc }));
+    }
+
+    success(
+      target === 'both'
+        ? 'បានបង្កើតការពិពណ៌នាទាំងពីរជោគជ័យ!'
+        : target === 'short'
+        ? 'បានបង្កើតការពិពណ៌នាសង្ខេបជោគជ័យ!'
+        : 'បានបង្កើតការពិពណ៌នាពេញលេញជោគជ័យ!'
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -566,22 +632,60 @@ export default function AdminProductsPage() {
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">ការពិពណ៌នាសង្ខេប (Short Desc)</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold text-slate-300">
+                      ការពិពណ៌នាសង្ខេប (Short Desc)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => generateDescriptions('short')}
+                      className="text-[11px] font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 transition-all cursor-pointer"
+                      title="Generate ការពិពណ៌នាសង្ខេបដោយស្វ័យប្រវត្តិតាមឈ្មោះផលិតផល"
+                    >
+                      <Sparkles className="w-3 h-3 text-purple-400 animate-pulse" />
+                      <span>✨ Auto Generate</span>
+                    </button>
+                  </div>
                   <input
                     type="text"
+                    placeholder="ឧ. License Key Windows 11 Pro របស់សុទ្ធ 100%..."
                     value={formData.shortDesc}
                     onChange={(e) => setFormData({ ...formData, shortDesc: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder:text-slate-600 focus:border-purple-500 focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">ការពិពណ៌នាពេញលេញ (Description)</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-bold text-slate-300">
+                      ការពិពណ៌នាពេញលេញ (Description)
+                    </label>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => generateDescriptions('both')}
+                        className="text-[10px] font-bold text-slate-400 hover:text-white px-2 py-1 rounded-lg bg-dark-850 hover:bg-slate-800 border border-slate-700 transition-all"
+                        title="Generate ទាំងការពិពណ៌នាសង្ខេប និងពេញលេញ"
+                      >
+                        ⚡ Generate ទាំងពីរ (Both)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => generateDescriptions('full')}
+                        className="text-[11px] font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/20 transition-all cursor-pointer"
+                        title="Generate ការពិពណ៌នាពេញលេញដោយស្វ័យប្រវត្តិតាមឈ្មោះផលិតផល"
+                      >
+                        <Sparkles className="w-3 h-3 text-purple-400 animate-pulse" />
+                        <span>✨ Auto Generate</span>
+                      </button>
+                    </div>
+                  </div>
                   <textarea
-                    rows={3}
+                    rows={4}
+                    placeholder="ព័ត៌មានលម្អិត លក្ខណៈពិសេស ការធានា និងវិធីប្រើប្រាស់..."
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
+                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white placeholder:text-slate-600 focus:border-purple-500 focus:outline-none text-xs leading-relaxed"
                   />
                 </div>
 

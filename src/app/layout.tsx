@@ -109,6 +109,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    google: '5IGI7gy16po_v9uPUpNp_d2gb0jVrk0_2JGB7dD91y0',
+  },
 };
 
 const jsonLd = {
@@ -162,6 +165,7 @@ export default function RootLayout({
   return (
     <html lang="km" suppressHydrationWarning className={`dark ${notoSansKhmer.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
+        <meta name="google-site-verification" content="5IGI7gy16po_v9uPUpNp_d2gb0jVrk0_2JGB7dD91y0" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

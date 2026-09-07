@@ -364,393 +364,403 @@ export default function AdminProductsPage() {
 
       {/* Add / Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-          <div className="glass-card max-w-2xl w-full rounded-3xl p-6 border border-slate-700 bg-dark-900 shadow-2xl space-y-4 my-8">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-bold text-base text-white">
-                {editingProduct ? 'កែសម្រួលផលិតផល' : 'បន្ថែមផលិតផលថ្មី'}
-              </h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-300 mb-1">ឈ្មោះផលិតផល *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-300 mb-1">
-                    ប្រភេទ (Category) <span className="text-slate-500 font-normal text-xs">(មិនចាំបាច់ / Optional)</span>
-                  </label>
-                  <select
-                    value={formData.categoryId || ''}
-                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
-                  >
-                    <option value="">(គ្មានប្រភេទ / ទូទៅ - General)</option>
-                    {categories.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.nameKm} ({c.nameEn})
-                      </option>
-                    ))}
-                  </select>
-                </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+          <div className="glass-card max-w-2xl w-full rounded-3xl border border-slate-700 bg-dark-900 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <form onSubmit={handleSubmit} className="flex flex-col h-full overflow-hidden">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between border-b border-slate-800 p-5 sm:p-6 pb-4 shrink-0 bg-dark-900">
+                <h3 className="font-bold text-base text-white flex items-center gap-2">
+                  <Package className="w-5 h-5 text-blue-400" />
+                  <span>{editingProduct ? 'កែសម្រួលផលិតផល' : 'បន្ថែមផលិតផលថ្មី'}</span>
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(false)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-300 mb-1">តម្លៃ ($) *</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-300 mb-1">តម្លៃចាស់ ($)</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={formData.comparePrice}
-                    onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-300 mb-1">បញ្ចុះតម្លៃ (%)</label>
-                  <input
-                    type="number"
-                    value={formData.discountPercent}
-                    onChange={(e) => setFormData({ ...formData, discountPercent: e.target.value })}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
-                  />
-                </div>
-              </div>
-
-              {/* Product Image Upload / URL */}
-              <div className="space-y-2 p-3.5 bg-dark-900 rounded-2xl border border-slate-700/80">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                    <ImageIcon className="w-4 h-4 text-purple-400" />
-                    <span>រូបភាពផលិតផល (Product Image)</span>
-                  </label>
-                  <div className="flex items-center gap-1 bg-dark-850 p-0.5 rounded-lg border border-slate-800">
-                    <button
-                      type="button"
-                      onClick={() => setImageMode('upload')}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 transition-all ${
-                        imageMode === 'upload'
-                          ? 'bg-purple-600 text-white shadow'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <Upload className="w-3 h-3" />
-                      <span>Upload រូបភាព</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setImageMode('url')}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 transition-all ${
-                        imageMode === 'url'
-                          ? 'bg-purple-600 text-white shadow'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <LinkIcon className="w-3 h-3" />
-                      <span>Image URL</span>
-                    </button>
-                  </div>
-                </div>
-
-                {imageMode === 'upload' ? (
-                  <div className="space-y-2">
-                    <input
-                      type="file"
-                      ref={imageInputRef}
-                      accept="image/*"
-                      onChange={handleImageFileChange}
-                      className="hidden"
-                    />
-
-                    {formData.images ? (
-                      <div className="flex items-center gap-3 p-2.5 rounded-xl bg-dark-850 border border-slate-700">
-                        <img
-                          src={formData.images}
-                          alt="Product preview"
-                          className="w-16 h-16 rounded-lg object-cover border border-slate-600 bg-black"
-                        />
-                        <div className="flex-1 min-w-0 text-xs">
-                          <span className="font-bold text-emerald-400 block truncate">✅ រូបភាពរួចរាល់</span>
-                          <span className="text-[10px] text-slate-400 block truncate mt-0.5">
-                            បានផ្ទុកក្នុងប្រព័ន្ធ និងត្រៀមបង្ហាញលើ Store
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => imageInputRef.current?.click()}
-                            className="text-[11px] font-bold text-purple-400 hover:text-purple-300 underline mt-1 block text-left"
-                          >
-                            ប្តូររូបភាពថ្មី
-                          </button>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => setFormData((prev) => ({ ...prev, images: '' }))}
-                          className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20"
-                          title="ដករូបចេញ"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => imageInputRef.current?.click()}
-                        disabled={uploadingImage}
-                        className="w-full py-4 px-4 rounded-xl border-2 border-dashed border-slate-700 hover:border-purple-500 bg-dark-850/60 hover:bg-dark-850 text-slate-300 flex flex-col items-center justify-center gap-1.5 text-xs transition-all cursor-pointer"
-                      >
-                        <Upload className="w-6 h-6 text-purple-400 animate-bounce" />
-                        <span className="font-bold text-white">
-                          {uploadingImage ? 'កំពុងដំណើរការ...' : 'ចុចត្រង់នេះដើម្បីជ្រើសរើសរូបភាពពី Computer ឬ ទូរស័ព្ទ'}
-                        </span>
-                        <span className="text-[10px] text-slate-400">គាំទ្រ JPG, PNG, WEBP (ប្រព័ន្ធនឹង Optimize ទំហំស្វ័យប្រវត្តិ)</span>
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <input
-                      type="url"
-                      value={formData.images}
-                      onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                      placeholder="https://images.unsplash.com/... ឬ link រូបភាព"
-                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:border-purple-500 focus:outline-none"
-                    />
-                    {formData.images && (
-                      <div className="flex items-center gap-2 p-2 rounded-xl bg-dark-850 border border-slate-800">
-                        <img
-                          src={formData.images}
-                          alt="URL preview"
-                          className="w-10 h-10 rounded-lg object-cover bg-black border border-slate-700"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                        <span className="text-[11px] text-slate-400 truncate">Image Preview ពី URL</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-300 mb-1">ការពិពណ៌នាសង្ខេប (Short Desc)</label>
-                <input
-                  type="text"
-                  value={formData.shortDesc}
-                  onChange={(e) => setFormData({ ...formData, shortDesc: e.target.value })}
-                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-300 mb-1">ការពិពណ៌នាពេញលេញ (Description)</label>
-                <textarea
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
-                />
-              </div>
-
-              {/* Product License Keys Management Section */}
-              <div className="p-3.5 rounded-2xl bg-dark-900 border border-blue-500/30 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <KeyRound className="w-4 h-4 text-blue-400" />
-                    <label className="text-xs font-bold text-white">
-                      🔑 បញ្ចូល Product Keys (License Activation)
-                    </label>
-                  </div>
-                  {editingProduct?.keys && (
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
-                      {editingProduct.keys.filter((k: any) => k.status === 'AVAILABLE').length} Available Keys ក្នុងស្តុក
-                    </span>
-                  )}
-                </div>
-
-                {/* Show existing keys if editing */}
-                {editingProduct?.keys && editingProduct.keys.length > 0 && (
-                  <div className="space-y-1.5 pt-1 border-t border-slate-800">
-                    <p className="text-[11px] text-slate-400 font-medium">Keys ដែលមានក្នុងផលិតផលនេះបច្ចុប្បន្ន៖</p>
-                    <div className="max-h-28 overflow-y-auto space-y-1 pr-1">
-                      {editingProduct.keys.map((k: any) => (
-                        <div
-                          key={k.id}
-                          className="flex items-center justify-between p-2 rounded-lg bg-dark-850 border border-slate-800 text-[11px] font-mono"
-                        >
-                          <span className={k.status === 'AVAILABLE' ? 'text-emerald-400' : 'text-slate-500 line-through'}>
-                            {k.key}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <span className={`text-[10px] px-1.5 py-0.5 rounded ${
-                              k.status === 'AVAILABLE'
-                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                : 'bg-slate-800 text-slate-400'
-                            }`}>
-                              {k.status}
-                            </span>
-                            {k.status === 'AVAILABLE' && (
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteKey(k.id)}
-                                className="text-red-400 hover:text-red-300 p-0.5 rounded"
-                                title="លុប Key នេះ"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Textarea to paste new keys */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-bold text-slate-300">
-                      {editingProduct ? '+ បញ្ចូល / Paste Keys ថ្មីបន្ថែម' : 'Paste Product Keys (មួយជួរម្តងៗ)'}
-                    </label>
-                    {formData.newKeys && (
-                      <span className="text-[10px] text-emerald-400 font-mono font-bold">
-                        ⚡ រកឃើញ {formData.newKeys.split('\n').filter((k) => k.trim().length > 0).length} Keys
-                      </span>
-                    )}
-                  </div>
-                  <textarea
-                    rows={3}
-                    value={formData.newKeys}
-                    onChange={(e) => setFormData({ ...formData, newKeys: e.target.value })}
-                    placeholder={"ឧទាហរណ៍ (Paste មួយជួរ ឬច្រើនជួរ):\nDEMO-W11PR-VK7JG-NPHTM-C97JM-9MPGT\nDEMO-W11PR-NRG8B-VKK3Q-CXVCJ-9G2XF"}
-                    className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono placeholder:text-slate-600 focus:border-blue-500 focus:outline-none"
-                  />
-                  <p className="text-[10px] text-slate-500">
-                    💡 លោកអ្នកអាច Copy & Paste Keys ពី Excel, Notepad ឬ Keygen ចូលទីនេះបានភ្លាមៗ (មួយជួរ = Key មួយ)
-                  </p>
-                </div>
-              </div>
-
-              {/* Attached Download File Section */}
-              <div className="p-3.5 rounded-2xl bg-dark-900 border border-slate-700/80 space-y-3">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                    <span>📦 ភ្ជាប់ឯកសារទាញយក (Download File / Setup .exe)</span>
-                  </label>
-                  <span className="text-[10px] text-slate-400">ជម្រើសបន្ថែម (Optional)</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Modal Scrollable Body */}
+              <div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-medium text-slate-300 mb-1">
-                      ជ្រើសរើស File ពីបញ្ជី Files (Files & Tools)
+                    <label className="block font-bold text-slate-300 mb-1">ឈ្មោះផលិតផល *</label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-300 mb-1">
+                      ប្រភេទ (Category) <span className="text-slate-500 font-normal text-xs">(មិនចាំបាច់ / Optional)</span>
                     </label>
                     <select
-                      value={formData.fileId}
-                      onChange={(e) => setFormData({ ...formData, fileId: e.target.value })}
-                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
+                      value={formData.categoryId || ''}
+                      onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white focus:border-blue-500 focus:outline-none"
                     >
-                      <option value="">-- មិនភ្ជាប់ File --</option>
-                      {files.map((f) => (
-                        <option key={f.id} value={f.id}>
-                          {f.title} ({f.fileType} - {f.fileSize})
+                      <option value="">(គ្មានប្រភេទ / ទូទៅ - General)</option>
+                      {categories.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.nameKm} ({c.nameEn})
                         </option>
                       ))}
                     </select>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="block font-bold text-slate-300 mb-1">តម្លៃ ($) *</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      required
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
+                    />
+                  </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-slate-300 mb-1">
-                      ឬដាក់ Link Cloud (Drive, Mega, etc.)
-                    </label>
+                    <label className="block font-bold text-slate-300 mb-1">តម្លៃចាស់ ($)</label>
                     <input
-                      type="url"
-                      placeholder="https://drive.google.com/..."
-                      value={formData.downloadUrl}
-                      onChange={(e) => setFormData({ ...formData, downloadUrl: e.target.value })}
-                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                      type="number"
+                      step="0.01"
+                      value={formData.comparePrice}
+                      onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-300 mb-1">បញ្ចុះតម្លៃ (%)</label>
+                    <input
+                      type="number"
+                      value={formData.discountPercent}
+                      onChange={(e) => setFormData({ ...formData, discountPercent: e.target.value })}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono"
                     />
                   </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-4">
+                {/* Product Image Upload / URL */}
+                <div className="space-y-2 p-3.5 bg-dark-900 rounded-2xl border border-slate-700/80">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                      <ImageIcon className="w-4 h-4 text-purple-400" />
+                      <span>រូបភាពផលិតផល (Product Image)</span>
+                    </label>
+                    <div className="flex items-center gap-1 bg-dark-850 p-0.5 rounded-lg border border-slate-800">
+                      <button
+                        type="button"
+                        onClick={() => setImageMode('upload')}
+                        className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 transition-all ${
+                          imageMode === 'upload'
+                            ? 'bg-purple-600 text-white shadow'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        <Upload className="w-3 h-3" />
+                        <span>Upload រូបភាព</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setImageMode('url')}
+                        className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1 transition-all ${
+                          imageMode === 'url'
+                            ? 'bg-purple-600 text-white shadow'
+                            : 'text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        <LinkIcon className="w-3 h-3" />
+                        <span>Image URL</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {imageMode === 'upload' ? (
+                    <div className="space-y-2">
+                      <input
+                        type="file"
+                        ref={imageInputRef}
+                        accept="image/*"
+                        onChange={handleImageFileChange}
+                        className="hidden"
+                      />
+
+                      {formData.images ? (
+                        <div className="flex items-center gap-3 p-2.5 rounded-xl bg-dark-850 border border-slate-700">
+                          <img
+                            src={formData.images}
+                            alt="Product preview"
+                            className="w-16 h-16 rounded-lg object-cover border border-slate-600 bg-black"
+                          />
+                          <div className="flex-1 min-w-0 text-xs">
+                            <span className="font-bold text-emerald-400 block truncate">✅ រូបភាពរួចរាល់</span>
+                            <span className="text-[10px] text-slate-400 block truncate mt-0.5">
+                              បានផ្ទុកក្នុងប្រព័ន្ធ និងត្រៀមបង្ហាញលើ Store
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => imageInputRef.current?.click()}
+                              className="text-[11px] font-bold text-purple-400 hover:text-purple-300 underline mt-1 block text-left"
+                            >
+                              ប្តូររូបភាពថ្មី
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setFormData((prev) => ({ ...prev, images: '' }))}
+                            className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                            title="ដករូបចេញ"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => imageInputRef.current?.click()}
+                          disabled={uploadingImage}
+                          className="w-full py-4 px-4 rounded-xl border-2 border-dashed border-slate-700 hover:border-purple-500 bg-dark-850/60 hover:bg-dark-850 text-slate-300 flex flex-col items-center justify-center gap-1.5 text-xs transition-all cursor-pointer"
+                        >
+                          <Upload className="w-6 h-6 text-purple-400 animate-bounce" />
+                          <span className="font-bold text-white">
+                            {uploadingImage ? 'កំពុងដំណើរការ...' : 'ចុចត្រង់នេះដើម្បីជ្រើសរើសរូបភាពពី Computer ឬ ទូរស័ព្ទ'}
+                          </span>
+                          <span className="text-[10px] text-slate-400">គាំទ្រ JPG, PNG, WEBP (ប្រព័ន្ធនឹង Optimize ទំហំស្វ័យប្រវត្តិ)</span>
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <input
+                        type="url"
+                        value={formData.images}
+                        onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                        placeholder="https://images.unsplash.com/... ឬ link រូបភាព"
+                        className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:border-purple-500 focus:outline-none"
+                      />
+                      {formData.images && (
+                        <div className="flex items-center gap-2 p-2 rounded-xl bg-dark-850 border border-slate-800">
+                          <img
+                            src={formData.images}
+                            alt="URL preview"
+                            className="w-10 h-10 rounded-lg object-cover bg-black border border-slate-700"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                          <span className="text-[11px] text-slate-400 truncate">Image Preview ពី URL</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">ជំនាន់ (Version)</label>
+                  <label className="block font-bold text-slate-300 mb-1">ការពិពណ៌នាសង្ខេប (Short Desc)</label>
                   <input
                     type="text"
-                    value={formData.version}
-                    onChange={(e) => setFormData({ ...formData, version: e.target.value })}
+                    value={formData.shortDesc}
+                    onChange={(e) => setFormData({ ...formData, shortDesc: e.target.value })}
                     className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
                   />
                 </div>
+
                 <div>
-                  <label className="block font-bold text-slate-300 mb-1">Platform</label>
-                  <input
-                    type="text"
-                    value={formData.platform}
-                    onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+                  <label className="block font-bold text-slate-300 mb-1">ការពិពណ៌នាពេញលេញ (Description)</label>
+                  <textarea
+                    rows={3}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
                   />
                 </div>
+
+                {/* Product License Keys Management Section */}
+                <div className="p-3.5 rounded-2xl bg-dark-900 border border-blue-500/30 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <KeyRound className="w-4 h-4 text-blue-400" />
+                      <label className="text-xs font-bold text-white">
+                        🔑 បញ្ចូល Product Keys (License Activation)
+                      </label>
+                    </div>
+                    {editingProduct?.keys && (
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">
+                        {editingProduct.keys.filter((k: any) => k.status === 'AVAILABLE').length} Available Keys ក្នុងស្តុក
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Show existing keys if editing */}
+                  {editingProduct?.keys && editingProduct.keys.length > 0 && (
+                    <div className="space-y-1.5 pt-1 border-t border-slate-800">
+                      <p className="text-[11px] text-slate-400 font-medium">Keys ដែលមានក្នុងផលិតផលនេះបច្ចុប្បន្ន៖</p>
+                      <div className="max-h-28 overflow-y-auto space-y-1 pr-1">
+                        {editingProduct.keys.map((k: any) => (
+                          <div
+                            key={k.id}
+                            className="flex items-center justify-between p-2 rounded-lg bg-dark-850 border border-slate-800 text-[11px] font-mono"
+                          >
+                            <span className={k.status === 'AVAILABLE' ? 'text-emerald-400' : 'text-slate-500 line-through'}>
+                              {k.key}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                                k.status === 'AVAILABLE'
+                                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                  : 'bg-slate-800 text-slate-400'
+                              }`}>
+                                {k.status}
+                              </span>
+                              {k.status === 'AVAILABLE' && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteKey(k.id)}
+                                  className="text-red-400 hover:text-red-300 p-0.5 rounded"
+                                  title="លុប Key នេះ"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Textarea to paste new keys */}
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] font-bold text-slate-300">
+                        {editingProduct ? '+ បញ្ចូល / Paste Keys ថ្មីបន្ថែម' : 'Paste Product Keys (មួយជួរម្តងៗ)'}
+                      </label>
+                      {formData.newKeys && (
+                        <span className="text-[10px] text-emerald-400 font-mono font-bold">
+                          ⚡ រកឃើញ {formData.newKeys.split('\n').filter((k) => k.trim().length > 0).length} Keys
+                        </span>
+                      )}
+                    </div>
+                    <textarea
+                      rows={3}
+                      value={formData.newKeys}
+                      onChange={(e) => setFormData({ ...formData, newKeys: e.target.value })}
+                      placeholder={"ឧទាហរណ៍ (Paste មួយជួរ ឬច្រើនជួរ):\nDEMO-W11PR-VK7JG-NPHTM-C97JM-9MPGT\nDEMO-W11PR-NRG8B-VKK3Q-CXVCJ-9G2XF"}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono placeholder:text-slate-600 focus:border-blue-500 focus:outline-none"
+                    />
+                    <p className="text-[10px] text-slate-500">
+                      💡 លោកអ្នកអាច Copy & Paste Keys ពី Excel, Notepad ឬ Keygen ចូលទីនេះបានភ្លាមៗ (មួយជួរ = Key មួយ)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Attached Download File Section */}
+                <div className="p-3.5 rounded-2xl bg-dark-900 border border-slate-700/80 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                      <span>📦 ភ្ជាប់ឯកសារទាញយក (Download File / Setup .exe)</span>
+                    </label>
+                    <span className="text-[10px] text-slate-400">ជម្រើសបន្ថែម (Optional)</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-300 mb-1">
+                        ជ្រើសរើស File ពីបញ្ជី Files (Files & Tools)
+                      </label>
+                      <select
+                        value={formData.fileId}
+                        onChange={(e) => setFormData({ ...formData, fileId: e.target.value })}
+                        className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white"
+                      >
+                        <option value="">-- មិនភ្ជាប់ File --</option>
+                        {files.map((f) => (
+                          <option key={f.id} value={f.id}>
+                            {f.title} ({f.fileType} - {f.fileSize})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-300 mb-1">
+                        ឬដាក់ Link Cloud (Drive, Mega, etc.)
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://drive.google.com/..."
+                        value={formData.downloadUrl}
+                        onChange={(e) => setFormData({ ...formData, downloadUrl: e.target.value })}
+                        className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block font-bold text-slate-300 mb-1">ជំនាន់ (Version)</label>
+                    <input
+                      type="text"
+                      value={formData.version}
+                      onChange={(e) => setFormData({ ...formData, version: e.target.value })}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-slate-300 mb-1">Platform</label>
+                    <input
+                      type="text"
+                      value={formData.platform}
+                      onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
+                      className="w-full bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.isFeatured}
+                      onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
+                      className="rounded text-blue-600"
+                    />
+                    <span>Featured</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.isBestSeller}
+                      onChange={(e) => setFormData({ ...formData, isBestSeller: e.target.checked })}
+                      className="rounded text-blue-600"
+                    />
+                    <span>Best Seller</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.isActive}
+                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                      className="rounded text-blue-600"
+                    />
+                    <span>Active</span>
+                  </label>
+                </div>
               </div>
 
-              <div className="flex gap-4 pt-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isFeatured}
-                    onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
-                    className="rounded text-blue-600"
-                  />
-                  <span>Featured</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isBestSeller}
-                    onChange={(e) => setFormData({ ...formData, isBestSeller: e.target.checked })}
-                    className="rounded text-blue-600"
-                  />
-                  <span>Best Seller</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="rounded text-blue-600"
-                  />
-                  <span>Active</span>
-                </label>
-              </div>
-
-              <div className="flex justify-end gap-2 pt-4 border-t border-slate-800">
+              {/* Modal Fixed Footer */}
+              <div className="flex items-center justify-end gap-2 p-4 sm:p-5 border-t border-slate-800 bg-dark-900 shrink-0">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}

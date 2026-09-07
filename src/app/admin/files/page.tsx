@@ -444,8 +444,8 @@ export default function AdminFilesPage() {
 
       {/* Modal: Add / Edit File */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto animate-fadeIn">
-          <div className="glass-card max-w-xl w-full rounded-3xl p-6 sm:p-8 border border-slate-700 bg-dark-900 shadow-2xl space-y-5 my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+          <div className="glass-card max-w-xl w-full rounded-3xl p-6 sm:p-8 border border-slate-700 bg-dark-900 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="font-bold text-base text-white flex items-center gap-2">
                 <FolderDown className="w-5 h-5 text-blue-400" />

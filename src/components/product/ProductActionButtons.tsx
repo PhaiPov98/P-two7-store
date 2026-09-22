@@ -5,11 +5,15 @@ import { useRouter } from 'next/navigation';
 import { ShoppingBag, Zap, Minus, Plus } from 'lucide-react';
 import { Product } from '@/types';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import { KHMER_TEXT } from '@/lib/translations';
 
 export default function ProductActionButtons({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { user } = useAuth();
+  const { info } = useToast();
   const router = useRouter();
 
   const handleAddToCart = () => {
@@ -26,6 +30,23 @@ export default function ProductActionButtons({ product }: { product: Product }) 
   };
 
   const handleBuyNow = () => {
+    // Paid products require login, free products do not
+    if (product.price > 0 && !user) {
+      info('សូមចូលគណនីជាមុនសិន', 'ដើម្បីទិញផលិតផលដែលគិតលុយ សូមចូលគណនីរបស់អ្នក');
+      addToCart(
+        {
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.images,
+          categoryName: product.category?.nameKm,
+        },
+        quantity
+      );
+      router.push(`/login?redirect=${encodeURIComponent('/checkout')}`);
+      return;
+    }
+
     addToCart(
       {
         productId: product.id,

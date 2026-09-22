@@ -20,6 +20,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'ចំនួនទឹកប្រាក់មិនត្រឹមត្រូវ (Invalid amount)' }, { status: 400 });
     }
 
+    // Paid KHQR requests strictly require user authentication
+    const session = await getCurrentUser();
+    if (amount > 0 && !session?.id) {
+      return NextResponse.json(
+        { error: 'សូមចូលគណនីជាមុនសិន ដើម្បីទូទាត់ប្រាក់ (Please log in to purchase paid products)' },
+        { status: 401 }
+      );
+    }
+
     // Load custom Bakong settings from DB if configured
     let bakongAccountId = process.env.BAKONG_ACCOUNT_ID || 'abaakhppxxx@abaa';
     let merchantName = process.env.BAKONG_MERCHANT_NAME || 'P-Two7';

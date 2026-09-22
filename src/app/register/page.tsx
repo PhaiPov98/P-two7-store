@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Mail, User, Phone, Zap, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/context/ToastContext';
 import { KHMER_TEXT } from '@/lib/translations';
 
-export default function RegisterPage() {
+function RegisterContent() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -17,6 +17,8 @@ export default function RegisterPage() {
   const { login, refreshUser } = useAuth();
   const { success, error } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams?.get('redirect') || '/account';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,7 +47,7 @@ export default function RegisterPage() {
       login(data.user);
       await refreshUser();
       success('បង្កើតគណនីជោគជ័យ!', `សូមស្វាគមន៍មកកាន់ P-Two7 Digital Store`);
-      router.push('/account');
+      router.push(redirectUrl);
       router.refresh();
     } catch (err) {
       error('មានបញ្ហា', 'សូមព្យាយាមម្តងទៀត');
@@ -140,7 +142,7 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={() => {
-              window.location.href = '/api/auth/google?redirect=/account';
+              window.location.href = `/api/auth/google?redirect=${encodeURIComponent(redirectUrl)}`;
             }}
             className="btn-google-auth"
           >
@@ -168,11 +170,22 @@ export default function RegisterPage() {
 
         <div className="text-center text-xs text-slate-400 pt-2 border-t border-slate-800">
           មានគណនីរួចហើយ?{' '}
-          <Link href="/login" className="text-blue-400 font-bold hover:underline">
+          <Link
+            href={redirectUrl !== '/account' ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : '/login'}
+            className="text-blue-400 font-bold hover:underline"
+          >
             {KHMER_TEXT.nav.login}
           </Link>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="text-center py-20 text-slate-400">កំពុងផ្ទុក...</div>}>
+      <RegisterContent />
+    </Suspense>
   );
 }

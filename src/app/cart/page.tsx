@@ -13,8 +13,11 @@ import {
   ShieldCheck,
   Tag,
   X,
+  Lock,
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/context/ToastContext';
 import { formatPrice, formatPriceRiel, KHMER_TEXT } from '@/lib/translations';
 
 export default function CartPage() {
@@ -31,9 +34,13 @@ export default function CartPage() {
     clearCart,
   } = useCart();
 
+  const { user } = useAuth();
+  const { info } = useToast();
   const [couponInput, setCouponInput] = useState('');
   const [applying, setApplying] = useState(false);
   const router = useRouter();
+
+  const hasPaidItems = items.some((item) => item.price > 0) || total > 0;
 
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -229,12 +236,27 @@ export default function CartPage() {
               </div>
             </div>
 
+            {/* Login notice if cart has paid items and user is not logged in */}
+            {hasPaidItems && !user && (
+              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs flex items-center gap-2">
+                <Lock className="w-4 h-4 shrink-0 text-amber-400" />
+                <span>តម្រូវឱ្យចូលគណនីជាមុនសិន ដើម្បីទូទាត់ទំនិញគិតលុយ</span>
+              </div>
+            )}
+
             {/* Checkout Button */}
             <button
-              onClick={() => router.push('/checkout')}
+              onClick={() => {
+                if (hasPaidItems && !user) {
+                  info('សូមចូលគណនីជាមុនសិន', 'ដើម្បីទិញផលិតផលដែលគិតលុយ សូមចូលគណនីរបស់អ្នក');
+                  router.push(`/login?redirect=${encodeURIComponent('/checkout')}`);
+                  return;
+                }
+                router.push('/checkout');
+              }}
               className="btn-uiverse-tranphattrien w-full py-4 px-6 rounded-2xl text-sm font-black tracking-wide"
             >
-              <span>{KHMER_TEXT.actions.checkout}</span>
+              <span>{hasPaidItems && !user ? 'ចូលគណនីដើម្បីបង់ប្រាក់' : KHMER_TEXT.actions.checkout}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 

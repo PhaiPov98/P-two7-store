@@ -26,18 +26,63 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!paymentSlip) {
+    // 1. Fetch fresh products from DB to validate prices & check if paid or free
+    let subtotal = 0;
+    const validatedItems: Array<{
+      productId: string;
+      name: string;
+      price: number;
+      quantity: number;
+    }> = [];
+
+    for (const item of items) {
+      const product = await prisma.product.findUnique({
+        where: { id: item.productId },
+      });
+
+      if (product) {
+        const itemPrice = Math.max(0, product.price || 0);
+        const itemQty = Math.max(1, item.quantity || 1);
+        subtotal += itemPrice * itemQty;
+
+        validatedItems.push({
+          productId: product.id,
+          name: product.name,
+          price: itemPrice,
+          quantity: itemQty,
+        });
+      }
+    }
+
+    if (validatedItems.length === 0) {
+      return NextResponse.json(
+        { error: 'រកមិនឃើញទំនិញដែលបានជ្រើសរើសឡើយ' },
+        { status: 400 }
+      );
+    }
+
+    // CHECK: Paid products REQUIRE user to be logged in! Free products DO NOT require login!
+    const isPaidOrder = validatedItems.some((i) => i.price > 0) || subtotal > 0;
+    if (isPaidOrder && !session?.id) {
+      return NextResponse.json(
+        { error: 'សូមចូលគណនីជាមុនសិន ដើម្បីទិញផលិតផលដែលគិតលុយ (Login required to purchase paid products)' },
+        { status: 401 }
+      );
+    }
+
+    // Payment slip is required for paid orders (free orders do not need a slip)
+    if (isPaidOrder && !paymentSlip) {
       return NextResponse.json(
         { error: 'សូមស្កេនទូទាត់ប្រាក់តាម App ABA ឬភ្ជាប់រូបភាពបង្កាន់ដៃបង់ប្រាក់ (Payment Slip) ជាមុនសិន' },
         { status: 400 }
       );
     }
 
-    // Slip uploads require manual admin review and approval before keys are delivered
-    const hasManualSlip = Boolean(paymentSlip);
-    let autoFulfill = false; // When slip is uploaded, always require admin to review and click Approve
+    // Auto fulfill: free orders always auto-fulfill immediately; paid orders with manual slip require admin approval
+    const hasManualSlip = Boolean(paymentSlip) && isPaidOrder;
+    let autoFulfill = !isPaidOrder; // Free orders are fulfilled instantly
 
-    if (!hasManualSlip) {
+    if (!hasManualSlip && isPaidOrder) {
       try {
         const autoSetting = await prisma.setting.findUnique({
           where: { key: 'payment_auto_fulfill' },
@@ -50,7 +95,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // 1. Identify or Create User
+    // 2. Identify or Create User
     let userId: string | null = null;
     if (session?.id) {
       const userInDb = await prisma.user.findUnique({
@@ -82,34 +127,6 @@ export async function POST(request: Request) {
           },
         });
         userId = newUser.id;
-      }
-    }
-
-    // 2. Fetch fresh products from DB to prevent client-side price tampering
-    let subtotal = 0;
-    const validatedItems: Array<{
-      productId: string;
-      name: string;
-      price: number;
-      quantity: number;
-    }> = [];
-
-    for (const item of items) {
-      const product = await prisma.product.findUnique({
-        where: { id: item.productId },
-      });
-
-      if (product) {
-        const itemPrice = product.price;
-        const itemQty = Math.max(1, item.quantity || 1);
-        subtotal += itemPrice * itemQty;
-
-        validatedItems.push({
-          productId: product.id,
-          name: product.name,
-          price: itemPrice,
-          quantity: itemQty,
-        });
       }
     }
 

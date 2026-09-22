@@ -55,6 +55,9 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
+  // Check if cart has paid items (price > 0 or total > 0)
+  const hasPaidItems = items.some((item) => item.price > 0) || total > 0;
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -247,6 +250,45 @@ export default function CheckoutPage() {
     }
   };
 
+  // Direct 1-click Free Order submission (No login or payment slip required for $0 orders)
+  const handleFreeOrderSubmit = async () => {
+    try {
+      setProcessing(true);
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: name.trim(),
+          customerEmail: email.trim(),
+          customerPhone: phone.trim(),
+          paymentMethod: 'ABA_PAY',
+          paymentSlip: null,
+          couponCode: coupon?.code || null,
+          items: items.map((i) => ({
+            productId: i.productId,
+            quantity: i.quantity,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        error('ការបញ្ជាទិញបរាជ័យ', data.error || 'មានបញ្ហាបច្ចេកទេស');
+        setProcessing(false);
+        return;
+      }
+
+      setOrderSuccess(data.order || data);
+      clearCart();
+      success('ទទួលបានជោគជ័យ!', 'ទទួលបានផលិតផលឥតគិតថ្លៃរួចរាល់ 100%');
+    } catch (err) {
+      error('មានបញ្ហា', 'មិនអាចបញ្ចប់ការបញ្ជាទិញបានទេ');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim()) {
@@ -259,7 +301,20 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Open Payment QR / Confirmation Modal
+    // Require login for paid products
+    if (hasPaidItems && !user) {
+      error('សូមចូលគណនីជាមុនសិន', 'សម្រាប់ផលិតផលគិតលុយ តម្រូវឱ្យចូលគណនីសិនទើបអាចទិញបាន');
+      router.push('/login?redirect=/checkout');
+      return;
+    }
+
+    // Free product order -> process directly without QR modal or payment slip
+    if (!hasPaidItems && total <= 0) {
+      handleFreeOrderSubmit();
+      return;
+    }
+
+    // Open Payment QR / Confirmation Modal for paid orders
     setShowQRModal(true);
     fetchDynamicKHQR();
   };
@@ -670,6 +725,31 @@ export default function CheckoutPage() {
         </div>
       </div>
 
+      {/* Notice banner when user is not logged in and cart contains paid products */}
+      {hasPaidItems && !user && (
+        <div className="p-4 sm:p-5 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+              <Lock className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-amber-300 flex items-center gap-2">
+                តម្រូវឱ្យចូលគណនីជាមុនសិន (Login Required)
+              </h4>
+              <p className="text-xs text-slate-300 mt-0.5">
+                សម្រាប់ផលិតផលគិតលុយ លោកអ្នកត្រូវ Login គណនីមុននឹងបង់ប្រាក់ ដើម្បីសុវត្ថិភាព និងរក្សាទុក Product Keys ក្នុងប្រព័ន្ធ។
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/login?redirect=/checkout"
+            className="btn-uiverse-buy px-5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap flex-shrink-0"
+          >
+            ចូលគណនីឥឡូវនេះ (Login)
+          </Link>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Customer & Payment Form */}
         <div className="lg:col-span-7 space-y-6">
@@ -732,38 +812,55 @@ export default function CheckoutPage() {
           </div>
 
           {/* Section 2: Payment Method */}
-          <div className="glass-card p-6 rounded-3xl border border-blue-500/30 bg-gradient-to-b from-blue-950/20 via-dark-900 to-dark-900 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-xs">2</span>
-                វិធីទូទាត់ (Payment Method)
-              </h3>
-              <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-                Official ABA Pay
-              </span>
+          {!hasPaidItems || total <= 0 ? (
+            <div className="glass-card p-6 rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-dark-900 to-dark-900 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-xs">2</span>
+                  ផលិតផលឥតគិតថ្លៃ (Free Product)
+                </h3>
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                  Free 100%
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                🎉 រាល់ផលិតផលឥតគិតថ្លៃ លោកអ្នកមិនបាច់ Login, មិនបាច់បង់ប្រាក់ ឬភ្ជាប់បង្កាន់ដៃឡើយ។ គ្រាន់តែចុចប៊ូតុងខាងក្រោម លោកអ្នកនឹងទទួលបាន Key និងឯកសារទាញយកភ្លាមៗ!
+              </p>
             </div>
+          ) : (
+            <div className="glass-card p-6 rounded-3xl border border-blue-500/30 bg-gradient-to-b from-blue-950/20 via-dark-900 to-dark-900 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-xs">2</span>
+                  វិធីទូទាត់ (Payment Method)
+                </h3>
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+                  Official ABA Pay
+                </span>
+              </div>
 
-            {/* Only ABA PAY */}
-            <div className="p-4 rounded-2xl border bg-blue-950/25 border-blue-500/60 text-white shadow-xl shadow-blue-950/30 flex items-center justify-between">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-600/40 flex-shrink-0">
-                  ABA
-                </div>
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-black text-sm text-white">ABA Mobile & KHQR</p>
-                    <span className="px-2 py-0.5 text-[9px] font-black rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
-                      Tap to Pay & Scan
-                    </span>
+              {/* Only ABA PAY */}
+              <div className="p-4 rounded-2xl border bg-blue-950/25 border-blue-500/60 text-white shadow-xl shadow-blue-950/30 flex items-center justify-between">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-600/40 flex-shrink-0">
+                    ABA
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-black text-sm text-white">ABA Mobile & KHQR</p>
+                      <span className="px-2 py-0.5 text-[9px] font-black rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
+                        Tap to Pay & Scan
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="w-5 h-5 rounded-full border-2 border-blue-400 flex items-center justify-center p-0.5 flex-shrink-0">
-                <div className="w-full h-full bg-blue-500 rounded-full" />
+                <div className="w-5 h-5 rounded-full border-2 border-blue-400 flex items-center justify-center p-0.5 flex-shrink-0">
+                  <div className="w-full h-full bg-blue-500 rounded-full" />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right: Order Review & Checkout Button */}
@@ -807,13 +904,35 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="btn-uiverse-buy w-full py-4 px-6 rounded-2xl text-sm font-black tracking-wide"
-            >
-              <Lock className="w-4 h-4" />
-              <span>បង់ប្រាក់ {formatPrice(total)}</span>
-            </button>
+            {hasPaidItems && !user ? (
+              <Link
+                href="/login?redirect=/checkout"
+                className="btn-uiverse-buy w-full py-4 px-6 rounded-2xl text-sm font-black tracking-wide flex items-center justify-center gap-2 text-center"
+              >
+                <Lock className="w-4 h-4" />
+                <span>សូមចូលគណនីដើម្បីបង់ប្រាក់ ({formatPrice(total)})</span>
+              </Link>
+            ) : (
+              <button
+                type="submit"
+                disabled={processing}
+                className="btn-uiverse-buy w-full py-4 px-6 rounded-2xl text-sm font-black tracking-wide disabled:opacity-50"
+              >
+                {processing ? (
+                  <span>កំពុងដំណើរការ...</span>
+                ) : !hasPaidItems || total <= 0 ? (
+                  <>
+                    <Download className="w-4 h-4" />
+                    <span>ទទួលបានផលិតផលឥតគិតថ្លៃ (Free Order)</span>
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-4 h-4" />
+                    <span>បង់ប្រាក់ {formatPrice(total)}</span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </form>

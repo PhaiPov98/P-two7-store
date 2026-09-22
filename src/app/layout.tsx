@@ -189,7 +189,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white font-khmer pb-16 lg:pb-0 transition-colors duration-300">
+      <body className="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white font-khmer pb-24 lg:pb-0 transition-colors duration-300">
         <Suspense fallback={null}>
           <TopProgressBar />
         </Suspense>

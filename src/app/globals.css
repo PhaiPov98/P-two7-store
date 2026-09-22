@@ -2693,6 +2693,11 @@ body {
   }
 }
 
+/* Safe area padding for mobile bottom bar */
+.pb-safe {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+}
+
 
 
 

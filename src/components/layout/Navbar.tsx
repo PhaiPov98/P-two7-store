@@ -317,21 +317,6 @@ export default function Navbar() {
                   <UserPlus className="w-3.5 h-3.5 relative z-10" />
                   <span className="relative z-10">{KHMER_TEXT.nav.register}</span>
                 </Link>
-
-                {/* Admin Link - visible on sm+ (on mobile it is in Hamburger Menu) */}
-                <Link
-                  href="/admin-login"
-                  prefetch={true}
-                  className="btn-uiverse-remon125 btn-uiverse-remon125-purple !hidden sm:!inline-flex !py-1.5 !px-3 text-xs shrink-0"
-                  title="ចូលជា Admin"
-                >
-                  <span className="bg-layer" />
-                  <span className="bg-layer" />
-                  <span className="bg-layer" />
-                  <span className="bg-layer" />
-                  <ShieldCheck className="w-3.5 h-3.5 relative z-10" />
-                  <span className="relative z-10">Admin</span>
-                </Link>
               </div>
             )}
 

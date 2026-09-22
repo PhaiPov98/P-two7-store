@@ -402,22 +402,14 @@ export default function Navbar() {
 
             {/* Additional Quick Actions in Mobile Menu */}
             {!user && (
-              <div className="pt-2 border-t border-slate-800/80 flex items-center gap-2">
+              <div className="pt-2 border-t border-slate-800/80">
                 <Link
                   href="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-md"
+                  className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-md active:scale-98 transition-all"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>{KHMER_TEXT.nav.register}</span>
-                </Link>
-                <Link
-                  href="/admin-login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="py-2.5 px-3 rounded-xl bg-purple-600/20 border border-purple-500/40 text-purple-300 text-xs font-bold text-center flex items-center justify-center gap-1.5"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-                  <span>Admin</span>
                 </Link>
               </div>
             )}

@@ -65,22 +65,22 @@ function LoginContent() {
   };
 
   return (
-    <div className="max-w-md mx-auto px-4 py-16 space-y-6">
+    <div className="max-w-md mx-auto px-3.5 sm:px-4 py-6 sm:py-16 space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center mx-auto shadow-xl shadow-blue-500/25 border border-blue-400/20">
-          <Zap className="w-7 h-7 text-white" />
+      <div className="text-center space-y-1.5 sm:space-y-2">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center mx-auto shadow-xl shadow-blue-500/25 border border-blue-400/20">
+          <Zap className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-white">ចូលគណនី</h1>
-        <p className="text-xs text-slate-400">សូមបំពេញ Email និង ពាក្យសម្ងាត់របស់អ្នក</p>
+        <h1 className="text-xl sm:text-3xl font-black text-white">ចូលគណនី</h1>
+        <p className="text-[11px] sm:text-xs text-slate-400">សូមបំពេញ Email និង ពាក្យសម្ងាត់របស់អ្នក</p>
       </div>
 
       {/* Login Card */}
-      <div className="glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6 shadow-2xl">
-        <form onSubmit={handleSubmit} className="space-y-5 text-xs">
+      <div className="glass-card p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-800 space-y-4 sm:space-y-6 shadow-2xl">
+        <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-5 text-xs">
           {/* Email */}
-          <div className="space-y-1.5">
-            <label className="block font-bold text-slate-300">Email (អ៊ីមែល) *</label>
+          <div className="space-y-1 sm:space-y-1.5">
+            <label className="block font-bold text-slate-300 text-[11px] sm:text-xs">Email (អ៊ីមែល) *</label>
             <div className="relative">
               <Mail className="w-4 h-4 text-blue-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
@@ -89,16 +89,16 @@ function LoginContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your-email@example.com"
-                className="w-full bg-dark-850 border border-slate-700 focus:border-blue-500 rounded-xl pl-10 pr-3 py-3 text-white font-mono focus:outline-none transition-colors"
+                className="w-full bg-dark-850 border border-slate-700 focus:border-blue-500 rounded-xl pl-10 pr-3 py-2.5 sm:py-3 text-white font-mono focus:outline-none transition-colors text-xs"
               />
             </div>
           </div>
 
           {/* Password */}
-          <div className="space-y-1.5">
+          <div className="space-y-1 sm:space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="block font-bold text-slate-300">ពាក្យសម្ងាត់ *</label>
-              <Link href="/forgot-password" className="text-[11px] text-blue-400 hover:underline">
+              <label className="block font-bold text-slate-300 text-[11px] sm:text-xs">ពាក្យសម្ងាត់ *</label>
+              <Link href="/forgot-password" className="text-[10px] sm:text-[11px] text-blue-400 hover:underline">
                 ភ្លេចពាក្យសម្ងាត់?
               </Link>
             </div>
@@ -110,12 +110,13 @@ function LoginContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-dark-850 border border-slate-700 focus:border-blue-500 rounded-xl pl-10 pr-10 py-3 text-white font-mono focus:outline-none transition-colors"
+                className="w-full bg-dark-850 border border-slate-700 focus:border-blue-500 rounded-xl pl-10 pr-10 py-2.5 sm:py-3 text-white font-mono focus:outline-none transition-colors text-xs"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -126,7 +127,7 @@ function LoginContent() {
           <button
             type="submit"
             disabled={loading}
-            className="btn-uiverse-remon125 btn-uiverse-remon125-blue w-full !py-3.5 px-6 rounded-xl text-xs font-bold disabled:opacity-50 flex items-center justify-center gap-2 mt-2"
+            className="btn-uiverse-remon125 btn-uiverse-remon125-blue w-full !py-3 sm:!py-3.5 px-6 rounded-xl text-xs font-bold disabled:opacity-50 flex items-center justify-center gap-2 mt-1 sm:mt-2"
           >
             <span className="bg-layer" />
             <span className="bg-layer" />

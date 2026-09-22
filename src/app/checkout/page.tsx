@@ -714,55 +714,55 @@ export default function CheckoutPage() {
 
   // Normal Checkout Form
   return (
-    <div className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8 pb-36 lg:pb-16">
-      <div className="flex items-center gap-3 pb-4 sm:pb-6 border-b border-slate-800">
-        <Link href="/cart" className="p-2 rounded-xl bg-dark-850 hover:bg-dark-800 text-slate-400 hover:text-white border border-slate-700 shrink-0">
-          <ArrowLeft className="w-4 h-4" />
+    <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-6 pb-36 lg:pb-16">
+      <div className="flex items-center gap-2.5 sm:gap-3 pb-3 sm:pb-5 border-b border-slate-800">
+        <Link href="/cart" className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-dark-850 hover:bg-dark-800 text-slate-400 hover:text-white border border-slate-700 shrink-0">
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
         </Link>
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl sm:text-3xl font-black text-white leading-normal truncate">ការទូទាត់ប្រាក់ (Checkout)</h1>
-          <p className="text-xs text-slate-400 mt-0.5 leading-relaxed truncate sm:text-clip">បំពេញព័ត៌មាន និងជ្រើសរើសវិធីទូទាត់</p>
+          <h1 className="text-base sm:text-2xl font-black text-white leading-snug truncate">ការទូទាត់ប្រាក់ (Checkout)</h1>
+          <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug truncate sm:text-clip">បំពេញព័ត៌មាន និងជ្រើសរើសវិធីទូទាត់</p>
         </div>
       </div>
 
       {/* Notice banner when user is not logged in and cart contains paid products */}
       {hasPaidItems && !user && (
-        <div className="p-4 sm:p-5 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
-          <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
-              <Lock className="w-5 h-5" />
+        <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0 border border-amber-500/30">
+              <Lock className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-amber-300 flex items-center gap-2">
+              <h4 className="text-xs sm:text-sm font-bold text-amber-300">
                 តម្រូវឱ្យចូលគណនីជាមុនសិន (Login Required)
               </h4>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-[11px] text-slate-300 mt-0.5 leading-snug">
                 សម្រាប់ផលិតផលគិតលុយ លោកអ្នកត្រូវ Login គណនីមុននឹងបង់ប្រាក់ ដើម្បីសុវត្ថិភាព និងរក្សាទុក Product Keys ក្នុងប្រព័ន្ធ។
               </p>
             </div>
           </div>
           <Link
             href="/login?redirect=/checkout"
-            className="btn-uiverse-buy px-5 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap flex-shrink-0"
+            className="btn-uiverse-buy px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold whitespace-nowrap flex-shrink-0"
           >
             ចូលគណនីឥឡូវនេះ (Login)
           </Link>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
         {/* Left: Customer & Payment Form */}
-        <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+        <div className="lg:col-span-7 space-y-3.5 sm:space-y-6">
           {/* Section 1: Customer Info */}
-          <div className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 space-y-4 shadow-xl">
-            <h3 className="text-base font-bold text-white flex items-center gap-2 leading-normal">
-              <span className="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-xs">1</span>
+          <div className="glass-card p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-slate-800 space-y-3 shadow-md">
+            <h3 className="text-xs sm:text-base font-bold text-white flex items-center gap-2 leading-snug">
+              <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-[11px] sm:text-xs font-bold">1</span>
               ព័ត៌មានអ្នកទិញ
             </h3>
 
-            <div className="space-y-4 text-xs">
+            <div className="space-y-2.5 text-xs">
               <div>
-                <label className="block font-bold text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-300 text-[11px] sm:text-xs mb-1">
                   ឈ្មោះពេញ (Full Name) <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -771,18 +771,18 @@ export default function CheckoutPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="ឧ. សុខ វិបុល"
-                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-dark-850 border border-slate-700 rounded-lg sm:rounded-xl px-3 py-1.5 sm:py-2 text-xs text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block font-bold text-slate-300">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
+                  <label className="font-semibold text-slate-300 text-[11px] sm:text-xs">
                     Email (សម្រាប់ទទួល Product Key) <span className="text-red-400">*</span>
                   </label>
                   {user?.email && (
-                    <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                      ✓ គណនីបាន Login ({user.email})
+                    <span className="text-[9.5px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 w-fit">
+                      ✓ បាន Login ({user.email})
                     </span>
                   )}
                 </div>
@@ -792,12 +792,12 @@ export default function CheckoutPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ឧ. example@gmail.com"
-                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
+                  className="w-full bg-dark-850 border border-slate-700 rounded-lg sm:rounded-xl px-3 py-1.5 sm:py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-mono"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-300 text-[11px] sm:text-xs mb-1">
                   លេខទូរស័ព្ទ (Phone Number - Optional)
                 </label>
                 <input
@@ -805,7 +805,7 @@ export default function CheckoutPage() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="ឧ. 012 345 678"
-                  className="w-full bg-dark-850 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-dark-850 border border-slate-700 rounded-lg sm:rounded-xl px-3 py-1.5 sm:py-2 text-xs text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>

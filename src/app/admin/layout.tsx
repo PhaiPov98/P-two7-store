@@ -1,5 +1,5 @@
 import React from 'react';
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import AdminSidebar from '@/components/layout/AdminSidebar';
 
@@ -11,7 +11,7 @@ export default async function AdminLayout({
   const user = await getCurrentUser();
 
   if (!user || user.role !== 'ADMIN') {
-    redirect('/admin-login');
+    notFound();
   }
 
   return (

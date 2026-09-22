@@ -148,7 +148,7 @@ export async function sendAdminLoginAlert(params: {
 • <b>ពេលវេលា:</b> ${time}
 ━━━━━━━━━━━━━━━━━━━━
 ⚠️ <i>ប្រសិនបើមិនមែនជាអ្នក Login សូមចុចខាងក្រោម៖</i>
-🔐 <a href="http://localhost:3000/admin/profile"><b>ចូលទៅប្តូរ Password ភ្លាម</b></a>
+🔐 <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pp-two7-store.vercel.app'}/admin/profile"><b>ចូលទៅប្តូរ Password ភ្លាម</b></a>
   `.trim();
 
   return await sendTelegramNotification(text);
@@ -209,7 +209,7 @@ export async function sendBruteForceAlert(params: {
 • <b>ពេលវេលា:</b> ${time}
 ━━━━━━━━━━━━━━━━━━━━
 ⚠️ <i>មានជនសង្ស័យកំពុងព្យាយាមទាយ Password គណនីរបស់អ្នក!</i>
-🔐 <a href="http://localhost:3000/admin/profile"><b>ចូលទៅពិនិត្យសុវត្ថិភាព Admin</b></a>
+🔐 <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pp-two7-store.vercel.app'}/admin/profile"><b>ចូលទៅពិនិត្យសុវត្ថិភាព Admin</b></a>
   `.trim();
 
   return await sendTelegramNotification(text);

@@ -187,6 +187,34 @@ ${changes.join('\n')}
   return await sendTelegramNotification(text);
 }
 
+export async function sendFailedAdminLoginAlert(params: {
+  email: string;
+  ip: string;
+  userAgent: string;
+  attemptNumber?: number;
+}) {
+  const time = getFormattedPhnomPenhTime();
+  const { device, browser } = parseDeviceAndBrowser(params.userAgent);
+  const cleanIp = formatIpAddress(params.ip);
+  const tgUser = await getTelegramUsername();
+
+  const text = `
+🚨 <b>សេចក្តីប្រកាសអាសន្ន៖ LOGIN ADMIN មិនត្រឹមត្រូវ!</b>
+━━━━━━━━━━━━━━━━━━━━
+⚠️ <b>មានអ្នកព្យាយាម Login ចូលគណនី Admin ដោយវាយពាក្យសម្ងាត់ខុស!</b>
+• <b>Email គោលដៅ:</b> <code>${params.email}</code> ${tgUser ? `(${tgUser})` : ''}
+• <b>ឧបករណ៍:</b> ${device} (${browser})
+• <b>IP Address:</b> <code>${cleanIp}</code>
+• <b>ចំនួនដងដែលវាយខុស:</b> លើកទី ${params.attemptNumber || 1}
+• <b>ពេលវេលា:</b> ${time}
+━━━━━━━━━━━━━━━━━━━━
+🔒 <i>ប្រសិនបើមិនមែនជាលោកអ្នក សូមប្រុងប្រយ័ត្ន និងពិនិត្យសុវត្ថិភាពភ្លាមៗ!</i>
+🔐 <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://pp-two7-store.vercel.app'}/admin/profile"><b>ពិនិត្យគណនី Admin</b></a>
+  `.trim();
+
+  return await sendTelegramNotification(text);
+}
+
 export async function sendBruteForceAlert(params: {
   email: string;
   ip: string;

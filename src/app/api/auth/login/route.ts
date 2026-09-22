@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import prisma from '@/lib/prisma';
 import { createToken, COOKIE_NAME } from '@/lib/auth';
 import { checkLoginRateLimit, recordFailedLoginAttempt, clearLoginAttempts } from '@/lib/rateLimit';
-import { sendAdminLoginAlert, sendBruteForceAlert } from '@/lib/telegram';
+import { sendAdminLoginAlert, sendBruteForceAlert, sendFailedAdminLoginAlert } from '@/lib/telegram';
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,6 +39,17 @@ export async function POST(request: NextRequest) {
 
     if (!user) {
       const failInfo = recordFailedLoginAttempt(rateLimitKey);
+
+      // If someone targeted admin email -> alert immediately even once!
+      if (cleanEmail === 'bob800195@gmail.com' || cleanEmail.includes('admin')) {
+        sendFailedAdminLoginAlert({
+          email: cleanEmail,
+          ip,
+          userAgent,
+          attemptNumber: 5 - failInfo.remainingAttempts,
+        }).catch((err) => console.error('Telegram failed admin login alert error:', err));
+      }
+
       if (failInfo.isNowLocked) {
         sendBruteForceAlert({
           email: cleanEmail,
@@ -62,6 +73,17 @@ export async function POST(request: NextRequest) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       const failInfo = recordFailedLoginAttempt(rateLimitKey);
+
+      // If ADMIN account has WRONG password -> alert Telegram immediately on the 1st attempt!
+      if (user.role === 'ADMIN' || cleanEmail === 'bob800195@gmail.com') {
+        sendFailedAdminLoginAlert({
+          email: user.email,
+          ip,
+          userAgent,
+          attemptNumber: 5 - failInfo.remainingAttempts,
+        }).catch((err) => console.error('Telegram failed admin login alert error:', err));
+      }
+
       if (failInfo.isNowLocked) {
         sendBruteForceAlert({
           email: cleanEmail,

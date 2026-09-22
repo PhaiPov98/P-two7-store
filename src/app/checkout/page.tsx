@@ -939,109 +939,109 @@ export default function CheckoutPage() {
 
       {/* REAL BAKONG KHQR & ABA PAY MODAL */}
       {showQRModal && mounted && createPortal(
-        <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-4 bg-dark-950/92 backdrop-blur-2xl animate-in fade-in overflow-y-auto">
-          <div className="max-w-[400px] w-full rounded-[28px] p-4 sm:p-5 border border-slate-700/60 bg-gradient-to-b from-[#141b2c]/98 via-[#0e1322]/98 to-[#090d18]/98 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_35px_rgba(238,28,37,0.1)] backdrop-blur-2xl space-y-3.5 text-center my-auto max-h-[95vh] overflow-y-auto relative ring-1 ring-white/10">
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center p-2.5 sm:p-4 bg-dark-950/92 backdrop-blur-2xl animate-in fade-in overflow-y-auto">
+          <div className="max-w-[340px] sm:max-w-[390px] w-full rounded-2xl sm:rounded-[28px] p-3 sm:p-4 border border-slate-700/60 bg-gradient-to-b from-[#141b2c]/98 via-[#0e1322]/98 to-[#090d18]/98 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_35px_rgba(238,28,37,0.1)] backdrop-blur-2xl space-y-2 sm:space-y-3 text-center my-auto max-h-[96vh] overflow-y-auto relative ring-1 ring-white/10">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-2.5">
-              <div className="flex items-center gap-2.5 text-left">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#EE1C25] to-[#B91018] flex items-center justify-center shadow-md shadow-red-500/25 text-white font-black text-[10px] tracking-wider border border-white/20">
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5 sm:pb-2">
+              <div className="flex items-center gap-2 text-left">
+                <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#EE1C25] to-[#B91018] flex items-center justify-center shadow-sm shadow-red-500/25 text-white font-black text-[9px] tracking-wider border border-white/20">
                   KHQR
                 </div>
                 <div>
-                  <h3 className="text-xs sm:text-sm font-black text-white leading-tight">ស្កេនទូទាត់ប្រាក់</h3>
-                  <p className="text-[10px] text-slate-400 font-medium">Bakong KHQR • ABA Bank</p>
+                  <h3 className="text-xs sm:text-sm font-black text-white leading-normal">ស្កេនទូទាត់ប្រាក់</h3>
+                  <p className="text-[9px] sm:text-[10px] text-slate-400 font-medium leading-none">Bakong KHQR • ABA Bank</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowQRModal(false)}
-                className="w-7 h-7 rounded-xl bg-dark-800/80 hover:bg-dark-750 text-slate-400 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60"
+                className="w-6 h-6 rounded-lg bg-dark-800/80 hover:bg-dark-750 text-slate-400 hover:text-white flex items-center justify-center transition-colors border border-slate-700/60"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
             {/* Premium Official KHQR Card */}
-            <div className="relative bg-gradient-to-b from-[#EE1C25] via-[#DE141E] to-[#99080F] p-3.5 sm:p-4 rounded-[22px] shadow-[0_12px_32px_-6px_rgba(238,28,37,0.35)] border border-white/25 text-white max-w-[330px] mx-auto overflow-hidden">
+            <div className="relative bg-gradient-to-b from-[#EE1C25] via-[#DE141E] to-[#99080F] p-2.5 sm:p-3.5 rounded-2xl shadow-[0_12px_28px_-6px_rgba(238,28,37,0.35)] border border-white/25 text-white max-w-[280px] sm:max-w-[320px] mx-auto overflow-hidden">
               {/* Gloss highlight */}
-              <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/12 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -top-12 -right-12 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 
               {/* KHQR Card Header */}
-              <div className="flex items-center justify-between pb-2 border-b border-white/20 relative z-10">
-                <div className="text-left flex items-center gap-2">
-                  <div className="bg-white px-2 py-0.5 rounded shadow-sm flex items-center justify-center">
-                    <span className="text-[#EE1C25] text-[11px] font-black tracking-wider">KHQR</span>
+              <div className="flex items-center justify-between pb-1.5 border-b border-white/20 relative z-10">
+                <div className="text-left flex items-center gap-1.5">
+                  <div className="bg-white px-1.5 py-0.5 rounded shadow-sm flex items-center justify-center">
+                    <span className="text-[#EE1C25] text-[10px] font-black tracking-wider">KHQR</span>
                   </div>
                   <div>
-                    <p className="text-[11px] font-black text-white tracking-wide uppercase leading-tight">
+                    <p className="text-[10px] sm:text-[11px] font-black text-white tracking-wide uppercase leading-tight">
                       P-TWO7 STORE
                     </p>
-                    <span className="text-[8.5px] text-white/80 block">Bakong Payment</span>
+                    <span className="text-[8px] text-white/80 block leading-tight">Bakong Payment</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[9px] font-bold text-white/90 bg-black/35 px-2 py-0.5 rounded-md border border-white/20 inline-block tracking-wide">
+                  <span className="text-[8px] sm:text-[9px] font-bold text-white/90 bg-black/35 px-1.5 py-0.5 rounded border border-white/20 inline-block">
                     Scan to Pay
                   </span>
                 </div>
               </div>
 
               {/* Dynamic QR Canvas */}
-              <div className="my-2.5 bg-white p-2.5 rounded-xl shadow-inner flex flex-col items-center justify-center min-h-[190px] relative z-10 ring-1 ring-black/5">
+              <div className="my-1.5 bg-white p-2 rounded-xl shadow-inner flex flex-col items-center justify-center min-h-[140px] sm:min-h-[175px] relative z-10 ring-1 ring-black/5">
                 {generatingQR ? (
-                  <div className="flex flex-col items-center justify-center space-y-2 text-slate-700 py-8">
-                    <div className="w-7 h-7 border-3 border-[#EE1C25] border-t-transparent rounded-full animate-spin" />
-                    <span className="text-xs font-bold text-slate-800">កំពុងបង្កើត KHQR...</span>
+                  <div className="flex flex-col items-center justify-center space-y-1.5 text-slate-700 py-6">
+                    <div className="w-6 h-6 border-2 border-[#EE1C25] border-t-transparent rounded-full animate-spin" />
+                    <span className="text-[11px] font-bold text-slate-800">កំពុងបង្កើត KHQR...</span>
                   </div>
                 ) : khqrData?.qrDataUrl ? (
                   <div className="flex items-center justify-center p-0.5 bg-white rounded-lg">
                     <img
                       src={khqrData.qrDataUrl}
                       alt="ABA KHQR Code"
-                      className="w-44 h-44 sm:w-48 sm:h-48 object-contain rounded-md"
+                      className="w-32 h-32 sm:w-40 sm:h-40 object-contain rounded-md"
                     />
                   </div>
                 ) : (
-                  <div className="text-xs text-red-600 p-4">មិនអាចទាញយក QR Code បានទេ</div>
+                  <div className="text-[11px] text-red-600 p-3">មិនអាចទាញយក QR Code បានទេ</div>
                 )}
               </div>
 
               {/* KHQR Card Footer: Amount Bar */}
-              <div className="bg-black/40 rounded-xl p-2.5 backdrop-blur-md border border-white/15 flex items-center justify-between relative z-10 shadow-inner">
+              <div className="bg-black/45 rounded-lg p-1.5 sm:p-2 backdrop-blur-md border border-white/15 flex items-center justify-between relative z-10 shadow-inner">
                 <div className="text-left">
-                  <span className="text-[8.5px] text-white/70 uppercase font-semibold tracking-wider block">ចំនួនទឹកប្រាក់ត្រូវបង់</span>
-                  <p className="text-base sm:text-lg font-black text-white font-mono leading-tight mt-0.5">
+                  <span className="text-[8px] text-white/70 uppercase font-semibold block leading-tight">ចំនួនទឹកប្រាក់ត្រូវបង់</span>
+                  <p className="text-sm sm:text-base font-black text-white font-mono leading-tight mt-0.5">
                     {formatPrice(total)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-[8.5px] text-white/70 uppercase font-semibold tracking-wider block">ប្រាក់រៀល (KHR)</span>
-                  <span className="text-sm sm:text-base font-mono font-black text-amber-300 block drop-shadow-sm mt-0.5">
+                  <span className="text-[8px] text-white/70 uppercase font-semibold block leading-tight">ប្រាក់រៀល (KHR)</span>
+                  <span className="text-xs sm:text-sm font-mono font-black text-amber-300 block drop-shadow-sm mt-0.5">
                     {formatPriceRiel(total)}
                   </span>
                 </div>
               </div>
 
               {/* Big & Cool Glowing Neon Countdown Box */}
-              <div className="mt-2 py-2 px-3.5 rounded-xl bg-gradient-to-r from-black/70 via-black/85 to-black/70 border border-amber-400/50 shadow-[0_0_20px_rgba(245,158,11,0.25)] flex items-center justify-between backdrop-blur-md relative overflow-hidden">
+              <div className="mt-1.5 py-1 sm:py-1.5 px-2.5 rounded-lg bg-gradient-to-r from-black/75 via-black/90 to-black/75 border border-amber-400/40 shadow-[0_0_15px_rgba(245,158,11,0.2)] flex items-center justify-between backdrop-blur-md relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-orange-500/15 to-amber-500/10 animate-pulse pointer-events-none" />
-                <div className="flex items-center gap-2 relative z-10">
-                  <div className="w-7 h-7 rounded-lg bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shadow-sm shadow-amber-500/20">
-                    <Clock className="w-4 h-4 animate-spin" style={{ animationDuration: '6s' }} />
+                <div className="flex items-center gap-1.5 relative z-10">
+                  <div className="w-5 h-5 rounded-md bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shadow-sm shadow-amber-500/20">
+                    <Clock className="w-3 h-3 animate-spin" style={{ animationDuration: '6s' }} />
                   </div>
                   <div className="text-left">
-                    <span className="text-[11px] font-bold text-amber-200 block leading-tight">
+                    <span className="text-[10px] font-bold text-amber-200 block leading-tight">
                       ផុតកំណត់ក្នុងរយៈពេល
                     </span>
-                    <span className="text-[9px] text-white/60 font-medium">Payment Timer</span>
+                    <span className="text-[8px] text-white/60 font-medium block leading-none">Payment Timer</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 relative z-10">
-                  <span className="relative flex h-2.5 w-2.5">
+                <div className="flex items-center gap-1.5 relative z-10">
+                  <span className="relative flex h-2 w-2">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.8)]"></span>
                   </span>
-                  <span className="font-mono text-xl sm:text-2xl font-black text-amber-300 tracking-widest drop-shadow-[0_0_12px_rgba(251,191,36,0.7)]">
+                  <span className="font-mono text-sm sm:text-lg font-black text-amber-300 tracking-wider drop-shadow-[0_0_8px_rgba(251,191,36,0.7)]">
                     {formatTimer(timeLeft)}
                   </span>
                 </div>
@@ -1049,13 +1049,13 @@ export default function CheckoutPage() {
             </div>
 
             {/* Slip Upload Box */}
-            <div className="p-2.5 rounded-xl bg-dark-850/80 border border-slate-800 text-left space-y-1.5">
+            <div className="p-2 rounded-lg bg-dark-850/80 border border-slate-800 text-left space-y-1 max-w-[280px] sm:max-w-[320px] mx-auto w-full">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 text-slate-300">
-                  <Upload className="w-3.5 h-3.5 text-blue-400" />
-                  <span className="text-[11px] font-bold text-slate-200">ភ្ជាប់បង្កាន់ដៃបង់ប្រាក់ (Slip / Screenshot)</span>
+                  <Upload className="w-3 h-3 text-blue-400" />
+                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-200 leading-normal">ភ្ជាប់បង្កាន់ដៃបង់ប្រាក់ (Slip / Screenshot)</span>
                 </div>
-                <span className="text-[9px] text-slate-400 px-1.5 py-0.5 rounded bg-dark-800 border border-slate-700/50">Optional</span>
+                <span className="text-[8px] text-slate-400 px-1 py-0.2 rounded bg-dark-800 border border-slate-700/50">Optional</span>
               </div>
 
               <input
@@ -1067,22 +1067,22 @@ export default function CheckoutPage() {
               />
 
               {slipImage ? (
-                <div className="p-2 rounded-lg bg-dark-900 border border-emerald-500/30 flex items-center justify-between gap-2.5">
-                  <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-dark-900 border border-emerald-500/30 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 min-w-0">
                     <img
                       src={slipImage}
                       alt="Slip preview"
-                      className="w-8 h-8 rounded-md object-cover border border-slate-700 bg-black"
+                      className="w-7 h-7 rounded object-cover border border-slate-700 bg-black shrink-0"
                     />
-                    <div className="text-xs">
-                      <span className="font-bold text-emerald-400 block line-clamp-1 text-[11px]">{slipFileName || 'Payment Slip'}</span>
-                      <span className="text-[9px] text-slate-400">បានភ្ជាប់រួចរាល់ ត្រៀមផ្ញើជូន Admin</span>
+                    <div className="text-[10px] min-w-0">
+                      <span className="font-bold text-emerald-400 block truncate text-[10px]">{slipFileName || 'Payment Slip'}</span>
+                      <span className="text-[8px] text-slate-400 block leading-tight">បានភ្ជាប់រួចរាល់ ត្រៀមផ្ញើជូន Admin</span>
                     </div>
                   </div>
                   <button
                     type="button"
                     onClick={removeSlip}
-                    className="p-1 rounded-md bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                    className="p-1 rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 shrink-0"
                     title="ដករូបចេញ"
                   >
                     <X className="w-3 h-3" />
@@ -1092,20 +1092,20 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full py-2 px-3 rounded-lg border border-dashed border-slate-700/80 hover:border-blue-500/50 bg-dark-900/40 hover:bg-blue-950/20 text-slate-400 hover:text-slate-200 flex items-center justify-center gap-2 text-[11px] transition-all cursor-pointer"
+                  className="w-full py-1.5 px-2 rounded-md border border-dashed border-slate-700/80 hover:border-blue-500/50 bg-dark-900/40 hover:bg-blue-950/20 text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5 text-[10px] transition-all cursor-pointer leading-normal"
                 >
                   <ImageIcon className="w-3.5 h-3.5 text-blue-400" />
-                  <span>ចុចត្រង់នេះដើម្បី Upload រូបភាព Slip ឬ Screenshot</span>
+                  <span>ចុចត្រង់នេះដើម្បី Upload Slip ឬ Screenshot</span>
                 </button>
               )}
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-2 pt-0.5">
+            <div className="flex gap-2 pt-0.5 max-w-[280px] sm:max-w-[320px] mx-auto w-full">
               <button
                 type="button"
                 onClick={() => setShowQRModal(false)}
-                className="flex-1 py-2.5 px-3 rounded-xl bg-dark-800 hover:bg-dark-750 text-slate-300 hover:text-white font-semibold text-xs transition-all border border-slate-700/60 active:scale-98"
+                className="flex-1 py-1.5 sm:py-2 px-2.5 rounded-lg bg-dark-800 hover:bg-dark-750 text-slate-300 hover:text-white font-semibold text-[11px] sm:text-xs transition-all border border-slate-700/60 active:scale-98"
               >
                 បោះបង់
               </button>
@@ -1113,10 +1113,10 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handleConfirmPayment}
                 disabled={processing}
-                className="flex-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-1.5 transition-all transform active:scale-98 disabled:opacity-50"
+                className="flex-2 py-1.5 sm:py-2 px-3 rounded-lg bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-[11px] sm:text-xs shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-1.5 transition-all transform active:scale-98 disabled:opacity-50"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>{processing ? 'កំពុងផ្ទៀងផ្ទាត់...' : 'ខ្ញុំបានទូទាត់ប្រាក់រួចរាល់'}</span>
+                <span>{processing ? 'កំពុងផ្ទៀងផ្ទាត់...' : 'ខ្ញុំបានទូទាត់រួចរាល់'}</span>
               </button>
             </div>
           </div>

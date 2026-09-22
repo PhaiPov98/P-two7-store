@@ -813,9 +813,9 @@ export default function CheckoutPage() {
 
           {/* Section 2: Payment Method */}
           {!hasPaidItems || total <= 0 ? (
-            <div className="glass-card p-6 rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-dark-900 to-dark-900 space-y-3">
+            <div className="glass-card p-3.5 sm:p-6 rounded-xl sm:rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 via-dark-900 to-dark-900 space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                   <span className="w-6 h-6 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-xs">2</span>
                   ផលិតផលឥតគិតថ្លៃ (Free Product)
                 </h3>
@@ -828,9 +828,9 @@ export default function CheckoutPage() {
               </p>
             </div>
           ) : (
-            <div className="glass-card p-6 rounded-3xl border border-blue-500/30 bg-gradient-to-b from-blue-950/20 via-dark-900 to-dark-900 space-y-4">
+            <div className="glass-card p-3.5 sm:p-6 rounded-xl sm:rounded-3xl border border-blue-500/30 bg-gradient-to-b from-blue-950/20 via-dark-900 to-dark-900 space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                   <span className="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-xs">2</span>
                   វិធីទូទាត់ (Payment Method)
                 </h3>
@@ -840,22 +840,22 @@ export default function CheckoutPage() {
               </div>
 
               {/* Only ABA PAY */}
-              <div className="p-4 rounded-2xl border bg-blue-950/25 border-blue-500/60 text-white shadow-xl shadow-blue-950/30 flex items-center justify-between">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-blue-600/40 flex-shrink-0">
+              <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl border bg-blue-950/25 border-blue-500/60 text-white shadow-lg shadow-blue-950/30 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-xs sm:text-sm shadow-md shadow-blue-600/40 shrink-0">
                     ABA
                   </div>
                   <div className="space-y-0.5">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-black text-sm text-white">ABA Mobile & KHQR</p>
-                      <span className="px-2 py-0.5 text-[9px] font-black rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
+                      <p className="font-black text-xs sm:text-sm text-white">ABA Mobile & KHQR</p>
+                      <span className="px-1.5 py-0.5 text-[8.5px] sm:text-[9px] font-black rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase">
                         Tap to Pay & Scan
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="w-5 h-5 rounded-full border-2 border-blue-400 flex items-center justify-center p-0.5 flex-shrink-0">
+                <div className="w-5 h-5 rounded-full border-2 border-blue-400 flex items-center justify-center p-0.5 shrink-0">
                   <div className="w-full h-full bg-blue-500 rounded-full" />
                 </div>
               </div>
@@ -864,11 +864,11 @@ export default function CheckoutPage() {
         </div>
 
         {/* Right: Order Review & Checkout Button */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-6">
-            <h3 className="text-base font-bold text-white">ទំនិញដែលបានជ្រើសរើស</h3>
+        <div className="lg:col-span-5 space-y-4 sm:space-y-6">
+          <div className="glass-card p-3.5 sm:p-6 rounded-xl sm:rounded-3xl border border-slate-800 space-y-4 sm:space-y-6 shadow-lg">
+            <h3 className="text-sm sm:text-base font-bold text-white">ទំនិញដែលបានជ្រើសរើស</h3>
 
-            <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+            <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
               {items.map((item) => (
                 <div key={item.productId} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-800/60 gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
@@ -884,23 +884,23 @@ export default function CheckoutPage() {
             </div>
 
             {/* Pricing */}
-            <div className="space-y-2 pt-4 border-t border-slate-800 text-xs">
+            <div className="space-y-1.5 sm:space-y-2 pt-3 border-t border-slate-800 text-[11px] sm:text-xs">
               <div className="flex justify-between text-slate-300">
                 <span>សរុបរង</span>
-                <span className="font-mono text-white">{formatPrice(subtotal)}</span>
+                <span className="font-mono text-white font-bold">{formatPrice(subtotal)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-emerald-400">
                   <span>បញ្ចុះតម្លៃ ({coupon?.code})</span>
-                  <span className="font-mono">-{formatPrice(discount)}</span>
+                  <span className="font-mono font-bold">-{formatPrice(discount)}</span>
                 </div>
               )}
-              <div className="flex justify-between items-baseline pt-3 border-t border-slate-800">
+              <div className="flex justify-between items-baseline pt-2.5 border-t border-slate-800">
                 <div>
-                  <span className="font-bold text-white text-sm block">សរុបត្រូវបង់</span>
-                  <span className="text-[10px] text-slate-400">{formatPriceRiel(total)}</span>
+                  <span className="font-bold text-white text-xs sm:text-sm block">សរុបត្រូវបង់</span>
+                  <span className="text-[10px] text-slate-400 font-mono mt-0.5 block">{formatPriceRiel(total)}</span>
                 </div>
-                <span className="text-2xl font-black text-white font-mono">{formatPrice(total)}</span>
+                <span className="text-lg sm:text-2xl font-black text-white font-mono leading-none">{formatPrice(total)}</span>
               </div>
             </div>
 

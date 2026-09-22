@@ -75,84 +75,85 @@ export default function CartPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8 pb-36 lg:pb-16">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-6 pb-36 lg:pb-16">
       {/* Title */}
-      <div className="flex flex-row items-center justify-between gap-3 pb-4 sm:pb-6 border-b border-slate-800">
+      <div className="flex flex-row items-center justify-between gap-3 pb-3 sm:pb-5 border-b border-slate-800">
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl sm:text-3xl font-black text-white leading-normal truncate">
+          <h1 className="text-base sm:text-2xl font-black text-white leading-snug truncate">
             កន្ត្រកទំនិញ <span className="text-blue-400 font-mono">({items.length})</span>
           </h1>
-          <p className="text-xs text-slate-400 mt-0.5 leading-relaxed truncate sm:text-clip">
+          <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5 leading-snug truncate sm:text-clip">
             ពិនិត្យទំនិញរបស់អ្នក មុននឹងបន្តទៅការទូទាត់
           </p>
         </div>
         <button
           onClick={clearCart}
-          className="btn-uiverse-danger px-2.5 sm:px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shrink-0"
+          className="btn-uiverse-danger px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-xs flex items-center gap-1 shrink-0"
           title="សម្អាតកន្ត្រក"
         >
-          <Trash2 className="w-3.5 h-3.5 shrink-0" />
-          <span className="leading-normal">សម្អាតកន្ត្រក</span>
+          <Trash2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+          <span className="leading-snug">សម្អាតកន្ត្រក</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
         {/* Items List */}
-        <div className="lg:col-span-8 space-y-3.5 sm:space-y-4">
+        <div className="lg:col-span-8 space-y-2.5 sm:space-y-3.5">
           {items.map((item) => (
             <div
               key={item.productId}
-              className="glass-card p-3.5 sm:p-5 rounded-2xl border border-slate-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4 shadow-lg hover:border-slate-700/80 transition-all"
+              className="glass-card p-2.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-800/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 shadow-md hover:border-slate-700/80 transition-all"
             >
               {/* Top / Left: Image and Product Details */}
-              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+              <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl bg-dark-850 border border-slate-800/80 shrink-0"
+                  className="w-13 h-13 sm:w-16 sm:h-16 object-cover rounded-lg sm:rounded-xl bg-dark-850 border border-slate-800/80 shrink-0"
+                  style={{ width: '3.5rem', height: '3.5rem' }}
                 />
                 <div className="min-w-0 flex-1">
-                  <span className="inline-block text-[10px] font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 leading-tight">
+                  <span className="inline-block text-[9px] sm:text-[10px] font-bold text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20 leading-none">
                     {item.categoryName || 'Product Key'}
                   </span>
-                  <h3 className="font-bold text-sm sm:text-base text-white mt-1 leading-snug break-words line-clamp-2">
+                  <h3 className="font-bold text-xs sm:text-sm text-white mt-0.5 leading-snug break-words line-clamp-2">
                     {item.name}
                   </h3>
-                  <p className="text-xs font-black text-blue-400 font-mono mt-1 leading-normal">
+                  <p className="text-[11px] sm:text-xs font-black text-blue-400 font-mono mt-0.5 leading-snug">
                     {formatPrice(item.price)}
                   </p>
                 </div>
               </div>
 
               {/* Bottom / Right: Quantity Controls, Subtotal Price & Delete */}
-              <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-5 pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-800/80">
+              <div className="flex items-center justify-between sm:justify-end gap-2.5 sm:gap-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800/70">
                 {/* Stepper */}
-                <div className="flex items-center rounded-xl bg-dark-850 border border-slate-700/80 p-1 shrink-0">
+                <div className="flex items-center rounded-lg bg-dark-850 border border-slate-700/80 p-0.5 shrink-0">
                   <button
                     onClick={() => updateQuantity(item.productId, -1)}
-                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-dark-700 text-slate-400 hover:text-white transition-colors active:scale-95"
+                    className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-dark-700 text-slate-400 hover:text-white transition-colors active:scale-95"
                     aria-label="Decrease quantity"
                   >
-                    <Minus className="w-3.5 h-3.5" />
+                    <Minus className="w-3 h-3" />
                   </button>
-                  <span className="w-8 text-center text-xs font-bold text-white font-mono">
+                  <span className="w-6 text-center text-xs font-bold text-white font-mono">
                     {item.quantity}
                   </span>
                   <button
                     onClick={() => updateQuantity(item.productId, 1)}
-                    className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-dark-700 text-slate-400 hover:text-white transition-colors active:scale-95"
+                    className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-dark-700 text-slate-400 hover:text-white transition-colors active:scale-95"
                     aria-label="Increase quantity"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-3 h-3" />
                   </button>
                 </div>
 
                 {/* Total price for this item */}
                 <div className="text-right flex-1 sm:flex-initial">
-                  <p className="font-black text-white text-base sm:text-lg font-mono leading-none">
+                  <p className="font-black text-white text-xs sm:text-base font-mono leading-none">
                     {formatPrice(item.price * item.quantity)}
                   </p>
-                  <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                  <p className="text-[9px] sm:text-[10px] text-slate-400 font-mono mt-0.5">
                     {formatPriceRiel(item.price * item.quantity)}
                   </p>
                 </div>
@@ -160,65 +161,65 @@ export default function CartPage() {
                 {/* Delete item button */}
                 <button
                   onClick={() => removeFromCart(item.productId)}
-                  className="btn-uiverse-icon p-2.5 rounded-xl text-slate-400 hover:text-red-400 hover:border-red-500/40 shrink-0 transition-colors"
+                  className="btn-uiverse-icon p-1.5 sm:p-2 rounded-lg text-slate-400 hover:text-red-400 hover:border-red-500/40 shrink-0 transition-colors"
                   title="លុបចេញពីកន្ត្រក"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
           ))}
 
-          <div className="pt-2">
+          <div className="pt-1">
             <Link
               href="/products"
-              className="btn-uiverse-secondary px-4 py-2.5 rounded-xl text-xs inline-flex items-center gap-2 leading-normal"
+              className="btn-uiverse-secondary px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-[11px] sm:text-xs inline-flex items-center gap-1.5 leading-snug"
             >
-              <ArrowLeft className="w-4 h-4 shrink-0" />
-              <span className="leading-normal">{KHMER_TEXT.actions.continueShopping}</span>
+              <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
+              <span className="leading-snug">{KHMER_TEXT.actions.continueShopping}</span>
             </Link>
           </div>
         </div>
 
         {/* Order Summary & Checkout Sidebar */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 space-y-5 sm:space-y-6 shadow-xl">
-            <h3 className="text-base font-bold text-white leading-normal flex items-center justify-between">
+        <div className="lg:col-span-4 space-y-4 sm:space-y-6">
+          <div className="glass-card p-3.5 sm:p-5 rounded-xl sm:rounded-2xl border border-slate-800 space-y-3 sm:space-y-4 shadow-lg">
+            <h3 className="text-xs sm:text-base font-bold text-white leading-snug flex items-center justify-between">
               <span>សង្ខេបការបញ្ជាទិញ</span>
-              <span className="text-xs text-slate-400 font-normal sm:hidden">({items.length} មុខ)</span>
+              <span className="text-[11px] sm:text-xs text-slate-400 font-normal sm:hidden font-mono">({items.length} មុខ)</span>
             </h3>
 
             {/* Coupon Application */}
             <div>
-              <label className="text-xs font-bold text-slate-300 block mb-2 leading-normal">
+              <label className="text-[11px] sm:text-xs font-semibold text-slate-300 block mb-1 leading-snug">
                 កូដបញ្ចុះតម្លៃ (Coupon Code)
               </label>
               {coupon ? (
-                <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold">
+                <div className="flex items-center justify-between p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-emerald-950/60 border border-emerald-500/30 text-emerald-300 text-xs font-mono font-bold">
                   <div className="flex items-center gap-2 min-w-0">
-                    <Tag className="w-4 h-4 shrink-0" />
-                    <span className="truncate">{coupon.code}</span>
-                    <span className="text-[10px] bg-emerald-500/20 px-1.5 py-0.5 rounded shrink-0">
+                    <Tag className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate text-xs">{coupon.code}</span>
+                    <span className="text-[9px] bg-emerald-500/20 px-1 py-0.5 rounded shrink-0">
                       -{coupon.discountValue}{coupon.discountType === 'PERCENT' ? '%' : '$'}
                     </span>
                   </div>
-                  <button onClick={removeCoupon} className="text-emerald-400 hover:text-white p-1 shrink-0">
-                    <X className="w-4 h-4" />
+                  <button onClick={removeCoupon} className="text-emerald-400 hover:text-white p-0.5 shrink-0">
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                <form onSubmit={handleApplyCoupon} className="flex gap-1.5 sm:gap-2">
                   <input
                     type="text"
                     value={couponInput}
                     onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                    placeholder="កូដបញ្ចុះតម្លៃ (ឧ. BOZZPOV10)"
-                    className="flex-1 min-w-0 bg-dark-850 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white uppercase placeholder-slate-500 focus:outline-none focus:border-blue-500 font-mono"
+                    placeholder="កូដបញ្ចុះតម្លៃ (BOZZPOV10)"
+                    className="flex-1 min-w-0 bg-dark-850 border border-slate-700 rounded-lg px-2.5 py-1.5 text-[11px] sm:text-xs text-white uppercase placeholder-slate-500 focus:outline-none focus:border-blue-500 font-mono"
                   />
                   <button
                     type="submit"
                     disabled={applying}
-                    className="btn-uiverse-primary px-4 py-2 rounded-xl text-xs font-bold disabled:opacity-50 shrink-0 leading-normal"
+                    className="btn-uiverse-primary px-3 sm:px-4 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold disabled:opacity-50 shrink-0 leading-snug"
                   >
                     {applying ? '...' : KHMER_TEXT.actions.applyCoupon}
                   </button>
@@ -227,27 +228,27 @@ export default function CartPage() {
             </div>
 
             {/* Price Calculations */}
-            <div className="space-y-2.5 pt-4 border-t border-slate-800 text-xs">
+            <div className="space-y-1.5 sm:space-y-2 pt-2.5 sm:pt-3 border-t border-slate-800/80 text-[11px] sm:text-xs">
               <div className="flex justify-between items-center text-slate-300">
-                <span className="leading-normal">សរុបរង (Subtotal)</span>
+                <span className="leading-snug">សរុបរង (Subtotal)</span>
                 <span className="font-bold text-white font-mono">{formatPrice(subtotal)}</span>
               </div>
 
               {discount > 0 && (
                 <div className="flex justify-between items-center text-emerald-400">
-                  <span className="leading-normal">ការបញ្ចុះតម្លៃ ({coupon?.code})</span>
+                  <span className="leading-snug">ការបញ្ចុះតម្លៃ ({coupon?.code})</span>
                   <span className="font-bold font-mono">-{formatPrice(discount)}</span>
                 </div>
               )}
 
-              <div className="flex justify-between items-baseline pt-3 border-t border-slate-800">
+              <div className="flex justify-between items-baseline pt-2 sm:pt-2.5 border-t border-slate-800">
                 <div>
-                  <span className="font-bold text-white block text-sm leading-normal">សរុបត្រូវបង់ (Total)</span>
-                  <span className="text-[11px] text-slate-400 font-mono mt-0.5 block">
+                  <span className="font-bold text-white block text-xs sm:text-sm leading-snug">សរុបត្រូវបង់ (Total)</span>
+                  <span className="text-[10px] text-slate-400 font-mono block mt-0.5">
                     {formatPriceRiel(total)}
                   </span>
                 </div>
-                <span className="text-2xl font-black text-white font-mono leading-none">
+                <span className="text-base sm:text-xl font-black text-white font-mono leading-none">
                   {formatPrice(total)}
                 </span>
               </div>
@@ -255,9 +256,9 @@ export default function CartPage() {
 
             {/* Login notice if cart has paid items and user is not logged in */}
             {hasPaidItems && !user && (
-              <div className="p-3 sm:p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2.5 leading-relaxed">
-                <Lock className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
-                <span className="leading-relaxed">តម្រូវឱ្យចូលគណនីជាមុនសិន ដើម្បីទូទាត់ទំនិញគិតលុយ</span>
+              <div className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] sm:text-xs flex items-center gap-2 leading-snug">
+                <Lock className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+                <span className="leading-snug">តម្រូវឱ្យចូលគណនីជាមុនសិន ដើម្បីទូទាត់ទំនិញគិតលុយ</span>
               </div>
             )}
 
@@ -271,10 +272,10 @@ export default function CartPage() {
                 }
                 router.push('/checkout');
               }}
-              className="btn-uiverse-tranphattrien w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-xs sm:text-sm font-bold leading-normal flex items-center justify-center gap-2 text-center"
+              className="btn-uiverse-tranphattrien w-full py-2.5 sm:py-3.5 px-3 sm:px-5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold leading-snug flex items-center justify-center gap-2 text-center"
             >
-              <span className="leading-normal">{hasPaidItems && !user ? 'ចូលគណនីដើម្បីបង់ប្រាក់' : KHMER_TEXT.actions.checkout}</span>
-              <ArrowRight className="w-4 h-4 shrink-0" />
+              <span className="leading-snug">{hasPaidItems && !user ? 'ចូលគណនីដើម្បីបង់ប្រាក់' : KHMER_TEXT.actions.checkout}</span>
+              <ArrowRight className="w-3.5 h-3.5 shrink-0" />
             </button>
 
             {/* Trust note */}

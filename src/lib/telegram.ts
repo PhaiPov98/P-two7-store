@@ -127,6 +127,43 @@ export async function sendTelegramNotification(message: string): Promise<boolean
   }
 }
 
+export async function sendAdminApprovalRequest(params: {
+  email: string;
+  name: string;
+  ip: string;
+  userAgent: string;
+  otpCode: string;
+  token: string;
+}) {
+  const time = getFormattedPhnomPenhTime();
+  const { device, browser } = parseDeviceAndBrowser(params.userAgent);
+  const cleanIp = formatIpAddress(params.ip);
+  const tgUser = await getTelegramUsername();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://pp-two7-store.vercel.app';
+
+  const text = `
+🔐 <b>សំណើអនុញ្ញាតចូល ADMIN (2FA APPROVAL REQUIRED)</b>
+━━━━━━━━━━━━━━━━━━━━
+⚠️ <b>មានការ Login ចូលគណនី Admin! ប្រព័ន្ធតម្រូវឱ្យអ្នក Approve ជាមុនសិន។</b>
+• <b>Admin:</b> <code>${params.name}</code> ${tgUser ? `(${tgUser})` : ''}
+• <b>Email:</b> <code>${params.email}</code>
+• <b>ឧបករណ៍:</b> ${device} (${browser})
+• <b>IP Address:</b> <code>${cleanIp}</code>
+• <b>លេខកូដសម្ងាត់ OTP:</b> <code>${params.otpCode}</code>
+• <b>សុពលភាព:</b> 3 នាទី
+━━━━━━━━━━━━━━━━━━━━
+👉 <b>សូមចុចជ្រើសរើសដើម្បីអនុញ្ញាត ឬបដិសេធ៖</b>
+
+✅ <a href="${appUrl}/api/auth/admin-approve?token=${params.token}&action=approve"><b>ចុចត្រង់នេះដើម្បី យល់ព្រម (APPROVE LOGIN)</b></a>
+
+❌ <a href="${appUrl}/api/auth/admin-approve?token=${params.token}&action=reject"><b>ចុចត្រង់នេះដើម្បី បដិសេធ (REJECT & BLOCK)</b></a>
+━━━━━━━━━━━━━━━━━━━━
+💡 <i>ចំណាំ៖ លោកអ្នកក៏អាចយកលេខកូដ <code>${params.otpCode}</code> ទៅវាយផ្ទាល់លើ Website ក៏បានដែរ។</i>
+  `.trim();
+
+  return await sendTelegramNotification(text);
+}
+
 export async function sendAdminLoginAlert(params: {
   email: string;
   name: string;

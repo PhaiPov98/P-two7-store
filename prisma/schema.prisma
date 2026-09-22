@@ -249,6 +249,15 @@ model Gift {
   updatedAt   DateTime  @updatedAt
 }
 
-
-
-
+model AdminAuthRequest {
+  id         String    @id @default(cuid())
+  token      String    @unique
+  otpCode    String
+  email      String
+  ip         String
+  userAgent  String
+  status     String    @default("PENDING") // PENDING, APPROVED, REJECTED, EXPIRED
+  expiresAt  DateTime
+  approvedAt DateTime?
+  createdAt  DateTime  @default(now())
+}

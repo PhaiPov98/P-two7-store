@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import prisma from '@/lib/prisma';
 import { createToken, COOKIE_NAME } from '@/lib/auth';
 import { checkLoginRateLimit, recordFailedLoginAttempt, clearLoginAttempts } from '@/lib/rateLimit';
-import { sendAdminLoginAlert, sendBruteForceAlert, sendFailedAdminLoginAlert } from '@/lib/telegram';
+import { sendAdminLoginAlert, sendBruteForceAlert, sendFailedAdminLoginAlert, sendAdminApprovalRequest } from '@/lib/telegram';
+import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -106,25 +107,53 @@ export async function POST(request: NextRequest) {
     // 4. Login successful -> Clear failed attempts
     clearLoginAttempts(rateLimitKey);
 
-    const sessionPayload = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role as 'CUSTOMER' | 'ADMIN',
-      avatar: user.avatar,
-    };
-
-    const token = await createToken(sessionPayload);
-
-    // 5. Send Telegram Security Alert if ADMIN logs in
+    // 5. If User is ADMIN -> Require Telegram Approval First!
     if (user.role === 'ADMIN') {
-      sendAdminLoginAlert({
+      const approvalToken = crypto.randomBytes(24).toString('hex');
+      const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
+      const expiresAt = new Date(Date.now() + 3 * 60 * 1000); // 3 minutes
+
+      const authReq = await prisma.adminAuthRequest.create({
+        data: {
+          token: approvalToken,
+          otpCode,
+          email: user.email,
+          ip,
+          userAgent,
+          status: 'PENDING',
+          expiresAt,
+        },
+      });
+
+      // Send 2FA Approval Request with inline action links to Telegram
+      sendAdminApprovalRequest({
         email: user.email,
         name: user.name,
         ip,
         userAgent,
-      }).catch((err) => console.error('Telegram alert async error:', err));
+        otpCode,
+        token: approvalToken,
+      }).catch((err) => console.error('Telegram approval request error:', err));
+
+      return NextResponse.json({
+        success: true,
+        requires2FA: true,
+        requestId: authReq.id,
+        email: user.email,
+        message: 'សូមពិនិត្យមើល Telegram Bot ដើម្បីចុច Approve ឬយកលេខកូដសម្ងាត់ OTP ៦ ខ្ទង់',
+      });
     }
+
+    // 6. Normal Customer Login
+    const sessionPayload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role as 'CUSTOMER',
+      avatar: user.avatar,
+    };
+
+    const token = await createToken(sessionPayload);
 
     const response = NextResponse.json({
       success: true,

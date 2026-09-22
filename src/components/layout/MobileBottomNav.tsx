@@ -44,10 +44,10 @@ export default function MobileBottomNav() {
       badge: totalItems > 0 ? totalItems : null,
     },
     {
-      label: user ? (user.role === 'ADMIN' ? 'Admin' : 'គណនី') : 'ចូល',
-      href: user ? (user.role === 'ADMIN' ? '/admin' : '/account') : '/login',
+      label: user ? 'គណនី' : 'ចូលគណនី',
+      href: user ? '/account' : '/login',
       icon: User,
-      isActive: pathname.startsWith('/account') || pathname.startsWith('/login') || pathname.startsWith('/admin'),
+      isActive: pathname.startsWith('/account') || pathname.startsWith('/login'),
     },
   ];
 

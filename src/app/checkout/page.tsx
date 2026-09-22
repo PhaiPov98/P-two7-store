@@ -714,14 +714,14 @@ export default function CheckoutPage() {
 
   // Normal Checkout Form
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      <div className="flex items-center gap-3 pb-6 border-b border-slate-800">
-        <Link href="/cart" className="p-2 rounded-xl bg-dark-850 hover:bg-dark-800 text-slate-400 hover:text-white border border-slate-700">
+    <div className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-10 space-y-6 sm:space-y-8 pb-36 lg:pb-16">
+      <div className="flex items-center gap-3 pb-4 sm:pb-6 border-b border-slate-800">
+        <Link href="/cart" className="p-2 rounded-xl bg-dark-850 hover:bg-dark-800 text-slate-400 hover:text-white border border-slate-700 shrink-0">
           <ArrowLeft className="w-4 h-4" />
         </Link>
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white">ការទូទាត់ប្រាក់ (Checkout)</h1>
-          <p className="text-xs text-slate-400 mt-0.5">បំពេញព័ត៌មាន និងជ្រើសរើសវិធីទូទាត់</p>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-3xl font-black text-white leading-normal truncate">ការទូទាត់ប្រាក់ (Checkout)</h1>
+          <p className="text-xs text-slate-400 mt-0.5 leading-relaxed truncate sm:text-clip">បំពេញព័ត៌មាន និងជ្រើសរើសវិធីទូទាត់</p>
         </div>
       </div>
 
@@ -750,12 +750,12 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
         {/* Left: Customer & Payment Form */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-5 sm:space-y-6">
           {/* Section 1: Customer Info */}
-          <div className="glass-card p-6 rounded-3xl border border-slate-800 space-y-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
+          <div className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-800 space-y-4 shadow-xl">
+            <h3 className="text-base font-bold text-white flex items-center gap-2 leading-normal">
               <span className="w-6 h-6 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center text-xs">1</span>
               ព័ត៌មានអ្នកទិញ
             </h3>
@@ -870,15 +870,15 @@ export default function CheckoutPage() {
 
             <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
               {items.map((item) => (
-                <div key={item.productId} className="flex items-center justify-between text-xs py-1 border-b border-slate-800/60">
-                  <div className="flex items-center gap-2">
-                    <img src={item.image} alt={item.name} className="w-9 h-9 rounded-lg object-cover bg-dark-850" />
-                    <div>
-                      <p className="font-bold text-white line-clamp-1">{item.name}</p>
-                      <p className="text-[10px] text-slate-400">ចំនួន: {item.quantity} x {formatPrice(item.price)}</p>
+                <div key={item.productId} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-800/60 gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <img src={item.image} alt={item.name} className="w-9 h-9 rounded-lg object-cover bg-dark-850 shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-bold text-white leading-snug line-clamp-2 break-words">{item.name}</p>
+                      <p className="text-[10px] text-slate-400 font-mono mt-0.5">ចំនួន: {item.quantity} x {formatPrice(item.price)}</p>
                     </div>
                   </div>
-                  <span className="font-mono font-bold text-white">{formatPrice(item.price * item.quantity)}</span>
+                  <span className="font-mono font-bold text-white shrink-0">{formatPrice(item.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
@@ -907,28 +907,28 @@ export default function CheckoutPage() {
             {hasPaidItems && !user ? (
               <Link
                 href="/login?redirect=/checkout"
-                className="btn-uiverse-buy w-full py-4 px-6 rounded-2xl text-sm font-black tracking-wide flex items-center justify-center gap-2 text-center"
+                className="btn-uiverse-buy w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-xs sm:text-sm font-bold leading-normal flex items-center justify-center gap-2 text-center"
               >
-                <Lock className="w-4 h-4" />
-                <span>សូមចូលគណនីដើម្បីបង់ប្រាក់ ({formatPrice(total)})</span>
+                <Lock className="w-4 h-4 shrink-0" />
+                <span className="leading-normal">សូមចូលគណនីដើម្បីបង់ប្រាក់ ({formatPrice(total)})</span>
               </Link>
             ) : (
               <button
                 type="submit"
                 disabled={processing}
-                className="btn-uiverse-buy w-full py-4 px-6 rounded-2xl text-sm font-black tracking-wide disabled:opacity-50"
+                className="btn-uiverse-buy w-full py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-xs sm:text-sm font-bold leading-normal flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {processing ? (
-                  <span>កំពុងដំណើរការ...</span>
+                  <span className="leading-normal">កំពុងដំណើរការ...</span>
                 ) : !hasPaidItems || total <= 0 ? (
                   <>
-                    <Download className="w-4 h-4" />
-                    <span>ទទួលបានផលិតផលឥតគិតថ្លៃ (Free Order)</span>
+                    <Download className="w-4 h-4 shrink-0" />
+                    <span className="leading-normal">ទទួលបានផលិតផលឥតគិតថ្លៃ (Free Order)</span>
                   </>
                 ) : (
                   <>
-                    <Lock className="w-4 h-4" />
-                    <span>បង់ប្រាក់ {formatPrice(total)}</span>
+                    <Lock className="w-4 h-4 shrink-0" />
+                    <span className="leading-normal">បង់ប្រាក់ {formatPrice(total)}</span>
                   </>
                 )}
               </button>

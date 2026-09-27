@@ -76,12 +76,33 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon-48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/icon-96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.json',
   openGraph: {
     title: 'P-Two7 Store (ptwo7 / storeptwo7) — ហាងឌីជីថលលក់ Product Key & Files',
     description: 'ទិញ Product Key, Software License Keys និងទាញយក Digital Files គុណភាពខ្ពស់ ផ្តល់ជូនភ្លាមៗ ធានាស្របច្បាប់ 100% ក្នុងប្រទេសកម្ពុជា។',
     url: APP_URL,
     siteName: 'P-Two7 Store (ptwo7)',
     images: [
+      {
+        url: '/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'P-Two7 Store Logo',
+      },
       {
         url: '/hero-full-banner.jpg',
         width: 1200,
@@ -96,7 +117,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'P-Two7 Store (ptwo7 / storeptwo7)',
     description: 'ទិញ Product Key & Software Files គុណភាពខ្ពស់ ធានាស្របច្បាប់ 100% — P-Two7 Store',
-    images: ['/hero-full-banner.jpg'],
+    images: ['/icon-512.png'],
   },
   robots: {
     index: true,
@@ -124,6 +145,17 @@ const jsonLd = {
       name: 'P-Two7 Store',
       alternateName: ['ptwo7', 'storeptwo7', 'pp-two7-store', 'P-Two7 stroe', 'P-Two7', 'PTwo7', 'ptwo7 store'],
       description: 'ហាងឌីជីថលលក់ Product Key, Software License Keys និង Digital Files ស្របច្បាប់នៅកម្ពុជា',
+      publisher: {
+        '@type': 'Organization',
+        name: 'P-Two7 Store',
+        url: APP_URL,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${APP_URL}/icon-512.png`,
+          width: 512,
+          height: 512,
+        },
+      },
       potentialAction: [
         {
           '@type': 'SearchAction',
@@ -142,7 +174,7 @@ const jsonLd = {
       name: 'P-Two7 Store',
       alternateName: ['ptwo7', 'storeptwo7', 'pp-two7-store', 'P-Two7 stroe', 'PTwo7'],
       url: APP_URL,
-      logo: `${APP_URL}/hero-slide-1.jpg`,
+      logo: `${APP_URL}/icon-512.png`,
       image: `${APP_URL}/hero-full-banner.jpg`,
       description: 'P-Two7 Store ផ្តល់ជូន Product Key និង Software Files គុណភាពខ្ពស់ ធានា 100%',
       priceRange: '$$',
@@ -166,6 +198,14 @@ export default function RootLayout({
     <html lang="km" suppressHydrationWarning className={`dark ${notoSansKhmer.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
         <meta name="google-site-verification" content="5IGI7gy16po_v9uPUpNp_d2gb0jVrk0_2JGB7dD91y0" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="48x48" href="/icon-48.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/icon-96.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -49,8 +49,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-14 sm:h-20 gap-2 sm:gap-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
-            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300 border border-white/20 shrink-0">
-              <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+            <div className="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform duration-300 border border-white/20 shrink-0 overflow-hidden">
+              <img
+                src="/icon-512.png"
+                alt="P-Two7 Store Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <div className="flex items-center gap-1.5">

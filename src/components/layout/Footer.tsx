@@ -14,8 +14,12 @@ export default function Footer() {
           {/* Brand Col */}
           <div className="text-center md:text-left">
             <Link href="/" className="inline-flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/10 group-hover:scale-105 transition-transform duration-300">
-                <Zap className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/25 border border-white/10 group-hover:scale-105 transition-transform duration-300 overflow-hidden shrink-0">
+                <img
+                  src="/icon-512.png"
+                  alt="P-Two7 Store Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <span className="text-xl font-black text-white tracking-tight group-hover:text-blue-400 transition-colors">
                 {KHMER_TEXT.brandName} <span className="text-blue-400">{KHMER_TEXT.brandSubtitle}</span>

@@ -1,7 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import prisma from '@/lib/prisma';
 import { allocateKeyForOrderItem } from '@/lib/key-allocator';
 import { sendTelegramNotification } from '@/lib/telegram';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 /**
  * ABA Mobile Notification Webhook Receiver
@@ -239,8 +242,8 @@ export async function POST(request: Request) {
 }
 
 // Allow GET for payment verification by desktop apps and checking status
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
   const bill = searchParams.get('bill') || searchParams.get('check');
   const amountStr = searchParams.get('amount');
   const targetAmount = amountStr ? parseFloat(amountStr) : null;
@@ -251,21 +254,32 @@ export async function GET(request: Request) {
         where: { key: 'aba_recent_notifications' },
       });
       if (setting?.value) {
-        const list: Array<{ raw: string; amount: number; currency: string; sender: string; timestamp: number }> = JSON.parse(setting.value);
+        let list: Array<{ raw: string; amount: number; currency: string; sender: string; timestamp: number; consumed?: boolean }> = JSON.parse(setting.value);
         const now = Date.now();
-        const fifteenMins = 15 * 60 * 1000;
+        const tenMins = 10 * 60 * 1000;
 
-        for (const item of list) {
-          if (now - item.timestamp > fifteenMins) continue;
+        for (let i = 0; i < list.length; i++) {
+          const item = list[i];
+          if (item.consumed) continue;
+          if (now - item.timestamp > tenMins) continue;
 
           const text = (item.raw || '').toLowerCase();
           const billLower = (bill || '').toLowerCase();
           const billDigits = (bill || '').replace(/\D/g, '');
 
           const billMatch = bill && (text.includes(billLower) || (billDigits.length >= 5 && text.includes(billDigits)));
-          const amountMatch = targetAmount && Math.abs(item.amount - targetAmount) < 0.01;
+          const amountMatch = targetAmount !== null && Math.abs(item.amount - targetAmount) < 0.01;
 
-          if (billMatch || (targetAmount && amountMatch)) {
+          if (billMatch || amountMatch) {
+            // Mark consumed to avoid duplicate key issuances
+            list[i].consumed = true;
+            try {
+              await prisma.setting.update({
+                where: { key: 'aba_recent_notifications' },
+                data: { value: JSON.stringify(list) },
+              });
+            } catch {}
+
             return NextResponse.json({
               paid: true,
               amount: item.amount,

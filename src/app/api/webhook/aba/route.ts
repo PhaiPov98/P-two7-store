@@ -241,9 +241,57 @@ export async function POST(request: Request) {
   }
 }
 
-// Allow GET for payment verification by desktop apps and checking status
+// Allow GET for payment verification by desktop apps, simple notification webhooks, and checking status
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+  const incomingMsg = searchParams.get('msg') || searchParams.get('text') || searchParams.get('notify') || searchParams.get('content');
+
+  // Channel: Ultra-simple 1-line Android notification forwarder via GET
+  if (incomingMsg) {
+    let amount: number | null = null;
+    let currency = 'USD';
+    const usdMatch = incomingMsg.match(/(?:USD|\$)\s*([\d,]+\.?\d*)|([\d,]+\.?\d*)\s*(?:USD|\$)/i);
+    if (usdMatch) {
+      amount = parseFloat((usdMatch[1] || usdMatch[2]).replace(/,/g, ''));
+      currency = 'USD';
+    } else {
+      const khrMatch = incomingMsg.match(/(?:KHR|៛)\s*([\d,]+)|([\d,]+)\s*(?:KHR|៛)/i);
+      if (khrMatch) {
+        amount = parseFloat((khrMatch[1] || khrMatch[2]).replace(/,/g, ''));
+        currency = 'KHR';
+      }
+    }
+    const senderMatch = incomingMsg.match(/from\s+([^(\n.,]+)|ពី\s+([^(\n.,]+)/i);
+    const senderName = (senderMatch?.[1] || senderMatch?.[2] || 'ABA Customer').trim();
+
+    try {
+      const existing = await prisma.setting.findUnique({
+        where: { key: 'aba_recent_notifications' },
+      });
+      let notifList: Array<{ raw: string; amount: number; currency: string; sender: string; timestamp: number }> = [];
+      if (existing?.value) {
+        try { notifList = JSON.parse(existing.value); } catch {}
+      }
+      notifList.unshift({
+        raw: incomingMsg,
+        amount: amount || 0,
+        currency: currency || 'USD',
+        sender: senderName || '',
+        timestamp: Date.now(),
+      });
+      notifList = notifList.slice(0, 50);
+      await prisma.setting.upsert({
+        where: { key: 'aba_recent_notifications' },
+        update: { value: JSON.stringify(notifList) },
+        create: { key: 'aba_recent_notifications', value: JSON.stringify(notifList) },
+      });
+    } catch (e) {
+      console.error('Error caching ABA GET notification:', e);
+    }
+
+    return NextResponse.json({ success: true, message: 'Notification received via GET', amount, sender: senderName });
+  }
+
   const bill = searchParams.get('bill') || searchParams.get('check');
   const amountStr = searchParams.get('amount');
   const targetAmount = amountStr ? parseFloat(amountStr) : null;

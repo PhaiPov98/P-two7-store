@@ -92,6 +92,32 @@ export async function POST(request: Request) {
     const senderMatch = fullText.match(/from\s+([^(\n.,]+)|ពី\s+([^(\n.,]+)/i);
     const senderName = (senderMatch?.[1] || senderMatch?.[2] || 'ABA Customer').trim();
 
+    // Cache in Setting table for desktop app & cross-platform license checking
+    try {
+      const existing = await prisma.setting.findUnique({
+        where: { key: 'aba_recent_notifications' },
+      });
+      let notifList: Array<{ raw: string; amount: number; currency: string; sender: string; timestamp: number }> = [];
+      if (existing?.value) {
+        try { notifList = JSON.parse(existing.value); } catch {}
+      }
+      notifList.unshift({
+        raw: fullText,
+        amount: amount || 0,
+        currency: currency || 'USD',
+        sender: senderName || '',
+        timestamp: Date.now(),
+      });
+      notifList = notifList.slice(0, 50);
+      await prisma.setting.upsert({
+        where: { key: 'aba_recent_notifications' },
+        update: { value: JSON.stringify(notifList) },
+        create: { key: 'aba_recent_notifications', value: JSON.stringify(notifList) },
+      });
+    } catch (e) {
+      console.error('Error caching ABA notification:', e);
+    }
+
     // 3. Find latest PENDING order matching amount within last 30 minutes
     const thirtyMinsAgo = new Date(Date.now() - 30 * 60 * 1000);
 
@@ -212,8 +238,50 @@ export async function POST(request: Request) {
   }
 }
 
-// Allow GET for simple test in browser
-export async function GET() {
+// Allow GET for payment verification by desktop apps and checking status
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const bill = searchParams.get('bill') || searchParams.get('check');
+  const amountStr = searchParams.get('amount');
+  const targetAmount = amountStr ? parseFloat(amountStr) : null;
+
+  if (bill || targetAmount) {
+    try {
+      const setting = await prisma.setting.findUnique({
+        where: { key: 'aba_recent_notifications' },
+      });
+      if (setting?.value) {
+        const list: Array<{ raw: string; amount: number; currency: string; sender: string; timestamp: number }> = JSON.parse(setting.value);
+        const now = Date.now();
+        const fifteenMins = 15 * 60 * 1000;
+
+        for (const item of list) {
+          if (now - item.timestamp > fifteenMins) continue;
+
+          const text = (item.raw || '').toLowerCase();
+          const billLower = (bill || '').toLowerCase();
+          const billDigits = (bill || '').replace(/\D/g, '');
+
+          const billMatch = bill && (text.includes(billLower) || (billDigits.length >= 5 && text.includes(billDigits)));
+          const amountMatch = targetAmount && Math.abs(item.amount - targetAmount) < 0.01;
+
+          if (billMatch || (targetAmount && amountMatch)) {
+            return NextResponse.json({
+              paid: true,
+              amount: item.amount,
+              currency: item.currency,
+              sender: item.sender,
+              timestamp: item.timestamp,
+            });
+          }
+        }
+      }
+    } catch (err: any) {
+      return NextResponse.json({ paid: false, error: err.message }, { status: 500 });
+    }
+    return NextResponse.json({ paid: false });
+  }
+
   return NextResponse.json({
     status: 'online',
     message: 'ABA Mobile Notification Webhook Receiver is active!',

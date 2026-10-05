@@ -243,22 +243,48 @@ export async function POST(request: Request) {
 
 // Allow GET for payment verification by desktop apps, simple notification webhooks, and checking status
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const incomingMsg = searchParams.get('msg') || searchParams.get('text') || searchParams.get('notify') || searchParams.get('content');
+  let incomingMsg =
+    searchParams.get('msg') ||
+    searchParams.get('text') ||
+    searchParams.get('notify') ||
+    searchParams.get('content') ||
+    searchParams.get('message') ||
+    searchParams.get('body') ||
+    searchParams.get('not_text') ||
+    searchParams.get('title');
+
+  if (!incomingMsg) {
+    for (const [key, value] of searchParams.entries()) {
+      if (key !== 'bill' && key !== 'check' && key !== 'amount' && value) {
+        if (/received|ទទួល|transfer|USD|\$|ABA/i.test(value)) {
+          incomingMsg = value;
+          break;
+        }
+      }
+    }
+  }
 
   // Channel: Ultra-simple 1-line Android notification forwarder via GET
   if (incomingMsg) {
     let amount: number | null = null;
     let currency = 'USD';
-    const usdMatch = incomingMsg.match(/(?:USD|\$)\s*([\d,]+\.?\d*)|([\d,]+\.?\d*)\s*(?:USD|\$)/i);
+    const usdMatch = incomingMsg.match(/(?:USD|\$)\s*([\d,]+\.?\d*)|([\d,]+\.?\d*)\s*(?:USD|\$)|(?:received|ទទួល|បាន)\s*([\d,]+\.?\d*)/i);
     if (usdMatch) {
-      amount = parseFloat((usdMatch[1] || usdMatch[2]).replace(/,/g, ''));
+      const rawAmt = (usdMatch[1] || usdMatch[2] || usdMatch[3]).replace(/,/g, '');
+      amount = parseFloat(rawAmt);
       currency = 'USD';
     } else {
       const khrMatch = incomingMsg.match(/(?:KHR|៛)\s*([\d,]+)|([\d,]+)\s*(?:KHR|៛)/i);
       if (khrMatch) {
-        amount = parseFloat((khrMatch[1] || khrMatch[2]).replace(/,/g, ''));
+        const rawAmt = (khrMatch[1] || khrMatch[2]).replace(/,/g, '');
+        amount = parseFloat(rawAmt);
         currency = 'KHR';
+      } else {
+        const numMatch = incomingMsg.match(/\b(\d+(?:\.\d{1,2})?)\b/);
+        if (numMatch) {
+          amount = parseFloat(numMatch[1]);
+          currency = 'USD';
+        }
       }
     }
     const senderMatch = incomingMsg.match(/from\s+([^(\n.,]+)|ពី\s+([^(\n.,]+)/i);
